@@ -14,9 +14,12 @@ import java.util.List;
 public class DropMeUser
 {
     public static final String EMAIL_STR = "email";
+    public static final String HASH_STR = "hash";
 
     @Id
     private Long id;
+    @Index
+    private String hash;
     @Index
     private String email;
     private String name;
@@ -37,6 +40,14 @@ public class DropMeUser
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getEmail() {

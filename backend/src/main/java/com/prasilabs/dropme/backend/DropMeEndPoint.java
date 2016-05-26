@@ -17,6 +17,7 @@ import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
+import com.prasilabs.dropme.backend.security.FBAuthenticator;
 import com.prasilabs.dropme.backend.utils.AdminUtil;
 
 /** An endpoint class we are exposing */
@@ -26,7 +27,7 @@ import com.prasilabs.dropme.backend.utils.AdminUtil;
         clientIds = {AuthConstants.WEB_CLIENT_ID,  AuthConstants.ANDROID_CLIENT_ID, com.google.api.server.spi.Constant.API_EXPLORER_CLIENT_ID},
         audiences = {AuthConstants.ANDROID_AUDIENCE},
         scopes = {AuthConstants.EMAIL_SCOPE},
-        authenticators = {EndpointsAuthenticator.class}, //add EndpointsAuthenticator to the end of the @authenticators list to make it as a fallback when user provided authenticator fails. Endpoints will try all authenticators and return the first successful one.
+        authenticators = {FBAuthenticator.class, EndpointsAuthenticator.class}, //add EndpointsAuthenticator to the end of the @authenticators list to make it as a fallback when user provided authenticator fails. Endpoints will try all authenticators and return the first successful one.
 
         namespace = @ApiNamespace(
                 ownerDomain = "backend.dropme.prasilabs.com",
