@@ -11,7 +11,6 @@ import android.support.v4.content.LocalBroadcastManager;
  */
 public abstract class CorePresenter
 {
-    private LocalBroadcastManager localBroadcastManager;
     private BroadcastReceiver broadcastReceiver;
 
 
@@ -29,10 +28,7 @@ public abstract class CorePresenter
 
     protected void registerReciever(IntentFilter intentFilter)
     {
-        if(localBroadcastManager != null)
-        {
-            localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
-        }
+        LocalBroadcastManager.getInstance(CoreApp.getAppContext()).registerReceiver(broadcastReceiver, intentFilter);
     }
 
     protected abstract void broadCastRecieved(Context context, Intent intent);
@@ -41,7 +37,7 @@ public abstract class CorePresenter
     {
         if(broadcastReceiver != null)
         {
-            localBroadcastManager.unregisterReceiver(broadcastReceiver);
+            LocalBroadcastManager.getInstance(CoreApp.getAppContext()).unregisterReceiver(broadcastReceiver);
         }
     }
 }

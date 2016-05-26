@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by prasi on 6/2/16.
  * All fragment should extend this class
@@ -26,6 +28,7 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
     public void setFragmentView(View fragmentView)
     {
         this.mFragmentView = fragmentView;
+        ButterKnife.bind(this, fragmentView);
     }
 
     protected abstract T getCorePresenter();

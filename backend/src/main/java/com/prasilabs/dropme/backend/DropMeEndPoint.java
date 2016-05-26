@@ -6,11 +6,13 @@
 
 package com.prasilabs.dropme.backend;
 
+import com.google.api.server.spi.auth.EndpointsAuthenticator;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
+import com.prasilabs.AuthConstants;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
@@ -19,13 +21,18 @@ import com.prasilabs.dropme.backend.utils.AdminUtil;
 
 /** An endpoint class we are exposing */
 @Api(
-  name = "dropMeApi",
-  version = "v1",
-  namespace = @ApiNamespace(
-    ownerDomain = "backend.dropme.prasilabs.com",
-    ownerName = "backend.dropme.prasilabs.com",
-    packagePath=""
-  )
+        name = "dropMeApi",
+        version = "v1",
+        clientIds = {AuthConstants.WEB_CLIENT_ID,  AuthConstants.ANDROID_CLIENT_ID, com.google.api.server.spi.Constant.API_EXPLORER_CLIENT_ID},
+        audiences = {AuthConstants.ANDROID_AUDIENCE},
+        scopes = {AuthConstants.EMAIL_SCOPE},
+        authenticators = {EndpointsAuthenticator.class}, //add EndpointsAuthenticator to the end of the @authenticators list to make it as a fallback when user provided authenticator fails. Endpoints will try all authenticators and return the first successful one.
+
+        namespace = @ApiNamespace(
+                ownerDomain = "backend.dropme.prasilabs.com",
+                ownerName = "backend.dropme.prasilabs.com",
+                packagePath=""
+        )
 )
 public class DropMeEndPoint
 {

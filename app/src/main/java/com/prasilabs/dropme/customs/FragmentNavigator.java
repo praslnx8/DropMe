@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CoreFragment;
 
@@ -24,6 +25,11 @@ public class FragmentNavigator
         FragmentManager fragmentManager = coreActivity.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out);
+
+        if(viewId == 0)
+        {
+            viewId = R.id.container;
+        }
 
         if (!coreFragment.isAdded())
         {

@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class CDropMeUser
 {
+    public static final String EMAIL_STR = "email";
+
     private long id;
     private String name;
     private String email;
