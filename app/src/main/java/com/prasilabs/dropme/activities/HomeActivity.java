@@ -10,12 +10,19 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.core.CoreActivity;
+import com.prasilabs.dropme.customs.FragmentNavigator;
+import com.prasilabs.dropme.modules.home.views.HomeFragment;
+
+import butterknife.BindView;
 
 public class HomeActivity extends CoreActivity implements NavigationView.OnNavigationItemSelectedListener
 {
+    @BindView(R.id.container)
+    LinearLayout containerLayout;
 
     public static void callHomeActivity(Context context)
     {
@@ -24,7 +31,8 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -38,6 +46,8 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentNavigator.navigateToFragment(this, HomeFragment.getHomeFragment(), false, containerLayout.getId());
     }
 
     @Override

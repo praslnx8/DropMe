@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.debug.ConsoleLog;
 
 import java.util.ArrayList;
@@ -264,11 +265,51 @@ public class LocalPreference
         return arrayList;
     }
 
-    public static void ClearAppSharedPreferences(Context context) {
+    public static void ClearAppSharedPreferences(Context context)
+    {
         SharedPreferences lp = context.getSharedPreferences(PERSISTENT_DATA, Context.MODE_PRIVATE);
         lp.edit().clear().apply();
     }
 
     //App data ends
+
+
+    //Location data starts
+    public static void storeLocation(Context context, LatLng location, String TAG)
+    {
+
+        SharedPreferences prefs = context.getSharedPreferences(SESSION_DATA, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        if (location != null)
+        {
+            ConsoleLog.i(TAG, "Saving location is lat: " + location.latitude + " lon : " + location.longitude);
+
+            editor.putLong(TAG + "LAT", Double.doubleToRawLongBits(location.latitude));
+            editor.putLong(TAG + "LON", Double.doubleToRawLongBits(location.longitude));
+            editor.apply();
+        }
+    }
+
+    public static LatLng getLocationFromPrefs(Context context, String TAG)
+    {
+        SharedPreferences prefs = context.getSharedPreferences(SESSION_DATA, Context.MODE_PRIVATE);
+        Long lat = prefs.getLong(TAG + "LAT", Long.MAX_VALUE);
+        Long lng = prefs.getLong(TAG + "LON", Long.MAX_VALUE);
+        LatLng latLng = computeLatLng(lat, lng);
+        if (latLng == null) {
+            ConsoleLog.i(TAG, "latlng is null");
+        }
+        return latLng;
+    }
+
+    private static LatLng computeLatLng(Long lat, Long lng) {
+        if ((lat != Long.MAX_VALUE && lng != Long.MAX_VALUE) && (lat != 0 && lng != 0)) {
+            Double latDbl = Double.longBitsToDouble(lat);
+            Double lngDbl = Double.longBitsToDouble(lng);
+            return new LatLng(latDbl, lngDbl);
+        }
+        return null;
+    }
 
 }

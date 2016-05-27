@@ -29,32 +29,39 @@
             android:layout_height="0dp"
             android:layout_weight="3" />
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/login_btn_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_weight="1">
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/glogin_btn"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="GLOGIN"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/fb_cbtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="FBLOGIN"/>
+                <Button
+                    android:id="@+id/glogin_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GLOGIN"/>
 
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/fb_btn"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="FLOGIN"/>
+                <Button
+                    android:id="@+id/fb_cbtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FBLOGIN"/>
 
-        </LinearLayout>
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/fb_btn"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FLOGIN"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
     </LinearLayout>
 
 </FrameLayout>

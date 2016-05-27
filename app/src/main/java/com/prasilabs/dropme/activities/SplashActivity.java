@@ -29,7 +29,7 @@ public class SplashActivity extends CoreActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        splashLoginFragment = SplashLoginFragment.newInstance();
+        splashLoginFragment = SplashLoginFragment.getInstance();
 
         FragmentNavigator.navigateToFragment(this, splashLoginFragment, false, frameLayout.getId());
     }

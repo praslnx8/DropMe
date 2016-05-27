@@ -12,6 +12,12 @@ public abstract class CoreModelEngine
         new AsyncTask<Void, Void, T>()
         {
             @Override
+            protected void onPreExecute()
+            {
+                super.onPreExecute();
+            }
+
+            @Override
             protected T doInBackground(Void... params)
             {
                 if(asyncCallBack != null)

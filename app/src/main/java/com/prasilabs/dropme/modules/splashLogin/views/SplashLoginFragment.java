@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.facebook.AccessToken;
@@ -32,14 +33,15 @@ import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.prasilabs.CommonConstant;
-import com.prasilabs.dropme.activities.HomeActivity;
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.activities.HomeActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.constants.PermisionConstant;
 import com.prasilabs.dropme.constants.UserConstant;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.mobileVerification.MobileVerificationManager;
 import com.prasilabs.dropme.modules.splashLogin.presenter.SplashLoginPresenter;
 import com.prasilabs.dropme.utils.ViewUtil;
@@ -67,7 +69,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     private CallbackManager callbackManager;
 
     private GoogleApiClient mGoogleApiClient;
-
+    private static SplashLoginFragment splashLoginFragment;
 
     @BindView(R.id.splash_layout)
     LinearLayout splashLayout;
@@ -75,10 +77,15 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     LinearLayout loginLayout;
     @BindView(R.id.fb_btn)
     LoginButton fbButton;
+    @BindView(R.id.login_btn_layout)
+    FrameLayout logiBtnLayout;
 
-    public static SplashLoginFragment newInstance()
+    public static SplashLoginFragment getInstance()
     {
-        SplashLoginFragment splashLoginFragment = new SplashLoginFragment();
+        if(splashLoginFragment == null)
+        {
+            splashLoginFragment = new SplashLoginFragment();
+        }
         return splashLoginFragment;
     }
 
@@ -116,8 +123,18 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 @Override
                 public void run()
                 {
-                    loginLayout.setVisibility(View.VISIBLE);
-                    splashLayout.setVisibility(View.GONE);
+                    VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
+
+                    if(vDropMeUser == null)
+                    {
+                        loginLayout.setVisibility(View.VISIBLE);
+                        splashLayout.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        HomeActivity.callHomeActivity(getContext());
+                        getCoreActivity().finish();
+                    }
                 }
             },2000);
 
@@ -217,6 +234,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     LocalPreference.saveLoginDataInShared(getContext(), UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
                     LocalPreference.saveLoginDataInShared(getContext(), UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
 
+                    ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
                     MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
                         @Override
                         public void verify(boolean status, String phone)
@@ -250,7 +268,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     }
 
     @Override
-    protected SplashLoginPresenter getCorePresenter()
+    protected SplashLoginPresenter setCorePresenter()
     {
         return splashLoginPresenter;
     }
@@ -260,13 +278,18 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     {
         ViewUtil.t(getContext(), "Welcome " + vDropMeUser.getName());
 
+        UserManager.saveDropMeUser(getContext(), vDropMeUser);
+        ViewUtil.hideProgressView(getContext(), logiBtnLayout);
+
         HomeActivity.callHomeActivity(getContext());
+        getCoreActivity().finish();
     }
 
     @Override
     public void Failed(String message)
     {
         ViewUtil.t(getContext(), message);
+        ViewUtil.hideProgressView(getContext(), logiBtnLayout);
     }
 
     @Override
@@ -276,14 +299,6 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
         progressDialog.dismiss();
 
         Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(this);
-
-        Plus.PeopleApi.load(mGoogleApiClient, "id").setResultCallback(new ResultCallback<People.LoadPeopleResult>() {
-            @Override
-            public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult)
-            {
-                Person currentPerson = loadPeopleResult.getPersonBuffer().get(0);
-            }
-        });
 
         if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null)
         {
@@ -319,6 +334,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
             LocalPreference.saveLoginDataInShared(getContext(), UserConstant.EMAIL_STR, gplusEmail);
             LocalPreference.saveLoginDataInShared(getContext(), UserConstant.LOGIN_TYPE_STR, LoginType.GPlus.name());
+
+            ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
 
             MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
                 @Override

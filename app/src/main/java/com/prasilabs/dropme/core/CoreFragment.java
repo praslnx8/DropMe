@@ -31,14 +31,14 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
         ButterKnife.bind(this, fragmentView);
     }
 
-    protected abstract T getCorePresenter();
+    protected abstract T setCorePresenter();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        corePresenter = getCorePresenter();
+        corePresenter = setCorePresenter();
 
         corePresenter.onCreate(context);
     }
