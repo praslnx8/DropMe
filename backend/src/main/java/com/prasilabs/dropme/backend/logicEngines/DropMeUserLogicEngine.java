@@ -80,6 +80,13 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         return dropMeUser;
     }
 
+    public DropMeUser getDropMeUserByHash(String hash)
+    {
+        DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.HASH_STR, hash).first().now();
+
+        return dropMeUser;
+    }
+
     private static boolean validateDropMeUser(DropMeUser dropMeUser)
     {
         boolean isValid = false;

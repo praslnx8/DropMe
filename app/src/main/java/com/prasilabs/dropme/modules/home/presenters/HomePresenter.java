@@ -2,77 +2,101 @@ package com.prasilabs.dropme.modules.home.presenters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 
-import com.firebase.client.FirebaseError;
-import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.prasilabs.dropme.constants.BroadCastConstant;
+import com.prasilabs.dropme.constants.LocationConstant;
 import com.prasilabs.dropme.core.CorePresenter;
-import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.customs.LocalPreference;
+import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.pojo.MarkerInfo;
-import com.prasilabs.dropme.services.firebase.FireBaseConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by prasi on 27/5/16.
  */
 public class HomePresenter extends CorePresenter
 {
-
+    private MapChange mapChange;
     private static final String TAG = HomePresenter.class.getSimpleName();
+    private List<MarkerInfo> markerInfoList = new ArrayList<>();
 
-    public static HomePresenter newInstance()
+    public static HomePresenter newInstance(MapChange mapChange)
     {
-        return new HomePresenter();
+        return new HomePresenter(mapChange);
     }
 
-    @Override
-    protected void broadCastRecieved(Context context, Intent intent) {
+    private  HomePresenter(MapChange mapChange)
+    {
+        this.mapChange = mapChange;
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
+        registerReciever(intentFilter);
     }
 
-    public void listentToGeo(LatLng latLng)
+    private void listenToMap(LatLng latLng)
     {
-        GeoQuery geoQuery = FireBaseConfig.getGeoFire().queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), 0.5);
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+        HomeGeoModelEngine.getInstance().listenToGeoLoc(latLng, new HomeGeoModelEngine.GeoCallBack() {
             @Override
-            public void onKeyEntered(String key, GeoLocation location)
+            public void getMarker(MarkerInfo markerInfo)
             {
-
+                if(checkAlreadyExist(markerInfo))
+                {
+                    mapChange.moveMarker(markerInfo);
+                }
+                else
+                {
+                    markerInfoList.add(markerInfo);
+                    mapChange.addMarker(markerInfo);
+                }
             }
 
             @Override
-            public void onKeyExited(String key)
+            public void removeMarker(MarkerInfo markerInfo)
             {
-
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location)
-            {
-
-            }
-
-            @Override
-            public void onGeoQueryReady()
-            {
-                ConsoleLog.i(TAG, "query ready");
-            }
-
-            @Override
-            public void onGeoQueryError(FirebaseError error)
-            {
-
+                mapChange.removeMarker(markerInfo);
             }
         });
     }
 
+    private boolean checkAlreadyExist(MarkerInfo markerInfo)
+    {
+        boolean isAlreadyExist = false;
+
+        for(MarkerInfo markerInfo1 : markerInfoList)
+        {
+            if(markerInfo1.getId() == markerInfo.getId() && markerInfo.getUserOrVehicle().equals(markerInfo1.getUserOrVehicle()))
+            {
+                return isAlreadyExist = true;
+            }
+        }
+
+        return isAlreadyExist;
+    }
+
+    @Override
+    protected void broadCastRecieved(Context context, Intent intent)
+    {
+        if(intent.getAction().equals(BroadCastConstant.LOCATION_REFRESH_CONSTANT))
+        {
+            LatLng latLng = LocalPreference.getLocationFromPrefs(context, LocationConstant.CURRENT_LOC_STR);
+            if(latLng != null)
+            {
+                listenToMap(latLng);
+            }
+        }
+    }
+
+
     public interface MapChange
     {
-        void addMarker(MarkerInfo markerInfo, LatLng latLng);
+        void addMarker(MarkerInfo markerInfo);
 
-        void moveMarker(MarkerInfo markerInfo, LatLng latLng);
+        void moveMarker(MarkerInfo markerInfo);
 
         void removeMarker(MarkerInfo markerInfo);
     }

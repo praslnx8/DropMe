@@ -14,10 +14,13 @@ import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.prasilabs.constants.AuthConstants;
+import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
+import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
+import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
 import com.prasilabs.dropme.backend.utils.AdminUtil;
 
@@ -75,7 +78,7 @@ public class DropMeEndPoint
     {
         try
         {
-
+            return VehicleLogicEngine.getInstance().getVehicleById(id);
         }
         catch (Exception e)
         {
@@ -83,5 +86,25 @@ public class DropMeEndPoint
         }
 
         return null;
+    }
+
+    @ApiMethod(name = "addVehicle")
+    public ApiResponse addVehicle(@Named("hash") String hash, VVehicle vVehicle) throws OAuthRequestException
+    {
+        ApiResponse apiResponse = new ApiResponse();
+
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+
+        if(dropMeUser != null)
+        {
+            vVehicle.setOwnerId(dropMeUser.getId());
+            apiResponse = VehicleLogicEngine.getInstance().addVehicle(vVehicle);
+        }
+        else
+        {
+            throw new OAuthRequestException("User is not found. User needs to logge in");
+        }
+
+        return apiResponse;
     }
 }
