@@ -3,7 +3,7 @@ package com.prasilabs.dropme.services.oauth;
 import android.content.Context;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.prasilabs.AuthConstants;
+import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.constants.UserConstant;
 import com.prasilabs.dropme.customs.LocalPreference;
 

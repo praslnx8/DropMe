@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class VDropMeUser
 {
-    private Long id;
+    private long id;
     private String hash;
     private String name;
     private String email;
@@ -20,11 +20,11 @@ public class VDropMeUser
     private List<String> roles;
     private Date created;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

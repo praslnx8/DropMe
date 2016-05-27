@@ -3,7 +3,7 @@ package com.prasilabs.dropme.services.oauth;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.prasilabs.CommonConstant;
+import com.prasilabs.constants.CommonConstant;
 
 import java.io.IOException;
 

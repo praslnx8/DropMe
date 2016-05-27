@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.prasilabs.ValidateUtil;
+import com.prasilabs.util.ValidateUtil;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.modelengines.DropMeUserModelEngine;
@@ -32,9 +32,9 @@ public class SplashLoginPresenter extends CorePresenter
     {
         if(validateDropMeUser(vDropMeUser))
         {
-            DropMeUserModelEngine.getInstance().signup(vDropMeUser, new DropMeUserModelEngine.LoginModelCallBack() {
+            DropMeUserModelEngine.getInstance().signup(vDropMeUser, new DropMeUserModelEngine.GetUserCallBack() {
                 @Override
-                public void login(VDropMeUser vDropMeUser)
+                public void getUser(VDropMeUser vDropMeUser)
                 {
                     if(vDropMeUser != null && vDropMeUser.getId() != null && !TextUtils.isEmpty(vDropMeUser.getHash()))
                     {

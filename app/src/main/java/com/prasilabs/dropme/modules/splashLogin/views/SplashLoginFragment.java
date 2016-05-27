@@ -32,7 +32,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.prasilabs.CommonConstant;
+import com.prasilabs.constants.CommonConstant;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.HomeActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
@@ -444,7 +444,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 //                        Snackbar.LENGTH_SHORT).show();
                 readAccounts();
             } else {
-                Snackbar.make(getFragmentView(), "No permision. cannot login",
+                Snackbar.make(getFragmentView(), "No permision. cannot getUser",
                         Snackbar.LENGTH_SHORT).show();
             }
         } else {

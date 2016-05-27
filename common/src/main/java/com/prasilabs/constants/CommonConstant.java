@@ -1,4 +1,4 @@
-package com.prasilabs;
+package com.prasilabs.constants;
 
 public class CommonConstant
 {

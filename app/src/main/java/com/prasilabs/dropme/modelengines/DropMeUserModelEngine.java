@@ -5,6 +5,8 @@ import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.CloudConnect;
 
+import java.io.IOException;
+
 /**
  * Created by prasi on 26/5/16.
  */
@@ -22,7 +24,7 @@ public class DropMeUserModelEngine extends CoreModelEngine
         return instance;
     }
 
-    public void signup(final VDropMeUser vDropMeUser, final LoginModelCallBack loginModelCallBack)
+    public void signup(final VDropMeUser vDropMeUser, final GetUserCallBack getUserCallBack)
     {
 
         callAsync(new AsyncCallBack() {
@@ -44,23 +46,53 @@ public class DropMeUserModelEngine extends CoreModelEngine
             @Override
             public <T> void result(T t)
             {
-                if(loginModelCallBack != null)
+                if(getUserCallBack != null)
                 {
                     if(t != null)
                     {
-                        loginModelCallBack.login((VDropMeUser) t);
+                        getUserCallBack.getUser((VDropMeUser) t);
                     }
                     else
                     {
-                        loginModelCallBack.login(null);
+                        getUserCallBack.getUser(null);
                     }
                 }
             }
         });
     }
 
-    public interface LoginModelCallBack
+    public void getDropMeUser(final long id, final GetUserCallBack getUserCallBack)
     {
-        void login(VDropMeUser vDropMeUser);
+        callAsync(new AsyncCallBack() {
+            @Override
+            public VDropMeUser async()
+            {
+                try
+                {
+                    return CloudConnect.callDropMeApi(false).getUserDetail(id).execute();
+                }
+                catch (Exception e)
+                {
+                    ConsoleLog.e(e);
+                }
+                return null;
+            }
+
+            @Override
+            public <T> void result(T t)
+            {
+                if(getUserCallBack != null)
+                {
+                    getUserCallBack.getUser((VDropMeUser) t);
+                }
+            }
+        });
     }
+
+    public interface GetUserCallBack
+    {
+        void getUser(VDropMeUser vDropMeUser);
+    }
+
+
 }

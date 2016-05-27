@@ -67,6 +67,8 @@ dependencies {
     compile('com.digits.sdk.android:digits:1.10.3@aar') {
         transitive = true;
     }
+    //Firebase GeoFilre
+    compile 'com.firebase:geofire:1.1.0+'
 
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile project(path: ':common')

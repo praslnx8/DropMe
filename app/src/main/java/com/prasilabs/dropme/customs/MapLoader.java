@@ -1,25 +1,35 @@
 package com.prasilabs.dropme.customs;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.api.client.util.ArrayMap;
+
+import java.util.Map;
 
 /**
  * Created by prasi on 12/12/15.
  */
-public class MapLoader {
+public class MapLoader
+{
     private MapView mapView;
     private Bundle savedInstanceState;
     private GoogleMap gMap;
     private boolean disableMapchangeListener;
+    private Map<String, Marker> markerMap = new ArrayMap<>();
 
     public MapLoader(MapView mapView, Bundle savedInstanceState) {
         this.mapView = mapView;
@@ -29,8 +39,7 @@ public class MapLoader {
     public void loadMap(final MapLoaderCallBack mapLoaderCallBack) {
         mapView.onCreate(savedInstanceState);
 
-        gMap = mapView.getMap();
-        /*mapView.getMapAsync(new OnMapReadyCallback() {
+        mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap)
             {
@@ -38,10 +47,10 @@ public class MapLoader {
                 //gMap.setMyLocationEnabled(true);
                 mapLoaderCallBack.mapLoaded();
             }
-        });*/
-        /*if (ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        });
+        if (ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             gMap.setMyLocationEnabled(true);
-        }*/
+        }
 
     }
 
@@ -80,15 +89,51 @@ public class MapLoader {
 
     public void addMarker(LatLng latLng, boolean isClear)
     {
-        if(latLng != null) {
-            if (isClear) {
+        addMarker(null, latLng, isClear);
+    }
+
+    public void addMarker(String id, LatLng latLng)
+    {
+        addMarker(id, latLng, false);
+    }
+
+    public void addMarker(String id, LatLng latLng, boolean isClear)
+    {
+        if(latLng != null)
+        {
+            if (isClear)
+            {
                 gMap.clear();
+                markerMap.clear();
             }
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            gMap.addMarker(markerOptions);
+            Marker existingMarker = null;
+            if(id != null)
+            {
+                existingMarker = markerMap.get(id);
+            }
+
+            if(existingMarker != null)
+            {
+                existingMarker.setPosition(latLng);
+            }
+            else
+            {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                Marker marker = gMap.addMarker(markerOptions);
+                if(id != null)
+                {
+                    markerMap.put(id, marker);
+                }
+            }
         }
+    }
+
+    public void removeMarker(String markerId)
+    {
+        Marker marker = markerMap.get(markerId);
+        marker.remove();
     }
 
     public LatLng getPointedLatLng()

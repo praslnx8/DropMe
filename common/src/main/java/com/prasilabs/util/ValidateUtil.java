@@ -1,4 +1,4 @@
-package com.prasilabs;
+package com.prasilabs.util;
 
 import org.apache.commons.validator.routines.EmailValidator;
 

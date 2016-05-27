@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:text="FBLOGIN"/>
 
-                <com.facebook.login.widget.LoginButton
+                <com.facebook.getUser.widget.LoginButton
                     android:id="@+id/fb_btn"
                     android:visibility="gone"
                     android:layout_width="match_parent"

@@ -65,6 +65,7 @@ public class HomeFragment extends CoreFragment<HomePresenter>
                     ConsoleLog.i(TAG, "map loaded");
                 }
             });
+
         }
 
         return getFragmentView();

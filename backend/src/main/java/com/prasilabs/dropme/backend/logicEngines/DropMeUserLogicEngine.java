@@ -2,7 +2,7 @@ package com.prasilabs.dropme.backend.logicEngines;
 
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
-import com.prasilabs.ValidateUtil;
+import com.prasilabs.util.ValidateUtil;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.db.OfyService;
@@ -55,6 +55,22 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         {
             return convertToVDropMeUser(existingDropMeUser, true);
         }
+    }
+
+    public VDropMeUser getDropMeUserById(long id)
+    {
+        DropMeUser dropMeUser = getDropMeUser(id);
+
+        VDropMeUser vDropMeUser = convertToVDropMeUser(dropMeUser, false);
+
+        return vDropMeUser;
+    }
+
+    public DropMeUser getDropMeUser(long id)
+    {
+        DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).id(id).now();
+
+        return dropMeUser;
     }
 
     public DropMeUser getDropMeUser(String email)

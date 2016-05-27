@@ -2,7 +2,7 @@ package com.prasilabs.dropme.backend.security;
 
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Authenticator;
-import com.prasilabs.CommonConstant;
+import com.prasilabs.constants.CommonConstant;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
 import org.json.JSONObject;

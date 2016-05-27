@@ -1,4 +1,4 @@
-package com.prasilabs;
+package com.prasilabs.constants;
 
 /**
  * Created by prasi on 26/5/16.

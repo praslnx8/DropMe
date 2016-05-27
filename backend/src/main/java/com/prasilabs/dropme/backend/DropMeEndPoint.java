@@ -10,11 +10,13 @@ import com.google.api.server.spi.auth.EndpointsAuthenticator;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
+import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
-import com.prasilabs.AuthConstants;
+import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
+import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
 import com.prasilabs.dropme.backend.utils.AdminUtil;
@@ -51,5 +53,35 @@ public class DropMeEndPoint
         }
 
         return vDropMeUser;
+    }
+
+    @ApiMethod(name = "getUserDetail")
+    public VDropMeUser getUserDetail(@Named("id") long id)
+    {
+        try
+        {
+            return DropMeUserLogicEngine.getInstance().getDropMeUserById(id);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+    }
+
+    @ApiMethod(name = "getVehicleDetail")
+    public VVehicle getVehicleDetail(@Named("id") long id)
+    {
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return null;
     }
 }
