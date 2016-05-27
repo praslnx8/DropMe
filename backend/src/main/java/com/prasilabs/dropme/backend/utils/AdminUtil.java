@@ -2,7 +2,7 @@ package com.prasilabs.dropme.backend.utils;
 
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
-import com.prasilabs.UserRole;
+import com.prasilabs.enums.UserRole;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.db.OfyService;
 
@@ -34,10 +34,13 @@ public class AdminUtil
         boolean isAdmin = false;
         if(user != null && user.getEmail() != null)
         {
-            DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.EMAIL_STR, user.getEmail()).first().now();
-            if(dropMeUser != null && dropMeUser.getRoles().contains(UserRole.Admin.name()))
+            if(isAdminCheck)
             {
-                isAdmin = true;
+                DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.EMAIL_STR, user.getEmail()).first().now();
+                if (dropMeUser != null && dropMeUser.getRoles() != null && dropMeUser.getRoles().contains(UserRole.Admin.name()))
+                {
+                    isAdmin = true;
+                }
             }
         }
         else

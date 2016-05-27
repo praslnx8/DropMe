@@ -1,17 +1,27 @@
-package com.prasilabs.dropme;
+package com.prasilabs.dropme.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.core.CoreActivity;
+
+public class HomeActivity extends CoreActivity implements NavigationView.OnNavigationItemSelectedListener
+{
+
+    public static void callHomeActivity(Context context)
+    {
+        Intent intent = new Intent(context, HomeActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

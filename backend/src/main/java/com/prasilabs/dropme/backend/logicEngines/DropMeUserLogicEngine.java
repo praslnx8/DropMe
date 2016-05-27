@@ -6,8 +6,8 @@ import com.prasilabs.ValidateUtil;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.db.OfyService;
-import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
+import com.prasilabs.dropme.backend.security.HashGenerator;
 
 import java.util.Date;
 
@@ -29,42 +29,32 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
     private DropMeUserLogicEngine(){}
 
-    public ApiResponse signup(User user, VDropMeUser vDropMeUser)
+    public VDropMeUser loginSignup(User user, VDropMeUser input)
     {
-        ApiResponse apiResponse = new ApiResponse();
-
         DropMeUser existingDropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.EMAIL_STR, user.getEmail()).first().now();
 
         if(existingDropMeUser == null)
         {
-            vDropMeUser.setEmail(user.getEmail());
-            DropMeUser dropMeUser = convertToDropMeUSer(vDropMeUser);
+            input.setEmail(user.getEmail());
+            DropMeUser dropMeUser = convertToDropMeUSer(input);
 
             if (validateDropMeUser(dropMeUser))
             {
+
+                dropMeUser.setHash(HashGenerator.md5(String.valueOf(System.currentTimeMillis())));
                 dropMeUser.setCreated(new Date(System.currentTimeMillis()));
                 Key<DropMeUser> dropMeUserKey = OfyService.ofy().save().entity(dropMeUser).now();
-                apiResponse.setStatus(true);
-                apiResponse.setId(dropMeUserKey.getId());
-                apiResponse.setMessage("Welcome " + dropMeUser.getName());
+                dropMeUser.setId(dropMeUserKey.getId());
+
+                return convertToVDropMeUser(dropMeUser, true);
             }
+
+            return null;
         }
         else
         {
-            apiResponse.setStatus(true);
-            apiResponse.setId(existingDropMeUser.getId());
-            apiResponse.setMessage("Welcome back " + existingDropMeUser.getName());
+            return convertToVDropMeUser(existingDropMeUser, true);
         }
-        return apiResponse;
-    }
-
-    public VDropMeUser login(User user)
-    {
-        DropMeUser dropMeUser = getDropMeUser(user.getEmail());
-
-        VDropMeUser vDropMeUser = convertToVDropMeUser(dropMeUser);
-
-        return vDropMeUser;
     }
 
     public DropMeUser getDropMeUser(String email)
@@ -80,6 +70,8 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
         if(dropMeUser != null)
         {
+            isValid= true;
+
             if (ValidateUtil.validateEmail(dropMeUser.getEmail()) && !ValidateUtil.isStringEmpty(dropMeUser.getName()) && dropMeUser.getGender() != 0)
             {
                 isValid = true;
@@ -98,6 +90,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
             dropMeUser.setId(vDropMeUser.getId());
             dropMeUser.setName(vDropMeUser.getName());
             dropMeUser.setEmail(vDropMeUser.getEmail());
+            dropMeUser.setLoginType(vDropMeUser.getLoginType());
             dropMeUser.setGender(vDropMeUser.getGender());
             dropMeUser.setMobile(vDropMeUser.getMobile());
             dropMeUser.setMobileVerified(vDropMeUser.isMobileVerified());
@@ -108,14 +101,19 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         return null;
     }
 
-    private static VDropMeUser convertToVDropMeUser(DropMeUser dropMeUser)
+    private static VDropMeUser convertToVDropMeUser(DropMeUser dropMeUser, boolean isSendHash)
     {
         VDropMeUser vDropMeUser = new VDropMeUser();
 
         vDropMeUser.setId(dropMeUser.getId());
+        if(isSendHash)
+        {
+            vDropMeUser.setHash(dropMeUser.getHash());
+        }
         vDropMeUser.setName(dropMeUser.getName());
         vDropMeUser.setEmail(dropMeUser.getEmail());
-        vDropMeUser.setGender(vDropMeUser.getGender());
+        vDropMeUser.setGender(dropMeUser.getGender());
+        vDropMeUser.setLoginType(dropMeUser.getLoginType());
         vDropMeUser.setMobile(dropMeUser.getMobile());
         vDropMeUser.setRoles(dropMeUser.getRoles());
         vDropMeUser.setCreated(dropMeUser.getCreated());

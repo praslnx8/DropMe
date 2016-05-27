@@ -8,7 +8,7 @@ public class FCredential
     private static String prevAccesToken;
     private static FbAccountCredential fbAccountCredential;
 
-    public FbAccountCredential getFbAccountCredential(String accesToken)
+    public static FbAccountCredential getFbAccountCredential(String accesToken)
     {
         if(prevAccesToken != null && prevAccesToken.equals(accesToken) && fbAccountCredential != null)
         {

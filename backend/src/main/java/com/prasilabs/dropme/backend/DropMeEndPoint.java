@@ -14,7 +14,6 @@ import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.prasilabs.AuthConstants;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
-import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
@@ -37,38 +36,20 @@ import com.prasilabs.dropme.backend.utils.AdminUtil;
 )
 public class DropMeEndPoint
 {
-    @ApiMethod(name = "signup")
-    public ApiResponse signup(User user, VDropMeUser vDropMeUser) throws OAuthRequestException
+    @ApiMethod(name = "loginsignup")
+    public VDropMeUser loginsignup(User user, VDropMeUser vDropMeUser) throws OAuthRequestException
     {
         AdminUtil.checkAndThrow(user);
 
         try
         {
-            ApiResponse apiResponse = DropMeUserLogicEngine.getInstance().signup(user, vDropMeUser);
-            return apiResponse;
+            return DropMeUserLogicEngine.getInstance().loginSignup(user, vDropMeUser);
         }
         catch (Exception e)
         {
             ConsoleLog.e(e);
         }
 
-        return new ApiResponse();
-    }
-
-    @ApiMethod
-    public VDropMeUser login(User user) throws OAuthRequestException
-    {
-        AdminUtil.checkAndThrow(user);
-
-        try
-        {
-            return DropMeUserLogicEngine.getInstance().login(user);
-        }
-        catch (Exception e)
-        {
-            ConsoleLog.e(e);
-        }
-
-        return null;
+        return vDropMeUser;
     }
 }

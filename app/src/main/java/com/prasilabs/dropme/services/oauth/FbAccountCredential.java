@@ -3,6 +3,7 @@ package com.prasilabs.dropme.services.oauth;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.prasilabs.CommonConstant;
 
 import java.io.IOException;
 
@@ -22,7 +23,7 @@ public class FbAccountCredential implements HttpRequestInitializer
     public void initialize(HttpRequest request) throws IOException
     {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.put("Authorization", accesToken);
+        httpHeaders.put(CommonConstant.FBAUTHHEADER, accesToken);
         request.setHeaders(httpHeaders);
     }
 }

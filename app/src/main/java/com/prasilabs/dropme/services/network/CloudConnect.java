@@ -1,12 +1,18 @@
 package com.prasilabs.dropme.services.network;
 
-import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.prasilabs.dropme.backend.dropMeApi.DropMeApi;
+import com.prasilabs.dropme.constants.UserConstant;
 import com.prasilabs.dropme.core.CoreApp;
+import com.prasilabs.dropme.customs.LocalPreference;
+import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.services.oauth.FCredential;
+import com.prasilabs.dropme.services.oauth.GCredential;
+import com.prasilabs.enums.LoginType;
 
 /**
  * Created by kiran on 8/27/2015.
@@ -15,14 +21,32 @@ import com.prasilabs.dropme.core.CoreApp;
 
 public class CloudConnect
 {
+    private static final String TAG = CloudConnect.class.getSimpleName();
     private static DropMeApi dropMeApi;
     private static String serverUrl = "https://prasilabs-dropme.appspot.com/_ah/api/";
-    private static String serverUrl_Dev = "https://localhost:8080/_ah/api/";
+    private static String serverUrl_Dev = "https://prasilabs-dropme.appspot.com/_ah/api/"; //https://192.168.0.103:8080/_ah/api/
 
-    public static DropMeApi callDropMeApi(@Nullable HttpRequestInitializer httpRequestInitializer)
+    public static DropMeApi callDropMeApi(boolean isOauth)
     {
-        if(httpRequestInitializer != null && dropMeApi == null)
+        if(isOauth || dropMeApi == null)
         {
+            String loginTypeStr = LocalPreference.getLoginDataFromShared(CoreApp.getAppContext(), UserConstant.LOGIN_TYPE_STR, null);
+            String accesToken = LocalPreference.getLoginDataFromShared(CoreApp.getAppContext(), UserConstant.ACCES_TOKEN_STR, null);
+            String email = LocalPreference.getLoginDataFromShared(CoreApp.getAppContext(), UserConstant.EMAIL_STR, null);
+
+            HttpRequestInitializer httpRequestInitializer = null;
+
+            if(!TextUtils.isEmpty(loginTypeStr) && loginTypeStr.equals(LoginType.FaceBook.name()) && !TextUtils.isEmpty(accesToken))
+            {
+                ConsoleLog.i(TAG, "facebook oauth");
+                httpRequestInitializer = FCredential.getFbAccountCredential(accesToken);
+            }
+            else if(!TextUtils.isEmpty(loginTypeStr) && loginTypeStr.equals(LoginType.GPlus.name()) && !TextUtils.isEmpty(email))
+            {
+                ConsoleLog.i(TAG, "google oauth");
+                httpRequestInitializer = GCredential.getGoogleCredential(CoreApp.getAppContext());
+            }
+
             DropMeApi.Builder builder = new DropMeApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), httpRequestInitializer);
             if (CoreApp.appDebug) {
                 builder.setRootUrl(serverUrl_Dev);

@@ -22,9 +22,12 @@ public class DropMeUser
     private String hash;
     @Index
     private String email;
+    private String picture;
     private String name;
     @Index
     private int gender;
+    @Index
+    private String loginType;
     @Index
     private String mobile;
     @Index
@@ -70,8 +73,24 @@ public class DropMeUser
         return gender;
     }
 
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public String getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
     }
 
     public String getMobile() {

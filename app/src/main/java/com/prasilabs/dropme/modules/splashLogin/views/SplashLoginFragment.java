@@ -1,4 +1,4 @@
-package com.prasilabs.dropme.modules;
+package com.prasilabs.dropme.modules.splashLogin.views;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -31,13 +31,19 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import com.prasilabs.CommonConstant;
+import com.prasilabs.dropme.activities.HomeActivity;
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.constants.PermisionConstant;
+import com.prasilabs.dropme.constants.UserConstant;
 import com.prasilabs.dropme.core.CoreFragment;
-import com.prasilabs.dropme.datamodels.CDropMeUser;
+import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
-import com.prasilabs.dropme.modules.splashLogin.SplashLoginPresenter;
+import com.prasilabs.dropme.modules.mobileVerification.MobileVerificationManager;
+import com.prasilabs.dropme.modules.splashLogin.presenter.SplashLoginPresenter;
 import com.prasilabs.dropme.utils.ViewUtil;
+import com.prasilabs.enums.LoginType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +60,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 {
     private static final String TAG = SplashLoginFragment.class.getSimpleName();
 
-    private SplashLoginPresenter splashLoginPresenter = new SplashLoginPresenter();
+    private SplashLoginPresenter splashLoginPresenter = SplashLoginPresenter.newInstance();
     private static final int RC_SIGN_IN = 0;
     private static final int RC_SIGN_IN_SUCCESS = -1;
     private static ProgressDialog progressDialog;
@@ -180,7 +186,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
         }
     }
 
-    private void getFacebookLoginDetailsFromAccesToken(AccessToken accessToken)
+    private void getFacebookLoginDetailsFromAccesToken(final AccessToken accessToken)
     {
         GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
@@ -199,7 +205,29 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     String fbGender = fbGraphObject.getString("gender");
                     String fbVerifiedEmail = fbGraphObject.getString("verified");
 
-                    //TODO
+                    String pictureUrl = "http://graph.facebook.com/"+fbId+"/picture?type=large";
+
+                    final VDropMeUser vDropMeUser = new VDropMeUser();
+                    vDropMeUser.setName(fbFirstName + " " + fbLastName);
+                    vDropMeUser.setPicture(pictureUrl);
+                    vDropMeUser.setEmail(fbEmail);
+                    vDropMeUser.setGender(0); //TODO
+                    vDropMeUser.setLoginType(LoginType.FaceBook.name());
+
+                    LocalPreference.saveLoginDataInShared(getContext(), UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
+                    LocalPreference.saveLoginDataInShared(getContext(), UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
+
+                    MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
+                        @Override
+                        public void verify(boolean status, String phone)
+                        {
+                            vDropMeUser.setMobile(phone);
+                            vDropMeUser.setMobileVerified(status);
+
+                            splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
+                        }
+                    });
+
                 } catch (JSONException e) {
                    ConsoleLog.e(e);
                 }
@@ -228,21 +256,17 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     }
 
     @Override
-    public void loginSuccess(CDropMeUser cDropMeUser)
+    public void loginSuccess(VDropMeUser vDropMeUser)
     {
+        ViewUtil.t(getContext(), "Welcome " + vDropMeUser.getName());
 
+        HomeActivity.callHomeActivity(getContext());
     }
 
     @Override
-    public void Failed()
+    public void Failed(String message)
     {
-
-    }
-
-    @Override
-    public void signupSuccess(long id)
-    {
-
+        ViewUtil.t(getContext(), message);
     }
 
     @Override
@@ -253,6 +277,14 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
         Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(this);
 
+        Plus.PeopleApi.load(mGoogleApiClient, "id").setResultCallback(new ResultCallback<People.LoadPeopleResult>() {
+            @Override
+            public void onResult(@NonNull People.LoadPeopleResult loadPeopleResult)
+            {
+                Person currentPerson = loadPeopleResult.getPersonBuffer().get(0);
+            }
+        });
+
         if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null)
         {
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
@@ -262,30 +294,51 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             String firstName = currentPerson.getName().getGivenName();
             String lastName = currentPerson.getName().getFamilyName();
             int gender = currentPerson.getGender(); //1 for female, 0 for male. 2 for others
-            String sgender = null;
-            if (gender == 0) {
-                sgender = "male";
-            } else if (gender == 1) {
-                sgender = "female";
-            } else {
-                sgender = "others";
+            int gndr = 0;
+            if (gender == 0)
+            {
+                gndr = CommonConstant.MALE;
             }
+            else if (gender == 1)
+            {
+                gndr = CommonConstant.FEMALE;
+            }
+
             String picture = currentPerson.getImage().getUrl();
 //            currentPerson.getCover().getCoverPhoto();
 
             String locale = currentPerson.getLanguage();
             String verifiedEmail = String.valueOf(currentPerson.isVerified());
 
-            ConsoleLog.i(TAG, "email is : " + gplusEmail);
+            final VDropMeUser vDropMeUser = new VDropMeUser();
+            vDropMeUser.setName(firstName + " " + lastName);
+            vDropMeUser.setEmail(gplusEmail);
+            vDropMeUser.setLoginType(LoginType.GPlus.name());
+            vDropMeUser.setGender(gndr);
+            vDropMeUser.setPicture(picture);
+
+            LocalPreference.saveLoginDataInShared(getContext(), UserConstant.EMAIL_STR, gplusEmail);
+            LocalPreference.saveLoginDataInShared(getContext(), UserConstant.LOGIN_TYPE_STR, LoginType.GPlus.name());
+
+            MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
+                @Override
+                public void verify(boolean status, String phone)
+                {
+                    vDropMeUser.setMobile(phone);
+                    vDropMeUser.setMobileVerified(status);
+
+                    splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
+                }
+            });
 
             Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             mGoogleApiClient.disconnect();
-
         }
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
+    public void onConnectionSuspended(int i)
+    {
 
     }
 

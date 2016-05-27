@@ -4,6 +4,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.prasilabs.dropme.backend.datastore.CacheKeyValue;
+import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
 /**
@@ -21,6 +22,7 @@ public class OfyService
         try
         {
             ObjectifyService.register(CacheKeyValue.class);
+            ObjectifyService.register(DropMeUser.class);
         }
         catch (Exception e)
         {

@@ -2,6 +2,7 @@ package com.prasilabs.dropme.backend.security;
 
 import com.google.api.server.spi.auth.common.User;
 import com.google.api.server.spi.config.Authenticator;
+import com.prasilabs.CommonConstant;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ public class FBAuthenticator implements Authenticator
     public User authenticate(HttpServletRequest httpServletRequest)
     {
         ConsoleLog.i(TAG, "Received authentication request");
-        String token = httpServletRequest.getHeader("Authorization");
+        String token = httpServletRequest.getHeader(CommonConstant.FBAUTHHEADER);
         ConsoleLog.i(TAG, "Authorization token = " + token);
 
         if (token != null)

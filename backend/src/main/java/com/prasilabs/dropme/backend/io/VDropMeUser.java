@@ -9,9 +9,12 @@ import java.util.List;
 public class VDropMeUser
 {
     private Long id;
+    private String hash;
     private String name;
     private String email;
+    private String picture;
     private int gender;
+    private String loginType;
     private String mobile;
     private boolean isMobileVerified;
     private List<String> roles;
@@ -23,6 +26,14 @@ public class VDropMeUser
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getName() {
@@ -39,6 +50,22 @@ public class VDropMeUser
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getLoginType() {
+        return loginType;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
     }
 
     public int getGender() {

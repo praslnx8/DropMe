@@ -1,13 +1,14 @@
-package com.prasilabs.dropme;
+package com.prasilabs.dropme.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.FrameLayout;
 
+import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.customs.FragmentNavigator;
-import com.prasilabs.dropme.modules.SplashLoginFragment;
+import com.prasilabs.dropme.modules.splashLogin.views.SplashLoginFragment;
 
 import butterknife.BindView;
 
