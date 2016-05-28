@@ -2,6 +2,7 @@ package com.prasilabs.dropme.core;
 
 import android.app.Application;
 import android.content.Context;
+import android.provider.Settings;
 import android.support.multidex.MultiDex;
 
 import com.prasilabs.dropme.BuildConfig;
@@ -36,5 +37,11 @@ public class CoreApp extends Application
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+    }
+
+    public static String getDeviceId()
+    {
+        String android_id = Settings.Secure.getString(CoreApp.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        return android_id;
     }
 }

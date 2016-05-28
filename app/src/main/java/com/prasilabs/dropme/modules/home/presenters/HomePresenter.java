@@ -6,11 +6,11 @@ import android.content.IntentFilter;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.constants.BroadCastConstant;
-import com.prasilabs.dropme.constants.LocationConstant;
 import com.prasilabs.dropme.core.CorePresenter;
-import com.prasilabs.dropme.customs.LocalPreference;
+import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.pojo.MarkerInfo;
+import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,18 +29,16 @@ public class HomePresenter extends CorePresenter
         return new HomePresenter(mapChange);
     }
 
-    private  HomePresenter(MapChange mapChange)
+    private HomePresenter(MapChange mapChange)
     {
         this.mapChange = mapChange;
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
-        registerReciever(intentFilter);
     }
 
     private void listenToMap(LatLng latLng)
     {
-        HomeGeoModelEngine.getInstance().listenToGeoLoc(latLng, new HomeGeoModelEngine.GeoCallBack() {
+        ConsoleLog.i(TAG, "listen to map triggered");
+        HomeGeoModelEngine.getInstance().listenToHomeGeoLoc(latLng, new HomeGeoModelEngine.GeoCallBack()
+        {
             @Override
             public void getMarker(MarkerInfo markerInfo)
             {
@@ -65,17 +63,23 @@ public class HomePresenter extends CorePresenter
 
     private boolean checkAlreadyExist(MarkerInfo markerInfo)
     {
-        boolean isAlreadyExist = false;
-
         for(MarkerInfo markerInfo1 : markerInfoList)
         {
-            if(markerInfo1.getId() == markerInfo.getId() && markerInfo.getUserOrVehicle().equals(markerInfo1.getUserOrVehicle()))
+            if(markerInfo1.getKey().equals(markerInfo.getKey()) && markerInfo.getUserOrVehicle().equals(markerInfo1.getUserOrVehicle()))
             {
-                return isAlreadyExist = true;
+                return true;
             }
         }
 
-        return isAlreadyExist;
+        return false;
+    }
+
+    @Override
+    protected void onCreateCalled()
+    {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
+        registerReciever(intentFilter);
     }
 
     @Override
@@ -83,7 +87,8 @@ public class HomePresenter extends CorePresenter
     {
         if(intent.getAction().equals(BroadCastConstant.LOCATION_REFRESH_CONSTANT))
         {
-            LatLng latLng = LocalPreference.getLocationFromPrefs(context, LocationConstant.CURRENT_LOC_STR);
+            ConsoleLog.i(TAG, "home Presenter location change broadcast recieved");
+            LatLng latLng = DropMeLocatioListener.getLatLng(context);
             if(latLng != null)
             {
                 listenToMap(latLng);

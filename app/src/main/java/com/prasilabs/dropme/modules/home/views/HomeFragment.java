@@ -13,6 +13,9 @@ import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.home.presenters.HomePresenter;
+import com.prasilabs.dropme.pojo.MarkerInfo;
+import com.prasilabs.dropme.services.location.DropMeLocatioListener;
+import com.prasilabs.dropme.utils.MarkerUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -20,10 +23,10 @@ import butterknife.OnClick;
 /**
  * Created by prasi on 27/5/16.
  */
-public class HomeFragment extends CoreFragment<HomePresenter>
+public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.MapChange
 {
     private static final String TAG = HomeFragment.class.getSimpleName();
-    private HomePresenter homePresenter = HomePresenter.newInstance();
+    private HomePresenter homePresenter = HomePresenter.newInstance(this);
     private static HomeFragment homeFragment;
     private MapLoader mapLoader;
 
@@ -65,6 +68,9 @@ public class HomeFragment extends CoreFragment<HomePresenter>
                     ConsoleLog.i(TAG, "map loaded");
                 }
             });
+
+
+            DropMeLocatioListener.getInstance().registerLoc(getContext());
 
         }
 
@@ -118,5 +124,23 @@ public class HomeFragment extends CoreFragment<HomePresenter>
     public void onDestroyView() {
         super.onDestroyView();
         mapView.onDestroy();
+    }
+
+    @Override
+    public void addMarker(MarkerInfo markerInfo)
+    {
+        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), MarkerUtil.getMarkerResId(markerInfo));
+    }
+
+    @Override
+    public void moveMarker(MarkerInfo markerInfo)
+    {
+        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), MarkerUtil.getMarkerResId(markerInfo));
+    }
+
+    @Override
+    public void removeMarker(MarkerInfo markerInfo)
+    {
+        mapLoader.removeMarker(markerInfo.getKey());
     }
 }

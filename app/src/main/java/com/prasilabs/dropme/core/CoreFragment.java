@@ -39,8 +39,7 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
         super.onCreate(savedInstanceState);
 
         corePresenter = setCorePresenter();
-
-        corePresenter.onCreate(context);
+        corePresenter.onCreate();
     }
 
     @Override

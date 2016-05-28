@@ -23,6 +23,12 @@ public class SplashLoginPresenter extends CorePresenter
     }
 
     @Override
+    protected void onCreateCalled()
+    {
+
+    }
+
+    @Override
     protected void broadCastRecieved(Context context, Intent intent)
     {
 

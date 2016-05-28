@@ -18,6 +18,7 @@ import com.prasilabs.dropme.constants.LocationConstant;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 /**
@@ -188,6 +189,8 @@ public class DropMeLocatioListener implements LocationListener
 
     private void informLocation(Context context)
     {
+        HomeGeoModelEngine.getInstance().locationChanged();
+
         Intent locationIntent = new Intent();
         locationIntent.setAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
         LocalBroadcastManager.getInstance(context).sendBroadcast(locationIntent);

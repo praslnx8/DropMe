@@ -11,6 +11,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -46,12 +48,12 @@ public class MapLoader
                 gMap = googleMap;
                 //gMap.setMyLocationEnabled(true);
                 mapLoaderCallBack.mapLoaded();
+
+                if (ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    gMap.setMyLocationEnabled(true);
+                }
             }
         });
-        if (ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            gMap.setMyLocationEnabled(true);
-        }
-
     }
 
     public void moveToLoc(LatLng target)
@@ -87,17 +89,17 @@ public class MapLoader
         }
     }
 
-    public void addMarker(LatLng latLng, boolean isClear)
+    public void addMarker(LatLng latLng, boolean isClear, int resourceId)
     {
-        addMarker(null, latLng, isClear);
+        addMarker(null, latLng, isClear, resourceId);
     }
 
-    public void addMarker(String id, LatLng latLng)
+    public void addMarker(String id, LatLng latLng, int resourceId)
     {
-        addMarker(id, latLng, false);
+        addMarker(id, latLng, false, resourceId);
     }
 
-    public void addMarker(String id, LatLng latLng, boolean isClear)
+    public void addMarker(String id, LatLng latLng, boolean isClear, int resourceId)
     {
         if(latLng != null)
         {
@@ -120,6 +122,11 @@ public class MapLoader
             else
             {
                 MarkerOptions markerOptions = new MarkerOptions();
+                if(resourceId != 0)
+                {
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(resourceId);
+                    markerOptions.icon(icon);
+                }
                 markerOptions.position(latLng);
                 Marker marker = gMap.addMarker(markerOptions);
                 if(id != null)
