@@ -337,7 +337,9 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
             ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
 
-            MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
+            splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
+
+           /* MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
                 @Override
                 public void verify(boolean status, String phone)
                 {
@@ -346,7 +348,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
                     splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
                 }
-            });
+            });*/
 
             Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             mGoogleApiClient.disconnect();

@@ -86,6 +86,28 @@ public class HomeGeoModelEngine
         FireBaseConfig.getGeoFire().setLocation(key, new GeoLocation(latLng.latitude, latLng.longitude));
     }
 
+    public void removeAllPoints()
+    {
+        VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
+        if(vDropMeUser != null)
+        {
+            String key = createGeoPtKey(vDropMeUser);
+            removePoint(key);
+        }
+
+        VVehicle vVehicle = RideManager.getCurentOfferingVehicle();
+        if(vVehicle != null)
+        {
+            String key = createGeoPtKey(vVehicle);
+            removePoint(key);
+        }
+    }
+
+    public void removePoint(String key)
+    {
+        FireBaseConfig.getGeoFire().removeLocation(key);
+    }
+
     public void listenToHomeGeoLoc(LatLng latLng, final GeoCallBack geoCallBack)
     {
         if(latLng != null)

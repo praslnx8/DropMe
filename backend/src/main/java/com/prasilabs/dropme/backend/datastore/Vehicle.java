@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.backend.datastore;
 
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.prasilabs.dropme.backend.datastore.pojo.VNumber;
 
@@ -14,7 +15,7 @@ import java.util.Date;
 @Entity
 public class Vehicle
 {
-    @Index
+    @Id
     private Long id;
     private String name;
     @Index

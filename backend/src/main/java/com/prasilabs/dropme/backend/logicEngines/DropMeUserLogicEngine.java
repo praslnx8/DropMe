@@ -2,12 +2,13 @@ package com.prasilabs.dropme.backend.logicEngines;
 
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
-import com.prasilabs.util.ValidateUtil;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.security.HashGenerator;
+import com.prasilabs.util.DataUtil;
+import com.prasilabs.util.ValidateUtil;
 
 import java.util.Date;
 
@@ -43,6 +44,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
                 dropMeUser.setHash(HashGenerator.md5(String.valueOf(System.currentTimeMillis())));
                 dropMeUser.setCreated(new Date(System.currentTimeMillis()));
+                dropMeUser.setLastLogedIn(new Date(System.currentTimeMillis()));
                 Key<DropMeUser> dropMeUserKey = OfyService.ofy().save().entity(dropMeUser).now();
                 dropMeUser.setId(dropMeUserKey.getId());
 
@@ -53,6 +55,14 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         }
         else
         {
+            DropMeUser dropMeUser = convertToDropMeUSer(input);
+
+            copyDropMeUser(dropMeUser, existingDropMeUser, false);
+            existingDropMeUser.setModified(new Date(System.currentTimeMillis()));
+            existingDropMeUser.setLastLogedIn(new Date(System.currentTimeMillis()));
+            Key<DropMeUser> dropMeUserKey = OfyService.ofy().save().entity(existingDropMeUser).now();
+            dropMeUser.setId(dropMeUserKey.getId());
+
             return convertToVDropMeUser(existingDropMeUser, true);
         }
     }
@@ -116,6 +126,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
             dropMeUser.setLoginType(vDropMeUser.getLoginType());
             dropMeUser.setGender(vDropMeUser.getGender());
             dropMeUser.setMobile(vDropMeUser.getMobile());
+            dropMeUser.setPicture(vDropMeUser.getPicture());
             dropMeUser.setMobileVerified(vDropMeUser.isMobileVerified());
 
             return dropMeUser;
@@ -140,8 +151,52 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         vDropMeUser.setMobile(dropMeUser.getMobile());
         vDropMeUser.setRoles(dropMeUser.getRoles());
         vDropMeUser.setCreated(dropMeUser.getCreated());
+        vDropMeUser.setPicture(dropMeUser.getPicture());
         vDropMeUser.setMobileVerified(dropMeUser.isMobileVerified());
 
         return vDropMeUser;
+    }
+
+    private static void copyDropMeUser(DropMeUser source, DropMeUser dest, boolean isFromDb)
+    {
+        if(isFromDb)
+        {
+            if (source.getId() != null)
+            {
+                dest.setId(source.getId());
+            }
+            if(!DataUtil.isStringEmpty(source.getHash()))
+            {
+                dest.setHash(source.getHash());
+            }
+            if(source.getRoles() != null && source.getRoles().size() > 0)
+            {
+                dest.setRoles(source.getRoles());
+            }
+            if(source.getGender() != 0)
+            {
+                dest.setGender(source.getGender());
+            }
+            if(!DataUtil.isStringEmpty(source.getEmail()))
+            {
+                dest.setEmail(source.getEmail());
+            }
+        }
+        if(!DataUtil.isStringEmpty(source.getName()))
+        {
+            dest.setName(source.getName());
+        }
+        if(!DataUtil.isStringEmpty(source.getLoginType()))
+        {
+            dest.setLoginType(source.getLoginType());
+        }
+        if(!DataUtil.isStringEmpty(source.getPicture()))
+        {
+            dest.setPicture(source.getPicture());
+        }
+        if(!DataUtil.isStringEmpty(source.getMobile()))
+        {
+            dest.setMobile(source.getMobile());
+        }
     }
 }

@@ -173,7 +173,7 @@ public class DropMeLocatioListener implements LocationListener
         }
         else
         {
-
+            ConsoleLog.i(TAG, "Gps is disabled");
         }
     }
 

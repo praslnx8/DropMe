@@ -24,6 +24,7 @@ public class UserManager
         {
             LocalPreference.saveLoginDataInShared(context, UserConstant.HASH_STR, vDropMeUser.getHash());
             LocalPreference.saveLoginDataInShared(context, UserConstant.NAME_STR, vDropMeUser.getName());
+            LocalPreference.saveLoginDataInShared(context, UserConstant.EMAIL_STR, vDropMeUser.getEmail());
             LocalPreference.saveLoginDataInShared(context, UserConstant.LOGIN_TYPE_STR, vDropMeUser.getLoginType());
             LocalPreference.saveLoginDataInShared(context, UserConstant.CREATED_STR, vDropMeUser.getCreated().getValue());
             LocalPreference.saveLoginDataInShared(context, UserConstant.PICTURE_STR, vDropMeUser.getPicture());
@@ -50,6 +51,7 @@ public class UserManager
         String name = LocalPreference.getLoginDataFromShared(context, UserConstant.NAME_STR, null);
         String hash = LocalPreference.getLoginDataFromShared(context, UserConstant.HASH_STR, null);
         String loginType = LocalPreference.getLoginDataFromShared(context, UserConstant.LOGIN_TYPE_STR, null);
+        String email = LocalPreference.getLoginDataFromShared(context, UserConstant.EMAIL_STR, null);
         long created = LocalPreference.getLoginDataFromShared(context, UserConstant.LOGIN_TYPE_STR, 0l);
         DateTime createdDate = null;
         if(created != 0l)
@@ -68,11 +70,12 @@ public class UserManager
         boolean mobileVerified = LocalPreference.getLoginDataFromShared(context, UserConstant.MOBILE_VERIFIED_STR, false);
         List<String> roles = LocalPreference.getSessionStringArrayData(context, UserConstant.ROLES_STR, null);
 
-        if(!TextUtils.isEmpty(hash) && !TextUtils.isEmpty(name) && idL != null && !TextUtils.isEmpty(loginType))
+        if(!TextUtils.isEmpty(hash) && !TextUtils.isEmpty(name) && idL != null && !TextUtils.isEmpty(loginType) && !TextUtils.isEmpty(email))
         {
             vDropMeUser = new VDropMeUser();
             vDropMeUser.setName(name);
             vDropMeUser.setHash(hash);
+            vDropMeUser.setEmail(email);
             vDropMeUser.setLoginType(loginType);
             vDropMeUser.setCreated(createdDate);
             vDropMeUser.setPicture(picture);

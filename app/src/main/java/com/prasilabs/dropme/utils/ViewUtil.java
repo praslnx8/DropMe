@@ -4,10 +4,15 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.customs.CircleTransform;
+import com.prasilabs.dropme.debug.ConsoleLog;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 /**
  * Created by prasi on 26/5/16.
@@ -75,5 +80,31 @@ public class ViewUtil
                 viewGroup.removeView(viewGroup.getChildAt(viewGroup.getChildCount() - 1));
             }
         }
+    }
+
+    public static void renderImage(ImageView view, String url, boolean isCircle)
+    {
+        if(!TextUtils.isEmpty(url))
+        {
+            try
+            {
+                RequestCreator requestCreator = Picasso.with(view.getContext()).load(url).placeholder(R.drawable.ic_file);
+                if(isCircle)
+                {
+                    requestCreator.transform(new CircleTransform());
+                }
+                requestCreator.into(view);
+            }
+            catch (Exception e)
+            {
+                ConsoleLog.e(e);
+            }
+        }
+    }
+
+    public static String formatAsName(String s)
+    {
+        //TODO
+        return s;
     }
 }

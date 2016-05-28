@@ -8,14 +8,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.customs.FragmentNavigator;
+import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.home.views.HomeFragment;
+import com.prasilabs.dropme.utils.ViewUtil;
 
 import butterknife.BindView;
 
@@ -48,6 +55,37 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentNavigator.navigateToFragment(this, HomeFragment.getHomeFragment(), false, containerLayout.getId());
+
+        setNavigationHeaderData(navigationView);
+    }
+
+    private void setNavigationHeaderData(NavigationView navigationView)
+    {
+        View header = navigationView.getHeaderView(0);
+        ImageView userImage = (ImageView) header.findViewById(R.id.user_image);
+        TextView nameText = (TextView) header.findViewById(R.id.name_text);
+        TextView emailText = (TextView) header.findViewById(R.id.email_text);
+
+        VDropMeUser vDropMeUser = UserManager.getDropMeUser(this);
+
+        if(vDropMeUser != null)
+        {
+            ViewUtil.renderImage(userImage, vDropMeUser.getPicture(), true);
+            if(!TextUtils.isEmpty(vDropMeUser.getName()))
+            {
+                nameText.setText(ViewUtil.formatAsName(vDropMeUser.getName()));
+            }
+            if(!TextUtils.isEmpty(vDropMeUser.getEmail()))
+            {
+                emailText.setText(vDropMeUser.getEmail());
+            }
+        }
+        else
+        {
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
@@ -84,7 +122,8 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -98,7 +137,7 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_help) {
 
         }
 
@@ -106,4 +145,6 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

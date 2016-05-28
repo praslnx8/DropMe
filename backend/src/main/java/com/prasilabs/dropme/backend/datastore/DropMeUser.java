@@ -36,6 +36,10 @@ public class DropMeUser
     private List<String> roles;
     @Index
     private Date created;
+    @Index
+    private Date lastLogedIn;
+    @Index
+    private Date modified;
 
     public Long getId() {
         return id;
@@ -123,5 +127,21 @@ public class DropMeUser
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getLastLogedIn() {
+        return lastLogedIn;
+    }
+
+    public void setLastLogedIn(Date lastLogedIn) {
+        this.lastLogedIn = lastLogedIn;
     }
 }
