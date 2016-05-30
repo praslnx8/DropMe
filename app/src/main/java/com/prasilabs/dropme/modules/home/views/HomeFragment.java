@@ -14,7 +14,7 @@ import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.home.presenters.HomePresenter;
 import com.prasilabs.dropme.pojo.MarkerInfo;
-import com.prasilabs.dropme.services.location.DropMeLocatioListener;
+import com.prasilabs.dropme.services.location.DropMeGLocationService;
 import com.prasilabs.dropme.utils.MarkerUtil;
 
 import butterknife.BindView;
@@ -69,9 +69,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
                 }
             });
 
-
-            DropMeLocatioListener.getInstance().registerLoc(getContext());
-
+            DropMeGLocationService.start(getContext());
         }
 
         return getFragmentView();

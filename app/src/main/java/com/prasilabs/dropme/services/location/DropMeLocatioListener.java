@@ -187,7 +187,7 @@ public class DropMeLocatioListener implements LocationListener
         }
     }
 
-    private void informLocation(Context context)
+    public static void informLocation(Context context)
     {
         HomeGeoModelEngine.getInstance().locationChanged();
 

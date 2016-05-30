@@ -32,7 +32,14 @@ public class UserManager
             LocalPreference.saveLoginDataInShared(context, UserConstant.ID_STR, vDropMeUser.getId());
             LocalPreference.saveLoginDataInShared(context, UserConstant.MOBILE_STR, vDropMeUser.getMobile());
             LocalPreference.saveLoginDataInShared(context, UserConstant.MOBILE_VERIFIED_STR, vDropMeUser.getMobileVerified());
-            LocalPreference.saveLoginDataInShared(context, UserConstant.ROLES_STR, Arrays.toString(vDropMeUser.getRoles().toArray()));
+            if(vDropMeUser.getRoles() != null)
+            {
+                LocalPreference.saveLoginDataInShared(context, UserConstant.ROLES_STR, Arrays.toString(vDropMeUser.getRoles().toArray()));
+            }
+            else
+            {
+                LocalPreference.saveLoginDataInShared(context, UserConstant.ROLES_STR, null);
+            }
 
             isSucces = true;
         }

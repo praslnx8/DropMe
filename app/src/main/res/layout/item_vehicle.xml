@@ -35,7 +35,10 @@
         <ImageView
             android:id="@+id/v_type_img"
             android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_height="30dp"
+            android:background="@drawable/v_type_car"/>
+
+
 
 
     </LinearLayout>
