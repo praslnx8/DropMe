@@ -93,7 +93,10 @@ public class DropMeLocatioListener implements LocationListener
             LocalPreference.saveLoginDataInShared(context,LocationConstant.CURRENT_LOC_TIME_STR, System.currentTimeMillis());
             informLocation(context);
 
+            stopLocationUpdates(context);
         }
+
+
     }
 
     @Override
@@ -118,7 +121,10 @@ public class DropMeLocatioListener implements LocationListener
 
             LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
             informLocation(context);
+
+            stopLocationUpdates(context);
         }
+
     }
 
     public void stopLocationUpdates(Context context)

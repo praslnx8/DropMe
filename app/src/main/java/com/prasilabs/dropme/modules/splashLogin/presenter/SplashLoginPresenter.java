@@ -88,7 +88,7 @@ public class SplashLoginPresenter extends CorePresenter
             {
                 isValid = false;
             }
-            else if(vDropMeUser.getGender() == 0)
+            else if(vDropMeUser.getGender() == null)
             {
                 isValid = false;
             }

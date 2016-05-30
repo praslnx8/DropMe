@@ -41,7 +41,6 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
             if (validateDropMeUser(dropMeUser))
             {
-
                 dropMeUser.setHash(HashGenerator.md5(String.valueOf(System.currentTimeMillis())));
                 dropMeUser.setCreated(new Date(System.currentTimeMillis()));
                 dropMeUser.setLastLogedIn(new Date(System.currentTimeMillis()));
@@ -105,7 +104,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         {
             isValid= true;
 
-            if (ValidateUtil.validateEmail(dropMeUser.getEmail()) && !ValidateUtil.isStringEmpty(dropMeUser.getName()) && dropMeUser.getGender() != 0)
+            if (ValidateUtil.validateEmail(dropMeUser.getEmail()) && !ValidateUtil.isStringEmpty(dropMeUser.getName()) && dropMeUser.getGender() != null)
             {
                 isValid = true;
             }
@@ -120,7 +119,10 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         {
             DropMeUser dropMeUser = new DropMeUser();
 
-            dropMeUser.setId(vDropMeUser.getId());
+            if(vDropMeUser.getId() != 0)
+            {
+                dropMeUser.setId(vDropMeUser.getId());
+            }
             dropMeUser.setName(vDropMeUser.getName());
             dropMeUser.setEmail(vDropMeUser.getEmail());
             dropMeUser.setLoginType(vDropMeUser.getLoginType());
@@ -152,6 +154,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         vDropMeUser.setRoles(dropMeUser.getRoles());
         vDropMeUser.setCreated(dropMeUser.getCreated());
         vDropMeUser.setPicture(dropMeUser.getPicture());
+        vDropMeUser.setAge(dropMeUser.getAge());
         vDropMeUser.setMobileVerified(dropMeUser.isMobileVerified());
 
         return vDropMeUser;
@@ -173,7 +176,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
             {
                 dest.setRoles(source.getRoles());
             }
-            if(source.getGender() != 0)
+            if(source.getGender() != null)
             {
                 dest.setGender(source.getGender());
             }
@@ -197,6 +200,14 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         if(!DataUtil.isStringEmpty(source.getMobile()))
         {
             dest.setMobile(source.getMobile());
+        }
+        if(source.getAge() != 0)
+        {
+            dest.setAge(source.getAge());
+        }
+        if(!DataUtil.isStringEmpty(source.getLocation()))
+        {
+            dest.setLoginType(source.getLocation());
         }
     }
 }

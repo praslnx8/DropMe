@@ -39,8 +39,10 @@ public class DropMeGLocationService extends IntentService {
         super(TAG);
     }
 
-    public static void start(Context context) {
-        if (!isRunning) {
+    public static void start(Context context)
+    {
+        if (!isRunning)
+        {
             Intent intent = new Intent(context, DropMeGLocationService.class);
             intent.setAction(DropMeGLocationService.ACTION_REQUEST_LOCATION);
             context.startService(intent);
@@ -48,7 +50,8 @@ public class DropMeGLocationService extends IntentService {
     }
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
         ConsoleLog.i(TAG, "Requesting location started");
         DropMeLocatioListener.getInstance().registerLoc(this);

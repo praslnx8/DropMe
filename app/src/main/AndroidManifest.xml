@@ -48,8 +48,8 @@
 
         <!-- Meta data -->
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCluFamJzItIalBT1AN60kiz88Ib_xuBNE" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDCxsGHyXBcUAx30qw9wLsYO1xhQ4VbvnQ"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -66,8 +66,11 @@
             android:exported="true" />
         <service
             android:name=".services.location.DropMeGLocationService"
-            android:exported="false"
-            android:enabled="true"></service>
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity android:name=".activities.RideCreateActivity" />
+        <activity android:name=".activities.RideSelectActivity"></activity>
     </application>
 
 </manifest>

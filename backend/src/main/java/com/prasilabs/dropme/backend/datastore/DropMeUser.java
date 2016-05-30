@@ -25,11 +25,14 @@ public class DropMeUser
     private String picture;
     private String name;
     @Index
-    private int gender;
+    private String gender;
     @Index
     private String loginType;
     @Index
     private String mobile;
+    @Index
+    private int age;
+    private String location;
     @Index
     private boolean isMobileVerified;
     @Index
@@ -73,7 +76,7 @@ public class DropMeUser
         this.name = name;
     }
 
-    public int getGender() {
+    public String getGender() {
         return gender;
     }
 
@@ -85,7 +88,7 @@ public class DropMeUser
         this.picture = picture;
     }
 
-    public void setGender(int gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -143,5 +146,21 @@ public class DropMeUser
 
     public void setLastLogedIn(Date lastLogedIn) {
         this.lastLogedIn = lastLogedIn;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

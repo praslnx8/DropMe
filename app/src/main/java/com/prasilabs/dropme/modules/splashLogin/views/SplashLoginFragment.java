@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.prasilabs.constants.CommonConstant;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.HomeActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
@@ -45,6 +45,7 @@ import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.mobileVerification.MobileVerificationManager;
 import com.prasilabs.dropme.modules.splashLogin.presenter.SplashLoginPresenter;
 import com.prasilabs.dropme.utils.ViewUtil;
+import com.prasilabs.enums.Gender;
 import com.prasilabs.enums.LoginType;
 
 import org.json.JSONException;
@@ -79,6 +80,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     LoginButton fbButton;
     @BindView(R.id.login_btn_layout)
     FrameLayout logiBtnLayout;
+    @BindView(R.id.intro_pager)
+    ViewPager introPager;
 
     public static SplashLoginFragment getInstance()
     {
@@ -118,6 +121,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
             loginLayout.setVisibility(View.GONE);
             splashLayout.setVisibility(View.VISIBLE);
+
+            introPager.setAdapter(IntroPagerAdapter.getInstance(getCoreActivity()));
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -228,7 +233,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     vDropMeUser.setName(fbFirstName + " " + fbLastName);
                     vDropMeUser.setPicture(pictureUrl);
                     vDropMeUser.setEmail(fbEmail);
-                    vDropMeUser.setGender(0); //TODO
+                    //vDropMeUser.setGender(0); //TODO
                     vDropMeUser.setLoginType(LoginType.FaceBook.name());
 
                     LocalPreference.saveLoginDataInShared(getContext(), UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
@@ -309,14 +314,14 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             String firstName = currentPerson.getName().getGivenName();
             String lastName = currentPerson.getName().getFamilyName();
             int gender = currentPerson.getGender(); //1 for female, 0 for male. 2 for others
-            int gndr = 0;
+            String gndr = null;
             if (gender == 0)
             {
-                gndr = CommonConstant.MALE;
+                gndr = Gender.Male.name();
             }
             else if (gender == 1)
             {
-                gndr = CommonConstant.FEMALE;
+                gndr = Gender.Female.name();
             }
 
             String picture = currentPerson.getImage().getUrl();

@@ -59,17 +59,17 @@ public class UserManager
         String hash = LocalPreference.getLoginDataFromShared(context, UserConstant.HASH_STR, null);
         String loginType = LocalPreference.getLoginDataFromShared(context, UserConstant.LOGIN_TYPE_STR, null);
         String email = LocalPreference.getLoginDataFromShared(context, UserConstant.EMAIL_STR, null);
-        long created = LocalPreference.getLoginDataFromShared(context, UserConstant.LOGIN_TYPE_STR, 0l);
+        long created = LocalPreference.getLoginDataFromShared(context, UserConstant.LOGIN_TYPE_STR, 0L);
         DateTime createdDate = null;
-        if(created != 0l)
+        if(created != 0L)
         {
             createdDate = new DateTime(created);
         }
         String picture = LocalPreference.getLoginDataFromShared(context, UserConstant.PICTURE_STR, null);
-        int gender = LocalPreference.getLoginDataFromShared(context, UserConstant.GENDER_STR, 0);
-        long id = LocalPreference.getLoginDataFromShared(context, UserConstant.ID_STR, 0l);
+        String gender = LocalPreference.getLoginDataFromShared(context, UserConstant.GENDER_STR, null);
+        long id = LocalPreference.getLoginDataFromShared(context, UserConstant.ID_STR, 0L);
         Long idL = null;
-        if(id != 0l)
+        if(id != 0L)
         {
             idL = id;
         }

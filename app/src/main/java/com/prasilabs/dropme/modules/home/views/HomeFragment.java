@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.activities.RideCreateActivity;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -85,6 +86,8 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     protected void offerRide()
     {
         ConsoleLog.i(TAG, "offer ride clicked");
+        RideCreateActivity.startRideCreateActivity(getContext());
+
     }
 
     @OnClick(R.id.book_ride_btn)
