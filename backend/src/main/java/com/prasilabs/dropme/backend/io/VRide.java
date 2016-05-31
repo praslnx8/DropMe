@@ -1,54 +1,33 @@
-package com.prasilabs.dropme.backend.datastore;
+package com.prasilabs.dropme.backend.io;
 
 import com.google.appengine.api.datastore.GeoPt;
-import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Index;
 
 import java.util.Date;
 
 /**
- * Created by prasi on 30/5/16.
+ * Created by prasi on 31/5/16.
  */
-@Entity
-public class Ride
+public class VRide
 {
-    public static final String USER_ID_STR = "userId";
-    public static final String DEVICE_ID_STR = "deviceId";
-    public static final String EXPIRY_DATE_STR = "expiryDate";
-
-    @Id
-    private Long id;
-    //Primary ones
-    @Index
+    private long id;
     private long userId;
-    @Index
     private String deviceId;
-
-    @Index
     private long vehicleId;
     private GeoPt sourceLoc;
-    @Index
     private GeoPt destLoc;
     private GeoPt currentLoc;
     private boolean isExpired;
     private boolean isClosed;
     private int farePerKm;
-
     private Date startDate;
-    @Index
     private Date endDate;
-    @Index
     private Date expiryDate;
 
-    private Date created;
-    private Date modified;
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -138,22 +117,6 @@ public class Ride
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
     }
 
     public int getFarePerKm() {

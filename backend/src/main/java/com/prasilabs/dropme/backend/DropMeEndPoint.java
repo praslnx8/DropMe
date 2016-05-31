@@ -18,8 +18,10 @@ import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
+import com.prasilabs.dropme.backend.io.VRide;
 import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
+import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
 import com.prasilabs.dropme.backend.utils.AdminUtil;
@@ -102,7 +104,27 @@ public class DropMeEndPoint
         }
         else
         {
-            throw new OAuthRequestException("User is not found. User needs to logge in");
+            throw new OAuthRequestException("User is not found. User needs to logged in");
+        }
+
+        return apiResponse;
+    }
+
+    @ApiMethod(name = "createRide")
+    public ApiResponse createRide(@Named("hash") String hash, VRide vRide) throws OAuthRequestException
+    {
+        ApiResponse apiResponse = new ApiResponse();
+
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+
+        if(dropMeUser != null)
+        {
+            vRide.setUserId(dropMeUser.getId());
+            apiResponse = RideLogicEngine.getInstance().createRide(vRide);;
+        }
+        else
+        {
+            throw new OAuthRequestException("User is not found. User needs to logged in");
         }
 
         return apiResponse;
