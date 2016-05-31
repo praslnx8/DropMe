@@ -39,7 +39,10 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
         super.onCreate(savedInstanceState);
 
         corePresenter = setCorePresenter();
-        corePresenter.onCreate();
+        if(corePresenter != null)
+        {
+            corePresenter.onCreate();
+        }
     }
 
     @Override
@@ -47,7 +50,10 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
     {
         super.onDestroy();
 
-        corePresenter.onDestroy();
+        if(corePresenter != null)
+        {
+            corePresenter.onDestroy();
+        }
     }
 
     protected boolean onDialogBackPressed()

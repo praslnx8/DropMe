@@ -5,6 +5,7 @@ import com.googlecode.objectify.Key;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.db.OfyService;
+import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.security.HashGenerator;
 import com.prasilabs.util.DataUtil;
@@ -17,7 +18,8 @@ import java.util.Date;
  */
 public class DropMeUserLogicEngine extends CoreLogicEngine
 {
-   private static DropMeUserLogicEngine instance;
+    private static final String TAG = DropMeUserLogicEngine.class.getSimpleName();
+    private static DropMeUserLogicEngine instance;
 
     public static DropMeUserLogicEngine getInstance()
     {
@@ -91,6 +93,8 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
     public DropMeUser getDropMeUserByHash(String hash)
     {
+        ConsoleLog.i(TAG, "user hash is :" + hash);
+
         DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.HASH_STR, hash).first().now();
 
         return dropMeUser;
@@ -168,7 +172,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
             {
                 dest.setId(source.getId());
             }
-            if(!DataUtil.isStringEmpty(source.getHash()))
+            if(!DataUtil.isEmpty(source.getHash()))
             {
                 dest.setHash(source.getHash());
             }
@@ -180,24 +184,24 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
             {
                 dest.setGender(source.getGender());
             }
-            if(!DataUtil.isStringEmpty(source.getEmail()))
+            if(!DataUtil.isEmpty(source.getEmail()))
             {
                 dest.setEmail(source.getEmail());
             }
         }
-        if(!DataUtil.isStringEmpty(source.getName()))
+        if(!DataUtil.isEmpty(source.getName()))
         {
             dest.setName(source.getName());
         }
-        if(!DataUtil.isStringEmpty(source.getLoginType()))
+        if(!DataUtil.isEmpty(source.getLoginType()))
         {
             dest.setLoginType(source.getLoginType());
         }
-        if(!DataUtil.isStringEmpty(source.getPicture()))
+        if(!DataUtil.isEmpty(source.getPicture()))
         {
             dest.setPicture(source.getPicture());
         }
-        if(!DataUtil.isStringEmpty(source.getMobile()))
+        if(!DataUtil.isEmpty(source.getMobile()))
         {
             dest.setMobile(source.getMobile());
         }
@@ -205,7 +209,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         {
             dest.setAge(source.getAge());
         }
-        if(!DataUtil.isStringEmpty(source.getLocation()))
+        if(!DataUtil.isEmpty(source.getLocation()))
         {
             dest.setLoginType(source.getLocation());
         }

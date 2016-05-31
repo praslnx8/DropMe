@@ -11,4 +11,6 @@ public class AuthConstants
     public static final String ANDROID_AUDIENCE = WEB_CLIENT_ID;
 
     public static final String AUDIENCE_PRE_TEXT = "server:client_id:";
+
+    public static final String FIREBASE_URL = "https://prasilabs-dropme.firebaseio.com";
 }

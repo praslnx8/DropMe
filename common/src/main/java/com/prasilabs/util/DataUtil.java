@@ -5,16 +5,31 @@ package com.prasilabs.util;
  */
 public class DataUtil
 {
-    public static boolean isStringEmpty(String s)
+    public static boolean isEmpty(String s)
     {
         return s == null || s.length() == 0;
+    }
+
+    public static boolean isEmpty(Long s)
+    {
+        return s == null || s == 0L;
+    }
+
+    public static boolean isEmpty(Boolean s)
+    {
+        return s == null || !s;
+    }
+
+    public static boolean isEmpty(Double s)
+    {
+        return s == null || s == 0 || s == 0.0;
     }
 
     public static int stringToInt(String s)
     {
         try
         {
-            if(!isStringEmpty(s))
+            if(!isEmpty(s))
             {
                 return Integer.parseInt(s);
             }
@@ -28,7 +43,7 @@ public class DataUtil
     {
         try
         {
-            if(!isStringEmpty(s))
+            if(!isEmpty(s))
             {
                 return Double.parseDouble(s);
             }
@@ -42,7 +57,7 @@ public class DataUtil
     {
         try
         {
-            if(!isStringEmpty(s))
+            if(!isEmpty(s))
             {
                 return Long.parseLong(s);
             }

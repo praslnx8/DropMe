@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.api.client.util.DateTime;
 import com.prasilabs.dropme.debug.ConsoleLog;
 
 import java.util.ArrayList;
@@ -19,6 +20,14 @@ public class LocalPreference
     private static final String SESSION_DATA = "session_data";
     private static final String PERSISTENT_DATA = "persistent_data";
 
+    public static void saveLoginDateDataInShared(Context context, String field, DateTime values)
+    {
+        if(values != null)
+        {
+            saveLoginDataInShared(context, field, values.getValue());
+        }
+    }
+
     public static void saveLoginDataInShared(Context context, String field, String values)
     {
         try
@@ -32,6 +41,17 @@ public class LocalPreference
         {
             ConsoleLog.e(e);
         }
+    }
+
+    public static DateTime getLoginDateDataFromShared(Context context, String field)
+    {
+        long dateTimeL = getLoginDataFromShared(context, field, 0L);
+        if(dateTimeL != 0L)
+        {
+            return new DateTime(dateTimeL);
+        }
+
+        return null;
     }
 
     public static String getLoginDataFromShared(Context context, String field, String defaultValue)
@@ -265,7 +285,7 @@ public class LocalPreference
         return arrayList;
     }
 
-    public static void ClearAppSharedPreferences(Context context)
+    public static void clearAppSharedPreferences(Context context)
     {
         SharedPreferences lp = context.getSharedPreferences(PERSISTENT_DATA, Context.MODE_PRIVATE);
         lp.edit().clear().apply();

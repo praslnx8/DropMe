@@ -6,21 +6,23 @@ import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.util.ArrayMap;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
-import com.prasilabs.dropme.backend.dropMeApi.model.VVehicle;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.enums.MarkerType;
-import com.prasilabs.dropme.enums.RideStatus;
 import com.prasilabs.dropme.enums.UserOrVehicle;
 import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.firebase.FireBaseConfig;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
-import com.prasilabs.enums.VehicleType;
+import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.util.DataUtil;
+import com.prasilabs.util.GeoFireKeyGenerator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +32,7 @@ public class HomeGeoModelEngine
 {
     private static final double RADIUS_IN_KM = 0.5;
     private static final String GeoUserStr = "user";
-    private static final String GeoVehStr = "veh";
+    private static final String GeoRideStr = "veh";
     private static final String splitter = "-";
 
     private static final String TAG = HomeGeoModelEngine.class.getSimpleName();
@@ -64,25 +66,34 @@ public class HomeGeoModelEngine
     public void locationChanged()
     {
         ConsoleLog.i(TAG, "location changed");
-        if(RideManager.rideStatus == RideStatus.User || RideManager.rideStatus == RideStatus.Riding)
+        RideInput rideInput = RideManager.getRideLite(CoreApp.getAppContext());
+        if(rideInput == null)
         {
             LatLng latLng = DropMeLocatioListener.getLatLng(CoreApp.getAppContext());
             addMyGeoPt(latLng);
         }
-        else if(RideManager.rideStatus == RideStatus.Offering)
+        else
         {
             LatLng latLng = DropMeLocatioListener.getLatLng(CoreApp.getAppContext());
-            VVehicle vVehicle = RideManager.getCurentOfferingVehicle();
-            if(vVehicle != null)
+            RideInput rideLite = RideManager.getRideLite(CoreApp.getAppContext());
+            if(rideLite != null)
             {
-                addGeopt(vVehicle, latLng);
+                addGeopt(rideLite, latLng);
             }
         }
     }
 
-    private void addGeopt(VVehicle vVehicle, LatLng latLng)
+    public void addRidePoint(RideInput rideInput)
     {
-        String key = createGeoPtKey(vVehicle);
+        if(rideInput != null)
+        {
+            addGeopt(rideInput, LocationUtils.convertToLatLng(rideInput.getCurrentLoc()));
+        }
+    }
+
+    private void addGeopt(RideInput rideLite, LatLng latLng)
+    {
+        String key = createGeoPtKey(rideLite);
         FireBaseConfig.getGeoFire().setLocation(key, new GeoLocation(latLng.latitude, latLng.longitude));
     }
 
@@ -95,12 +106,31 @@ public class HomeGeoModelEngine
             removePoint(key);
         }
 
-        VVehicle vVehicle = RideManager.getCurentOfferingVehicle();
-        if(vVehicle != null)
+        RideInput rideLite = RideManager.getRideLite(CoreApp.getAppContext());
+        if(rideLite != null)
         {
-            String key = createGeoPtKey(vVehicle);
+            String key = createGeoPtKey(rideLite);
             removePoint(key);
         }
+    }
+
+    public List<Long> getAllRides()
+    {
+        List<Long> rideList = new ArrayList<>();
+        for(Map.Entry<String, MarkerInfo> entry : geoMarkerMap.entrySet())
+        {
+            MarkerInfo markerInfo = entry.getValue();
+            if(markerInfo.getUserOrVehicle().equals(UserOrVehicle.Vehicle.name()))
+            {
+                long id = getIdFromGeoKey(markerInfo.getKey());
+                if(id != 0)
+                {
+                    rideList.add(id);
+                }
+            }
+        }
+
+        return rideList;
     }
 
     public void removePoint(String key)
@@ -145,27 +175,10 @@ public class HomeGeoModelEngine
                                         geoCallBack.getMarker(markerInfo);
                                     }
                                 }
-                            } else if (key.contains(GeoVehStr)) {
-                                VehicleModelEngine.getInstance().getVehicleDetail(id, new VehicleModelEngine.VehicleGetCallBack() {
-                                    @Override
-                                    public void getVehicle(VVehicle vVehicle) {
-                                        MarkerInfo markerInfo = new MarkerInfo();
-                                        markerInfo.setKey(key);
-                                        markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
-                                        if (vVehicle.getType().equals(VehicleType.Car.name())) {
-                                            markerInfo.setMarkerType(MarkerType.Car.name());
-                                        } else if (vVehicle.getType().equals(VehicleType.Bike.name())) {
-                                            markerInfo.setMarkerType(MarkerType.Bike.name());
-                                        }
-                                        markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
+                            }
+                            else if (key.contains(GeoRideStr))
+                            {
 
-                                        geoMarkerMap.put(key, markerInfo);
-
-                                        if (geoCallBack != null) {
-                                            geoCallBack.getMarker(markerInfo);
-                                        }
-                                    }
-                                });
                             }
                         }
                     }
@@ -231,20 +244,28 @@ public class HomeGeoModelEngine
         return GeoUserStr + splitter + CoreApp.getDeviceId() + splitter + vDropMeUser.getId();
     }
 
-    private static String createGeoPtKey(VVehicle vVehicle)
+    private static String createGeoPtKey(RideInput rideLite)
     {
-        return GeoVehStr + splitter + CoreApp.getDeviceId() + splitter + vVehicle.getId();
+        return GeoFireKeyGenerator.generateRideKey(rideLite.getId());
     }
 
     private static long getIdFromGeoKey(String key)
     {
         String sid = null;
-        String[] splittedKey = key.split("$");
-        if(splittedKey.length == 3)
+        String[] splittedKey = key.split(splitter);
+        if(splittedKey.length > 0)
         {
-            sid = splittedKey[2];
-        }
+            String parentKey = splittedKey[0];
 
+            if(parentKey.equals(GeoUserStr) && splittedKey.length > 2)
+            {
+                sid = splittedKey[2];
+            }
+            else if(parentKey.equals(GeoRideStr) && splittedKey.length > 1)
+            {
+                sid = splittedKey[1];
+            }
+        }
 
         long id = DataUtil.stringToLong(sid);
 

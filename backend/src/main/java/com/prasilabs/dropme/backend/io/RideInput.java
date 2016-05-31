@@ -7,21 +7,21 @@ import java.util.Date;
 /**
  * Created by prasi on 31/5/16.
  */
-public class VRide
+public class RideInput
 {
     private long id;
     private long userId;
     private String deviceId;
     private long vehicleId;
     private GeoPt sourceLoc;
+    private String destLocName;
     private GeoPt destLoc;
     private GeoPt currentLoc;
-    private boolean isExpired;
     private boolean isClosed;
     private int farePerKm;
-    private Date startDate;
-    private Date endDate;
     private Date expiryDate;
+    private Date startDate;
+    private Date closedDate;
 
     public long getId() {
         return id;
@@ -63,6 +63,14 @@ public class VRide
         this.sourceLoc = sourceLoc;
     }
 
+    public String getDestLocName() {
+        return destLocName;
+    }
+
+    public void setDestLocName(String destLocName) {
+        this.destLocName = destLocName;
+    }
+
     public GeoPt getDestLoc() {
         return destLoc;
     }
@@ -79,20 +87,20 @@ public class VRide
         this.currentLoc = currentLoc;
     }
 
-    public boolean isExpired() {
-        return isExpired;
-    }
-
-    public void setExpired(boolean expired) {
-        isExpired = expired;
-    }
-
     public boolean isClosed() {
         return isClosed;
     }
 
     public void setClosed(boolean closed) {
         isClosed = closed;
+    }
+
+    public int getFarePerKm() {
+        return farePerKm;
+    }
+
+    public void setFarePerKm(int farePerKm) {
+        this.farePerKm = farePerKm;
     }
 
     public Date getStartDate() {
@@ -103,27 +111,19 @@ public class VRide
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getClosedDate() {
+        return closedDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
+    public void setClosedDate(Date closedDate) {
+        this.closedDate = closedDate;
     }
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 
-    public int getFarePerKm() {
-        return farePerKm;
-    }
-
-    public void setFarePerKm(int farePerKm) {
-        this.farePerKm = farePerKm;
+    public Date getExpiryDate() {
+        return expiryDate;
     }
 }

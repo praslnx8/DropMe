@@ -28,6 +28,9 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     compile 'org.json:json:20140107'
     compile 'com.googlecode.objectify:objectify:5.1.9'
+    compile 'com.firebase:geofire:1.1.0+'
+    compile 'com.sendgrid:sendgrid-java:2.2.1'
+
 
     compile project(path: ':common')
 }

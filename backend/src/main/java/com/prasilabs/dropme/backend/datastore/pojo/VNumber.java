@@ -48,7 +48,7 @@ public class VNumber
     {
         boolean isValid = true;
 
-        if(DataUtil.isStringEmpty(stateName) || stateName.length() > 2)
+        if(DataUtil.isEmpty(stateName) || stateName.length() > 2)
         {
             isValid = false;
         }
@@ -56,7 +56,7 @@ public class VNumber
         {
             isValid = false;
         }
-        else if(DataUtil.isStringEmpty(areaCode))
+        else if(DataUtil.isEmpty(areaCode))
         {
             isValid = false;
         }

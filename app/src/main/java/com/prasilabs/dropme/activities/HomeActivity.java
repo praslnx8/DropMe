@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreActivity;
+import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.customs.FragmentNavigator;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.home.views.HomeFragment;
@@ -57,6 +58,11 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         FragmentNavigator.navigateToFragment(this, HomeFragment.getHomeFragment(), false, containerLayout.getId());
 
         setNavigationHeaderData(navigationView);
+    }
+
+    @Override
+    protected CorePresenter setCorePresenter() {
+        return null;
     }
 
     private void setNavigationHeaderData(NavigationView navigationView)

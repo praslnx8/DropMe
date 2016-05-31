@@ -63,7 +63,7 @@ public class AdminUtil
         boolean isAdmin = false;
 
         DropMeUser dropMeUser = null;
-        if(!DataUtil.isStringEmpty(hash))
+        if(!DataUtil.isEmpty(hash))
         {
             dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
         }

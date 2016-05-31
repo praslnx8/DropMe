@@ -16,6 +16,7 @@ public class Ride
     public static final String USER_ID_STR = "userId";
     public static final String DEVICE_ID_STR = "deviceId";
     public static final String EXPIRY_DATE_STR = "expiryDate";
+    public static final String IS_CLOSED_STR = "isClosed";
 
     @Id
     private Long id;
@@ -25,19 +26,18 @@ public class Ride
     @Index
     private String deviceId;
 
-    @Index
     private long vehicleId;
     private GeoPt sourceLoc;
+    private String destLocName;
     @Index
     private GeoPt destLoc;
     private GeoPt currentLoc;
-    private boolean isExpired;
+    @Index
     private boolean isClosed;
     private int farePerKm;
-
     private Date startDate;
     @Index
-    private Date endDate;
+    private Date closedDate;
     @Index
     private Date expiryDate;
 
@@ -100,14 +100,6 @@ public class Ride
         this.currentLoc = currentLoc;
     }
 
-    public boolean isExpired() {
-        return isExpired;
-    }
-
-    public void setExpired(boolean expired) {
-        isExpired = expired;
-    }
-
     public boolean isClosed() {
         return isClosed;
     }
@@ -124,12 +116,12 @@ public class Ride
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getClosedDate() {
+        return closedDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setClosedDate(Date closedDate) {
+        this.closedDate = closedDate;
     }
 
     public Date getExpiryDate() {
@@ -162,5 +154,13 @@ public class Ride
 
     public void setFarePerKm(int farePerKm) {
         this.farePerKm = farePerKm;
+    }
+
+    public String getDestLocName() {
+        return destLocName;
+    }
+
+    public void setDestLocName(String destLocName) {
+        this.destLocName = destLocName;
     }
 }

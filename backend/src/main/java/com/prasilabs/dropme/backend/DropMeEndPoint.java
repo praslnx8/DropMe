@@ -15,16 +15,22 @@ import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
+import com.prasilabs.dropme.backend.datastore.Vehicle;
+import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
+import com.prasilabs.dropme.backend.io.RideDetail;
+import com.prasilabs.dropme.backend.io.RideInput;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
-import com.prasilabs.dropme.backend.io.VRide;
 import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
 import com.prasilabs.dropme.backend.utils.AdminUtil;
+import com.prasilabs.enums.VehicleType;
+
+import java.util.List;
 
 /** An endpoint class we are exposing */
 @Api(
@@ -111,22 +117,84 @@ public class DropMeEndPoint
     }
 
     @ApiMethod(name = "createRide")
-    public ApiResponse createRide(@Named("hash") String hash, VRide vRide) throws OAuthRequestException
+    public RideInput createRide(@Named("hash") String hash, RideInput rideInput) throws OAuthRequestException
     {
-        ApiResponse apiResponse = new ApiResponse();
-
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
 
         if(dropMeUser != null)
         {
-            vRide.setUserId(dropMeUser.getId());
-            apiResponse = RideLogicEngine.getInstance().createRide(vRide);;
+            rideInput.setUserId(dropMeUser.getId());
+            return RideLogicEngine.getInstance().createRide(rideInput);
         }
         else
         {
             throw new OAuthRequestException("User is not found. User needs to logged in");
         }
+    }
 
-        return apiResponse;
+    @ApiMethod(name = "getCurrentRide")
+    public RideInput getCurrentRide(@Named("hash") String hash, @Named("deviceId") String deviceId) throws OAuthRequestException
+    {
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+
+        if(dropMeUser != null)
+        {
+            return RideLogicEngine.getInstance().getCurrentRide(dropMeUser, deviceId);
+        }
+        else
+        {
+            throw new OAuthRequestException("User is not found. User needs to logged in");
+        }
+    }
+
+    @ApiMethod(name = "cancelRide")
+    public ApiResponse cancelRide(@Named("hash") String hash, @Named("rideId") long rideId) throws OAuthRequestException
+    {
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+
+        if(dropMeUser != null)
+        {
+            return RideLogicEngine.getInstance().cancelRide(dropMeUser, rideId);
+        }
+        else
+        {
+            throw new OAuthRequestException("User is not found. User needs to logged in");
+        }
+    }
+
+    @ApiMethod(name = "getRideDetailList")
+    public List<RideDetail> getRideDetailList(@Named("hash") String hash, @Named("ids") List<Long> ids) throws OAuthRequestException
+    {
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+
+        if(dropMeUser != null)
+        {
+            return RideLogicEngine.getInstance().getRideDetailList(ids);
+        }
+        else
+        {
+            throw new OAuthRequestException("User is not found. User needs to logged in");
+        }
+    }
+
+    @ApiMethod(name = "test")
+    public void test(@Named("password") String password)
+    {
+        if(password.equals("prasi123"))
+        {
+            Vehicle vehicle = new Vehicle();
+            vehicle.setName("DEFAULT CAR");
+            vehicle.setType(VehicleType.Car.name());
+
+            OfyService.ofy().save().entity(vehicle).now();
+
+
+            Vehicle bike = new Vehicle();
+            bike.setName("DEFAULT CAR");
+            bike.setType(VehicleType.Bike.name());
+
+            OfyService.ofy().save().entity(bike).now();
+
+        }
     }
 }

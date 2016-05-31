@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/CronJobServlet</url>
+        <description>Cron Job that runs at every night 12:00 GMT .</description>
+        <schedule>every day 00:00</schedule>
+    </cron>
+    <cron>
+        <description>My Weekly Backup</description>
+        <url>/_ah/datastore_admin/backup.create?name=BackupToCloud&amp;kind=LogTitle&amp;kind=EventLog&amp;filesystem=gs&amp;gs_bucket_name=findspace-backups</url>
+        <schedule>every sunday 00:00</schedule>
+        <target>ah-builtin-python-bundle</target>
+    </cron>  <!--For production-->
+</cronentries>

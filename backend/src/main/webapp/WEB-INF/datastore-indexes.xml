@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes
+    autoGenerate="true">
+    <!--Check duplicate Ride-->
+    <datastore-index kind="Ride" ancestor="false" source="manual">
+        <property name="deviceId" direction="asc"/>
+        <property name="userId" direction="asc"/>
+        <property name="expiryDate" direction="asc"/>
+        <property name="isClosed" direction="asc"/>
+    </datastore-index>
+</datastore-indexes>

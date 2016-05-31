@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
+import com.prasilabs.dropme.modelengines.RideModelEngine;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 
@@ -44,19 +47,28 @@ public class HomePresenter extends CorePresenter
             {
                 if(checkAlreadyExist(markerInfo))
                 {
-                    mapChange.moveMarker(markerInfo);
+                    if(mapChange != null)
+                    {
+                        mapChange.moveMarker(markerInfo);
+                    }
                 }
                 else
                 {
                     markerInfoList.add(markerInfo);
-                    mapChange.addMarker(markerInfo);
+                    if(mapChange != null)
+                    {
+                        mapChange.addMarker(markerInfo);
+                    }
                 }
             }
 
             @Override
             public void removeMarker(MarkerInfo markerInfo)
             {
-                mapChange.removeMarker(markerInfo);
+                if(mapChange != null)
+                {
+                    mapChange.removeMarker(markerInfo);
+                }
             }
         });
     }
@@ -74,11 +86,22 @@ public class HomePresenter extends CorePresenter
         return false;
     }
 
+    public void getCurrentRide()
+    {
+        RideModelEngine.getInstance().getCurrentRide();
+    }
+
+    public void cancelRide(CancelRideCallBack cancelRideCallBack)
+    {
+        //TODO
+    }
+
     @Override
     protected void onCreateCalled()
     {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
+        intentFilter.addAction(BroadCastConstant.RIDE_REFRESH_INTENT);
         registerReciever(intentFilter);
     }
 
@@ -93,9 +116,30 @@ public class HomePresenter extends CorePresenter
             {
                 listenToMap(latLng);
             }
+            RideInput rideInput = RideManager.getRideLite(context);
+
+            if(mapChange != null)
+            {
+                mapChange.addSourceAndDestination(rideInput);
+            }
+        }
+        else if(intent.getAction().equals(BroadCastConstant.RIDE_REFRESH_INTENT))
+        {
+            RideInput rideInput = RideManager.getRideLite(context);
+
+            if(mapChange != null)
+            {
+                mapChange.addSourceAndDestination(rideInput);
+            }
         }
     }
 
+    public interface CancelRideCallBack
+    {
+        void rideCanceled();
+
+        void rideCancelFailed(String message);
+    }
 
     public interface MapChange
     {
@@ -104,5 +148,7 @@ public class HomePresenter extends CorePresenter
         void moveMarker(MarkerInfo markerInfo);
 
         void removeMarker(MarkerInfo markerInfo);
+
+        void addSourceAndDestination(RideInput rideInput);
     }
 }

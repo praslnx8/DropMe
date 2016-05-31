@@ -98,11 +98,11 @@ public class VehicleLogicEngine
         {
             isValid = true;
 
-            if(DataUtil.isStringEmpty(vehicle.getName()))
+            if(DataUtil.isEmpty(vehicle.getName()))
             {
                 isValid = false;
             }
-            else if(DataUtil.isStringEmpty(vehicle.getType()))
+            else if(DataUtil.isEmpty(vehicle.getType()))
             {
                 isValid = false;
             }

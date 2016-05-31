@@ -2,6 +2,7 @@ package com.prasilabs.dropme.services.firebase;
 
 import com.firebase.client.Firebase;
 import com.firebase.geofire.GeoFire;
+import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.core.CoreApp;
 
 /**
@@ -9,7 +10,6 @@ import com.prasilabs.dropme.core.CoreApp;
  */
 public class FireBaseConfig
 {
-    private static final String FIREBASE_URL = "https://prasilabs-dropme.firebaseio.com";
     private static Firebase firebase;
     private static GeoFire geoFire;
 
@@ -18,7 +18,7 @@ public class FireBaseConfig
         if(firebase == null)
         {
             Firebase.setAndroidContext(CoreApp.getAppContext());
-            firebase = new Firebase(FIREBASE_URL);
+            firebase = new Firebase(AuthConstants.FIREBASE_URL);
         }
 
         return firebase;

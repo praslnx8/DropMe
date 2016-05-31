@@ -11,15 +11,23 @@ import butterknife.ButterKnife;
 /**
  * Created by prasi on 6/2/16.
  */
-public abstract class CoreActivity extends AppCompatActivity
+public abstract class CoreActivity<T extends CorePresenter> extends AppCompatActivity
 {
     private static final String TAG = CoreActivity.class.getSimpleName();
+    private T corePresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        corePresenter = setCorePresenter();
+        if(corePresenter != null)
+        {
+            corePresenter.onCreate();
+        }
     }
+
+    protected abstract T setCorePresenter();
 
     @Override
     public void setContentView(@LayoutRes int layoutResID)
@@ -32,5 +40,9 @@ public abstract class CoreActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
+        if(corePresenter != null)
+        {
+            corePresenter.onDestroy();
+        }
     }
 }

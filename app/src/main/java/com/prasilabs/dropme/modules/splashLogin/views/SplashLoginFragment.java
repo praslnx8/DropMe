@@ -37,7 +37,7 @@ import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.HomeActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.constants.PermisionConstant;
-import com.prasilabs.dropme.constants.UserConstant;
+import com.prasilabs.dropme.constants.PojoConstants;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -236,8 +236,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     //vDropMeUser.setGender(0); //TODO
                     vDropMeUser.setLoginType(LoginType.FaceBook.name());
 
-                    LocalPreference.saveLoginDataInShared(getContext(), UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
-                    LocalPreference.saveLoginDataInShared(getContext(), UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
+                    LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
+                    LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
 
                     ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
                     MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
@@ -337,8 +337,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             vDropMeUser.setGender(gndr);
             vDropMeUser.setPicture(picture);
 
-            LocalPreference.saveLoginDataInShared(getContext(), UserConstant.EMAIL_STR, gplusEmail);
-            LocalPreference.saveLoginDataInShared(getContext(), UserConstant.LOGIN_TYPE_STR, LoginType.GPlus.name());
+            LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.EMAIL_STR, gplusEmail);
+            LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.LOGIN_TYPE_STR, LoginType.GPlus.name());
 
             ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
 

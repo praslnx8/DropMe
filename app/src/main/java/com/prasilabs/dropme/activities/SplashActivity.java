@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.core.CoreActivity;
+import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.customs.FragmentNavigator;
 import com.prasilabs.dropme.modules.splashLogin.views.SplashLoginFragment;
 
@@ -31,7 +32,17 @@ public class SplashActivity extends CoreActivity
         setContentView(R.layout.activity_splash);
         splashLoginFragment = SplashLoginFragment.getInstance();
 
+        if(getSupportActionBar() != null)
+        {
+            getSupportActionBar().hide();
+        }
+
         FragmentNavigator.navigateToFragment(this, splashLoginFragment, false, frameLayout.getId());
+    }
+
+    @Override
+    protected CorePresenter setCorePresenter() {
+        return null;
     }
 
     @Override

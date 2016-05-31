@@ -140,7 +140,10 @@ public class MapLoader
     public void removeMarker(String markerId)
     {
         Marker marker = markerMap.get(markerId);
-        marker.remove();
+        if(marker != null)
+        {
+            marker.remove();
+        }
     }
 
     public LatLng getPointedLatLng()
@@ -164,7 +167,17 @@ public class MapLoader
 
     public void addPolyLine(PolylineOptions polylineOptions)
     {
-        if(polylineOptions != null && gMap != null) {
+        if(polylineOptions != null && gMap != null)
+        {
+            gMap.addPolyline(polylineOptions);
+        }
+    }
+
+    public void clearPolyLine()
+    {
+        if(gMap != null)
+        {
+            PolylineOptions polylineOptions = new PolylineOptions();
             gMap.addPolyline(polylineOptions);
         }
     }

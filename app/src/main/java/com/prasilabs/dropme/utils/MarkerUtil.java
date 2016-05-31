@@ -9,6 +9,12 @@ import com.prasilabs.dropme.pojo.MarkerInfo;
  */
 public class MarkerUtil
 {
+    public static String SOURCE_MARKER_KEY = "source_marker";
+    public static String DEST_MARKER_KEY = "dest_marker";
+
+    public static int SOURCE_MARKER = 0; //TODO
+    public static int DEST_MARKER = 0; //TODO
+
     public static int getMarkerResId(MarkerInfo markerInfo)
     {
         int resourceID = R.drawable.user;

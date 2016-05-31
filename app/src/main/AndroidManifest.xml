@@ -38,6 +38,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.RideCreateActivity" />
+        <activity android:name=".activities.RideSelectActivity" />
 
         <!-- For facebook -->
         <activity
@@ -61,16 +63,9 @@
             android:value="04341200e2be6a3deeda2e642f8b7d29ae4624e2" />
 
         <service
-            android:name=".services.RideService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".services.location.DropMeGLocationService"
             android:enabled="true"
             android:exported="false" />
-
-        <activity android:name=".activities.RideCreateActivity" />
-        <activity android:name=".activities.RideSelectActivity"></activity>
     </application>
 
 </manifest>

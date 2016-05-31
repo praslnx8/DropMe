@@ -5,6 +5,6 @@ package com.prasilabs.constants;
  */
 public class TempConstant
 {
-    private long VCAR = 1;
-    private long VBIKE = 2;
+    public static final long VCAR = 5722646637445120L;
+    public static final long VBIKE = 5639445604728832L;
 }
