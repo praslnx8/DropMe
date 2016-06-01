@@ -124,25 +124,6 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
             introPager.setAdapter(IntroPagerAdapter.getInstance(getCoreActivity()));
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run()
-                {
-                    VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
-
-                    if(vDropMeUser == null)
-                    {
-                        loginLayout.setVisibility(View.VISIBLE);
-                        splashLayout.setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        HomeActivity.callHomeActivity(getContext());
-                        getCoreActivity().finish();
-                    }
-                }
-            },2000);
-
             fbButton.setFragment(this);
             fbButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends", "user_likes", "user_about_me"));
 
@@ -171,6 +152,25 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 }
             });
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run()
+            {
+                VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
+
+                if(vDropMeUser == null)
+                {
+                    loginLayout.setVisibility(View.VISIBLE);
+                    splashLayout.setVisibility(View.GONE);
+                }
+                else
+                {
+                    HomeActivity.callHomeActivity(getContext());
+                    getCoreActivity().finish();
+                }
+            }
+        },2000);
 
         return getFragmentView();
     }

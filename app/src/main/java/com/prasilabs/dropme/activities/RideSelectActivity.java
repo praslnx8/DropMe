@@ -10,14 +10,18 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.customs.MyRecyclerView;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.rideSelect.presenters.RideSelectPresenter;
+import com.prasilabs.dropme.modules.rideSelect.views.RideSelectAdapter;
+
+import java.util.List;
 
 import butterknife.BindView;
 
-public class RideSelectActivity extends CoreActivity<RideSelectPresenter>
+public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implements RideSelectPresenter.GetRidesCallBack
 {
     private static final String TAG = RideSelectActivity.class.getSimpleName();
     RideSelectPresenter rideSelectPresenter = new RideSelectPresenter();
@@ -26,6 +30,8 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter>
     LinearLayout mainLayout;
     @BindView(R.id.rider_list)
     MyRecyclerView ridersListView;
+
+    private RideSelectAdapter rideSelectAdapter;
 
     public static void startRideSelectActivity(Context context)
     {
@@ -55,11 +61,21 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter>
             }
         });
 
+        rideSelectAdapter = RideSelectAdapter.getInstance(this);
+        ridersListView.setAdapter(rideSelectAdapter);
+
+        rideSelectPresenter.getRideDetailList(this);
     }
 
     @Override
     protected RideSelectPresenter setCorePresenter()
     {
         return rideSelectPresenter;
+    }
+
+    @Override
+    public void getRides(List<RideDetail> rideDetailList)
+    {
+        rideSelectAdapter.addListItem(rideDetailList);
     }
 }

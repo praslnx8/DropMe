@@ -14,7 +14,6 @@ import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -46,7 +45,7 @@ public class RideModelEngine extends CoreModelEngine
                     RideInput output = CloudConnect.callDropMeApi(false).createRide(UserManager.getDropMeUser(CoreApp.getAppContext()).getHash(), rideInput).execute();
                     return output;
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     ConsoleLog.e(e);
                 }
@@ -113,6 +112,35 @@ public class RideModelEngine extends CoreModelEngine
         });
     }
 
+    public void getRideDetail(final long rideId, final RideDetailCallBack rideDetailCallBack)
+    {
+        callAsync(new AsyncCallBack() {
+            @Override
+            public RideDetail async()
+            {
+                try
+                {
+                    return CloudConnect.callDropMeApi(false).getRideDetail(rideId).execute();
+                } catch (Exception e) {
+                    ConsoleLog.e(e);
+                }
+                return null;
+            }
+
+            @Override
+            public <T> void result(T t)
+            {
+                RideDetail rideDetail = (RideDetail) t;
+
+                if(rideDetailCallBack != null)
+                {
+                    rideDetailCallBack.getRideDetail(rideDetail);
+                }
+            }
+        });
+    }
+
+
     public void cancelRide(final long rideId)
     {
         callAsync(new AsyncCallBack() {
@@ -158,7 +186,7 @@ public class RideModelEngine extends CoreModelEngine
                 {
                     return CloudConnect.callDropMeApi(false).getRideDetailList(UserManager.getUserHash(CoreApp.getAppContext()), idsList).execute().getItems();
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
                     ConsoleLog.e(e);
                 }
@@ -188,5 +216,10 @@ public class RideModelEngine extends CoreModelEngine
     {
         void rideCreated();
         void rideCreateFailed();
+    }
+
+    public interface RideDetailCallBack
+    {
+        void getRideDetail(RideDetail rideDetail);
     }
 }

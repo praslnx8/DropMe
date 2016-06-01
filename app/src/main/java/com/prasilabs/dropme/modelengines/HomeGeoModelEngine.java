@@ -6,6 +6,7 @@ import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.api.client.util.ArrayMap;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreApp;
@@ -18,6 +19,7 @@ import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.firebase.FireBaseConfig;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.LocationUtils;
+import com.prasilabs.enums.VehicleType;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.GeoFireKeyGenerator;
 
@@ -78,6 +80,8 @@ public class HomeGeoModelEngine
             RideInput rideLite = RideManager.getRideLite(CoreApp.getAppContext());
             if(rideLite != null)
             {
+                String userKey = createGeoPtKey(UserManager.getDropMeUser(CoreApp.getAppContext()));
+                removePoint(userKey);
                 addGeopt(rideLite, latLng);
             }
         }
@@ -87,6 +91,8 @@ public class HomeGeoModelEngine
     {
         if(rideInput != null)
         {
+            String userKey = createGeoPtKey(UserManager.getDropMeUser(CoreApp.getAppContext()));
+            removePoint(userKey);
             addGeopt(rideInput, LocationUtils.convertToLatLng(rideInput.getCurrentLoc()));
         }
     }
@@ -94,7 +100,10 @@ public class HomeGeoModelEngine
     private void addGeopt(RideInput rideLite, LatLng latLng)
     {
         String key = createGeoPtKey(rideLite);
-        FireBaseConfig.getGeoFire().setLocation(key, new GeoLocation(latLng.latitude, latLng.longitude));
+        if(key != null)
+        {
+            FireBaseConfig.getGeoFire().setLocation(key, new GeoLocation(latLng.latitude, latLng.longitude));
+        }
     }
 
     public void removeAllPoints()
@@ -135,7 +144,10 @@ public class HomeGeoModelEngine
 
     public void removePoint(String key)
     {
-        FireBaseConfig.getGeoFire().removeLocation(key);
+        if(key != null)
+        {
+            FireBaseConfig.getGeoFire().removeLocation(key);
+        }
     }
 
     public void listenToHomeGeoLoc(LatLng latLng, final GeoCallBack geoCallBack)
@@ -178,7 +190,30 @@ public class HomeGeoModelEngine
                             }
                             else if (key.contains(GeoRideStr))
                             {
+                                RideModelEngine.getInstance().getRideDetail(id, new RideModelEngine.RideDetailCallBack() {
+                                    @Override
+                                    public void getRideDetail(RideDetail rideDetail)
+                                    {
+                                        if(rideDetail != null)
+                                        {
+                                            MarkerInfo markerInfo = new MarkerInfo();
+                                            markerInfo.setKey(key);
+                                            markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
+                                            if (rideDetail.getVehicleType().equals(VehicleType.Bike.name())) {
+                                                markerInfo.setMarkerType(MarkerType.Bike.name());
+                                            } else {
+                                                markerInfo.setMarkerType(MarkerType.Car.name());
+                                            }
+                                            markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
 
+                                            geoMarkerMap.put(key, markerInfo);
+
+                                            if (geoCallBack != null) {
+                                                geoCallBack.getMarker(markerInfo);
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         }
                     }
@@ -241,12 +276,19 @@ public class HomeGeoModelEngine
 
     private static String createGeoPtKey(VDropMeUser vDropMeUser)
     {
-        return GeoUserStr + splitter + CoreApp.getDeviceId() + splitter + vDropMeUser.getId();
+        if(vDropMeUser != null && vDropMeUser.getId() != null) {
+            return GeoUserStr + splitter + CoreApp.getDeviceId() + splitter + vDropMeUser.getId();
+        }
+        return null;
     }
 
     private static String createGeoPtKey(RideInput rideLite)
     {
-        return GeoFireKeyGenerator.generateRideKey(rideLite.getId());
+        if(rideLite != null && rideLite.getId() != null)
+        {
+            return GeoFireKeyGenerator.generateRideKey(rideLite.getId());
+        }
+        return null;
     }
 
     private static long getIdFromGeoKey(String key)

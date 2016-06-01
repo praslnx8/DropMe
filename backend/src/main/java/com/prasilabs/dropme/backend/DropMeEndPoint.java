@@ -132,6 +132,12 @@ public class DropMeEndPoint
         }
     }
 
+    @ApiMethod(name = "getRideDetail")
+    public RideDetail getRideDetail(@Named("rideId") long rideId)
+    {
+        return RideLogicEngine.getInstance().getRideDetail(rideId);
+    }
+
     @ApiMethod(name = "getCurrentRide")
     public RideInput getCurrentRide(@Named("hash") String hash, @Named("deviceId") String deviceId) throws OAuthRequestException
     {

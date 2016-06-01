@@ -11,7 +11,6 @@ import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
-import com.prasilabs.dropme.backend.services.geofire.GeoFireManager;
 import com.prasilabs.dropme.backend.utils.RideUtil;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.GeoFireKeyGenerator;
@@ -100,6 +99,21 @@ public class RideLogicEngine extends CoreLogicEngine
         return apiResponse;
     }
 
+    public RideDetail getRideDetail(long id)
+    {
+        List<Long> ids = new ArrayList<>();
+        ids.add(id);
+
+        List<RideDetail> rideDetails = getRideDetailList(ids);
+
+        if(rideDetails.size() > 0)
+        {
+            return rideDetails.get(0);
+        }
+
+        return null;
+    }
+
     public List<RideDetail> getRideDetailList(List<Long> ids)
     {
         List<RideDetail> rideDetails = new ArrayList<>();
@@ -143,7 +157,7 @@ public class RideLogicEngine extends CoreLogicEngine
             {
                 ConsoleLog.i(TAG, "removing expired or closed");
                 String key = GeoFireKeyGenerator.generateRideKey(ride.getId());
-                GeoFireManager.getGeoFire().removeLocation(key);
+                //TODO background instance GeoFireManager.getGeoFire().removeLocation(key);
             }
         }
 
