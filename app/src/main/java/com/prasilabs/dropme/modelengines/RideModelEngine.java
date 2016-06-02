@@ -14,6 +14,7 @@ import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -178,33 +179,36 @@ public class RideModelEngine extends CoreModelEngine
     {
         final List<Long> idsList = HomeGeoModelEngine.getInstance().getAllRides();
 
-        callAsync(new AsyncCallBack() {
-            @Override
-            public List<RideDetail> async()
+        if(idsList.size() > 0) {
+            callAsync(new AsyncCallBack() {
+                @Override
+                public List<RideDetail> async() {
+                    try {
+                        return CloudConnect.callDropMeApi(false).getRideDetailList(UserManager.getUserHash(CoreApp.getAppContext()), idsList).execute().getItems();
+                    } catch (Exception e) {
+                        ConsoleLog.e(e);
+                    }
+
+                    return null;
+                }
+
+                @Override
+                public <T> void result(T t) {
+                    List<RideDetail> rideDetailList = (List<RideDetail>) t;
+
+                    if (getRideDetailListCallBack != null) {
+                        getRideDetailListCallBack.getRideDetailList(rideDetailList);
+                    }
+                }
+            });
+        }
+        else
+        {
+            if (getRideDetailListCallBack != null)
             {
-                try
-                {
-                    return CloudConnect.callDropMeApi(false).getRideDetailList(UserManager.getUserHash(CoreApp.getAppContext()), idsList).execute().getItems();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-
-                return null;
+                getRideDetailListCallBack.getRideDetailList(new ArrayList<RideDetail>());
             }
-
-            @Override
-            public <T> void result(T t)
-            {
-                List<RideDetail> rideDetailList = (List<RideDetail>) t;
-
-                if(getRideDetailListCallBack != null)
-                {
-                    getRideDetailListCallBack.getRideDetailList(rideDetailList);
-                }
-            }
-        });
+        }
     }
 
     public interface GetRideDetailListCallBack

@@ -32,6 +32,8 @@ import com.prasilabs.enums.VehicleType;
 
 import java.util.List;
 
+import static com.google.api.server.spi.config.ApiMethod.HttpMethod.POST;
+
 /** An endpoint class we are exposing */
 @Api(
         name = "dropMeApi",
@@ -168,7 +170,7 @@ public class DropMeEndPoint
         }
     }
 
-    @ApiMethod(name = "getRideDetailList")
+    @ApiMethod(name = "getRideDetailList",path = "getRideDetailList", httpMethod = POST)
     public List<RideDetail> getRideDetailList(@Named("hash") String hash, @Named("ids") List<Long> ids) throws OAuthRequestException
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
@@ -182,6 +184,8 @@ public class DropMeEndPoint
             throw new OAuthRequestException("User is not found. User needs to logged in");
         }
     }
+
+
 
     @ApiMethod(name = "test")
     public void test(@Named("password") String password)

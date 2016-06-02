@@ -136,7 +136,6 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     AccessToken accessToken = loginResult.getAccessToken();
 
                     getFacebookLoginDetailsFromAccesToken(accessToken);
-
                 }
 
                 @Override
