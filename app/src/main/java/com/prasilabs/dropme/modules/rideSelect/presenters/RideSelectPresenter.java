@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.core.CorePresenter;
+import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modelengines.RideModelEngine;
 
 import java.util.List;
@@ -15,14 +16,20 @@ import java.util.List;
 public class RideSelectPresenter extends CorePresenter
 {
 
+    private static final String TAG = RideSelectPresenter.class.getSimpleName();
+
     public static RideSelectPresenter newInstance()
     {
         return new RideSelectPresenter();
     }
 
+    private RideSelectPresenter(){}
+
     public void getRideDetailList(final GetRidesCallBack getRidesCallBack)
     {
-        RideModelEngine.getInstance().getRideDetailsList(new RideModelEngine.GetRideDetailListCallBack() {
+        ConsoleLog.i(TAG, "ride select called on the presenter");
+        RideModelEngine.getInstance().getRideDetailsList(new RideModelEngine.GetRideDetailListCallBack()
+        {
             @Override
             public void getRideDetailList(List<RideDetail> rideDetailList)
             {

@@ -3,6 +3,7 @@ package com.prasilabs.dropme.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.common.api.Status;
@@ -16,6 +17,7 @@ import com.prasilabs.dropme.customs.MyRecyclerView;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.rideSelect.presenters.RideSelectPresenter;
 import com.prasilabs.dropme.modules.rideSelect.views.RideSelectAdapter;
+import com.prasilabs.dropme.utils.ViewUtil;
 
 import java.util.List;
 
@@ -24,12 +26,14 @@ import butterknife.BindView;
 public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implements RideSelectPresenter.GetRidesCallBack
 {
     private static final String TAG = RideSelectActivity.class.getSimpleName();
-    RideSelectPresenter rideSelectPresenter = new RideSelectPresenter();
+    RideSelectPresenter rideSelectPresenter = RideSelectPresenter.newInstance();
 
-    @BindView(R.id.container)
-    LinearLayout mainLayout;
+    @BindView(R.id.top_layout)
+    LinearLayout topLayout;
     @BindView(R.id.rider_list)
     MyRecyclerView ridersListView;
+    @BindView(R.id.empty_layout)
+    LinearLayout emptyJokerLayout;
 
     private RideSelectAdapter rideSelectAdapter;
 
@@ -45,8 +49,13 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_select);
 
+        if(getSupportActionBar() != null)
+        {
+            getSupportActionBar().hide();
+        }
+
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        autocompleteFragment.setHint("Enter Destination");
+        autocompleteFragment.setHint("Search Destination");
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place)
@@ -64,6 +73,8 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
         rideSelectAdapter = RideSelectAdapter.getInstance(this);
         ridersListView.setAdapter(rideSelectAdapter);
 
+        ViewUtil.showProgressView(this, topLayout, true);
+
         rideSelectPresenter.getRideDetailList(this);
     }
 
@@ -76,6 +87,18 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
     @Override
     public void getRides(List<RideDetail> rideDetailList)
     {
-        rideSelectAdapter.addListItem(rideDetailList);
+        ConsoleLog.i(TAG, "ridelist came for the views");
+        ViewUtil.hideProgressView(this, topLayout);
+        if(rideDetailList != null && rideDetailList.size() > 0)
+        {
+            rideSelectAdapter.addListItem(rideDetailList);
+            ridersListView.setVisibility(View.VISIBLE);
+            emptyJokerLayout.setVisibility(View.GONE);
+        }
+        else
+        {
+            emptyJokerLayout.setVisibility(View.VISIBLE);
+            ridersListView.setVisibility(View.GONE);
+        }
     }
 }

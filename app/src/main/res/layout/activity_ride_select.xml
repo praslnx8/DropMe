@@ -19,9 +19,38 @@
 
     </android.support.v7.widget.CardView>
 
-    <com.prasilabs.dropme.customs.MyRecyclerView
-        android:id="@+id/rider_list"
+    <LinearLayout
+        android:id="@+id/top_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.prasilabs.dropme.customs.MyRecyclerView
+            android:id="@+id/rider_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/empty_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <com.prasilabs.dropme.customs.FontAweSomeTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="200dp"
+                android:text="@string/fa_exclamation_circle"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No riders found for this route. :( "/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -170,50 +170,54 @@ public class HomeGeoModelEngine
                             if (geoCallBack != null) {
                                 geoCallBack.getMarker(existingMarkerInfo);
                             }
-                        } else {
+                        } else
+                        {
                             final long id = getIdFromGeoKey(key);
 
-                            if (key.contains(GeoUserStr)) {
-                                if (id != UserManager.getDropMeUser(CoreApp.getAppContext()).getId()) {
-                                    MarkerInfo markerInfo = new MarkerInfo();
-                                    markerInfo.setKey(key);
-                                    markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
-                                    markerInfo.setMarkerType(MarkerType.User.name());
-                                    markerInfo.setUserOrVehicle(UserOrVehicle.User.name());
-
-                                    geoMarkerMap.put(key, markerInfo);
-
-                                    if (geoCallBack != null) {
-                                        geoCallBack.getMarker(markerInfo);
-                                    }
-                                }
-                            }
-                            else if (key.contains(GeoRideStr))
+                            if(id == 0)
                             {
-                                RideModelEngine.getInstance().getRideDetail(id, new RideModelEngine.RideDetailCallBack() {
-                                    @Override
-                                    public void getRideDetail(RideDetail rideDetail)
-                                    {
-                                        if(rideDetail != null)
-                                        {
-                                            MarkerInfo markerInfo = new MarkerInfo();
-                                            markerInfo.setKey(key);
-                                            markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
-                                            if (rideDetail.getVehicleType().equals(VehicleType.Bike.name())) {
-                                                markerInfo.setMarkerType(MarkerType.Bike.name());
-                                            } else {
-                                                markerInfo.setMarkerType(MarkerType.Car.name());
-                                            }
-                                            markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
+                                if (key.contains(GeoUserStr)) {
+                                    if (id != UserManager.getDropMeUser(CoreApp.getAppContext()).getId()) {
+                                        MarkerInfo markerInfo = new MarkerInfo();
+                                        markerInfo.setKey(key);
+                                        markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
+                                        markerInfo.setMarkerType(MarkerType.User.name());
+                                        markerInfo.setUserOrVehicle(UserOrVehicle.User.name());
 
-                                            geoMarkerMap.put(key, markerInfo);
+                                        geoMarkerMap.put(key, markerInfo);
 
-                                            if (geoCallBack != null) {
-                                                geoCallBack.getMarker(markerInfo);
-                                            }
+                                        if (geoCallBack != null) {
+                                            geoCallBack.getMarker(markerInfo);
                                         }
                                     }
-                                });
+                                } else if (key.contains(GeoRideStr)) {
+                                    RideModelEngine.getInstance().getRideDetail(id, new RideModelEngine.RideDetailCallBack() {
+                                        @Override
+                                        public void getRideDetail(RideDetail rideDetail) {
+                                            if (rideDetail != null) {
+                                                MarkerInfo markerInfo = new MarkerInfo();
+                                                markerInfo.setKey(key);
+                                                markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
+                                                if (rideDetail.getVehicleType().equals(VehicleType.Bike.name())) {
+                                                    markerInfo.setMarkerType(MarkerType.Bike.name());
+                                                } else {
+                                                    markerInfo.setMarkerType(MarkerType.Car.name());
+                                                }
+                                                markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
+
+                                                geoMarkerMap.put(key, markerInfo);
+
+                                                if (geoCallBack != null) {
+                                                    geoCallBack.getMarker(markerInfo);
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                ConsoleLog.w(TAG, "key has invalid id : " + key);
                             }
                         }
                     }

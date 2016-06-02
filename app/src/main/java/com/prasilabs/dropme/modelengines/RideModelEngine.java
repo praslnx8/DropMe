@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class RideModelEngine extends CoreModelEngine
 {
+    private static final String TAG = RideModelEngine.class.getSimpleName();
     private static RideModelEngine instance;
 
     public static RideModelEngine getInstance()
@@ -179,7 +180,8 @@ public class RideModelEngine extends CoreModelEngine
     {
         final List<Long> idsList = HomeGeoModelEngine.getInstance().getAllRides();
 
-        if(idsList.size() > 0) {
+        if(idsList.size() > 0)
+        {
             callAsync(new AsyncCallBack() {
                 @Override
                 public List<RideDetail> async() {
@@ -196,7 +198,8 @@ public class RideModelEngine extends CoreModelEngine
                 public <T> void result(T t) {
                     List<RideDetail> rideDetailList = (List<RideDetail>) t;
 
-                    if (getRideDetailListCallBack != null) {
+                    if (getRideDetailListCallBack != null)
+                    {
                         getRideDetailListCallBack.getRideDetailList(rideDetailList);
                     }
                 }
@@ -204,6 +207,7 @@ public class RideModelEngine extends CoreModelEngine
         }
         else
         {
+            ConsoleLog.i(TAG, "id list is zero");
             if (getRideDetailListCallBack != null)
             {
                 getRideDetailListCallBack.getRideDetailList(new ArrayList<RideDetail>());
