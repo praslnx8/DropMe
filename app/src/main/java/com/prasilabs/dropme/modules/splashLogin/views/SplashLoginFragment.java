@@ -127,6 +127,25 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             fbButton.setFragment(this);
             fbButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends", "user_likes", "user_about_me"));
 
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run()
+                {
+                    VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
+
+                    if(vDropMeUser == null)
+                    {
+                        loginLayout.setVisibility(View.VISIBLE);
+                        splashLayout.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        HomeActivity.callHomeActivity(getContext());
+                        getCoreActivity().finish();
+                    }
+                }
+            },2000);
+
             fbButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>()
             {
                 @Override
@@ -151,25 +170,21 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 }
             });
         }
+        else
+        {
+            VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run()
+            if(vDropMeUser == null)
             {
-                VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
-
-                if(vDropMeUser == null)
-                {
-                    loginLayout.setVisibility(View.VISIBLE);
-                    splashLayout.setVisibility(View.GONE);
-                }
-                else
-                {
-                    HomeActivity.callHomeActivity(getContext());
-                    getCoreActivity().finish();
-                }
+                loginLayout.setVisibility(View.VISIBLE);
+                splashLayout.setVisibility(View.GONE);
             }
-        },2000);
+            else
+            {
+                HomeActivity.callHomeActivity(getContext());
+                getCoreActivity().finish();
+            }
+        }
 
         return getFragmentView();
     }

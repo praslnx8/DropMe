@@ -17,6 +17,7 @@ public class Ride
     public static final String DEVICE_ID_STR = "deviceId";
     public static final String EXPIRY_DATE_STR = "expiryDate";
     public static final String IS_CLOSED_STR = "isClosed";
+    public static final String IS_GEO_REMOVED_STR = "isGeoRemoved";
 
     @Id
     private Long id;
@@ -40,6 +41,8 @@ public class Ride
     private Date closedDate;
     @Index
     private Date expiryDate;
+    @Index
+    private boolean isGeoRemoved;
 
     private Date created;
     private Date modified;
@@ -162,5 +165,13 @@ public class Ride
 
     public void setDestLocName(String destLocName) {
         this.destLocName = destLocName;
+    }
+
+    public boolean isGeoRemoved() {
+        return isGeoRemoved;
+    }
+
+    public void setGeoRemoved(boolean geoRemoved) {
+        isGeoRemoved = geoRemoved;
     }
 }

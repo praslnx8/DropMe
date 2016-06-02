@@ -24,12 +24,16 @@
 
             <Button
                 android:id="@+id/book_ride_btn"
+                style="@style/button.primary.big"
+                android:layout_margin="@dimen/paddingXS"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="BOOK A RIDE"/>
 
             <Button
                 android:id="@+id/offer_ride_btn"
+                style="@style/button.secondary.big"
+                android:layout_margin="@dimen/paddingXS"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="OFFER A RIDE"/>
@@ -41,7 +45,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="bottom">
+            android:layout_gravity="bottom"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/cancel_btn"

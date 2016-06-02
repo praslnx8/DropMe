@@ -18,33 +18,24 @@
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
+
+    <Spinner
+        android:id="@+id/select_vehicle"
+        style="@style/button.primary.transparent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="40dp"
+        android:textSize="30dp"
+        android:layout_margin="@dimen/paddingS"
+        android:text="Select Vehicle Type"/>
 
-        <Spinner
-            android:id="@+id/select_vehicle"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="30dp"
-            android:text="Select Vehicle Type"/>
-
-    </android.support.v7.widget.CardView>
-
-
-    <android.support.v7.widget.CardView
+    <Spinner
+        android:id="@+id/select_fare_rate"
+        style="@style/button.primary.transparent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Spinner
-            android:id="@+id/select_fare_rate"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="30dp"
-            android:text="Select Fare Rate"/>
-
-    </android.support.v7.widget.CardView>
-
+        android:layout_height="40dp"
+        android:textSize="30dp"
+        android:layout_margin="@dimen/paddingS"
+        android:text="Select Fare Rate"/>
 
     <View
         android:layout_width="0dp"
@@ -60,15 +51,19 @@
 
         <Button
             android:id="@+id/later_btn"
+            style="@style/button.primary.transparent.big"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/paddingXXXS"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="LATER"/>
 
 
         <Button
             android:id="@+id/ride_btn"
+            style="@style/button.primary.big"
             android:layout_width="0dp"
+            android:layout_margin="@dimen/paddingXXXS"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="RIDE"/>

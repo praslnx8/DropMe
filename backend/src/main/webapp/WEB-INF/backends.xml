@@ -1,0 +1,6 @@
+<backends>
+    <backend name="test">
+        <class>B1</class>
+        <instances>1</instances>
+    </backend>
+</backends>

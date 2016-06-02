@@ -15,9 +15,8 @@ import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
-import com.prasilabs.dropme.backend.datastore.Vehicle;
-import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
+import com.prasilabs.dropme.backend.debug.Experiments;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
@@ -28,7 +27,6 @@ import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
 import com.prasilabs.dropme.backend.utils.AdminUtil;
-import com.prasilabs.enums.VehicleType;
 
 import java.util.List;
 
@@ -192,19 +190,7 @@ public class DropMeEndPoint
     {
         if(password.equals("prasi123"))
         {
-            Vehicle vehicle = new Vehicle();
-            vehicle.setName("DEFAULT CAR");
-            vehicle.setType(VehicleType.Car.name());
-
-            OfyService.ofy().save().entity(vehicle).now();
-
-
-            Vehicle bike = new Vehicle();
-            bike.setName("DEFAULT CAR");
-            bike.setType(VehicleType.Bike.name());
-
-            OfyService.ofy().save().entity(bike).now();
-
+            Experiments.test();
         }
     }
 }

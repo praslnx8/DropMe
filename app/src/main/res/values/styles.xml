@@ -36,4 +36,186 @@
     </style>
 
 
+    <style name="primaryButton" parent="Base.Widget.AppCompat.ButtonBar">
+        <item name="android:background">@drawable/primary_btn</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@android:style/TextAppearance</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="social_button" parent="button.primary">
+        <item name="android:background">@color/tprimary</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@android:style/TextAppearance</item>
+    </style>
+
+    <style name="button.primary" parent="Base.Widget.AppCompat.Button.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:background">@drawable/primary_btn</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:minHeight">24dip</item>
+        <item name="android:minWidth">48dip</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:colorPressedHighlight">@color/tgray1</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <style name="button.primary.small" parent="button.primary">
+        <item name="android:background">@drawable/primary_btn_small</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:paddingBottom">@dimen/button_small_padding_tb</item>
+        <item name="android:paddingTop">@dimen/button_small_padding_tb</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="button.primary.big" parent="button.primary">
+        <item name="android:background">@drawable/primary_btn_big</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="button.secondary" parent="button.primary">
+        <item name="android:background">@drawable/secondary_btn</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="button.secondary.big" parent="button.secondary">
+        <item name="android:background">@drawable/secondary_btn_big</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="button.secondary.small" parent="button.secondary">
+        <item name="android:background">@drawable/secondary_btn_small</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="button.primary.transparent.big" parent="button.primary">
+        <item name="android:background">@drawable/primary_transparent_btn</item>
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="button.primary.transparent" parent="button.primary">
+        <item name="android:background">@drawable/primary_transparent_btn</item>
+        <item name="android:textColor">@color/primaryText</item>
+    </style>
+
+    <style name="button.primary.transparent.small" parent="button.primary.small">
+        <item name="android:background">@drawable/primary_transparent_btn_small</item>
+        <item name="android:textColor">@color/primaryText</item>
+    </style>
+
+    <style name="button.secondary.transparent" parent="button.secondary">
+        <item name="android:background">@drawable/secondary_transparent_btn</item>
+        <item name="android:textColor">@color/secondary</item>
+    </style>
+
+    <style name="button.secondary.transparent.big" parent="button.secondary.big">
+        <item name="android:background">@drawable/secondary_transparent_btn_big</item>
+        <item name="android:textColor">@color/secondary</item>
+    </style>
+
+    <style name="button.secondary.transparent.small" parent="button.secondary.transparent">
+        <item name="android:background">@drawable/secondary_transparent_btn_small</item>
+        <item name="android:textColor">@color/secondary</item>
+    </style>
+
+    <style name="button.transparent.white" parent="button.primary.transparent">
+        <item name="android:background">@drawable/white_transparent_btn</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="button.transparent.gray" parent="button.primary">
+        <item name="android:background">@drawable/gray_transparent_btn</item>
+        <item name="android:textColor">@color/textColor</item>
+    </style>
+
+    <style name="button.transparent.gray.small" parent="button.primary.small">
+        <item name="android:background">@drawable/gray_transparent_btn_small</item>
+        <item name="android:textColor">@color/textColor</item>
+    </style>
+
+    <style name="button.blue" parent="Base.Widget.AppCompat.Button">
+        <item name="android:background">@color/lightBlue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">@dimen/paddingS</item>
+    </style>
+
+    <style name="primaryBoxButton" parent="primaryButton">
+        <item name="android:background">@drawable/primary_box_btn</item>
+    </style>
+
+    <style name="primaryBoxButtonSmall" parent="primaryButton">
+        <item name="android:background">@drawable/primary_box_btn_small</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+    </style>
+
+    <style name="transparentButton" parent="primaryButton">
+        <item name="android:background">@drawable/transparent_btn</item>
+        <item name="android:textColor">@color/primary</item>
+    </style>
+
+    <style name="transparentBoxButton" parent="transparentButton">
+        <item name="android:background">@drawable/transparent_box_btn</item>
+    </style>
+
+    <style name="whiteTransparentButton" parent="transparentButton">
+        <item name="android:background">@drawable/white_transparent_btn</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="primaryRoundButton" parent="primaryButton">
+        <item name="android:background">@drawable/primary_round_btn</item>
+    </style>
+
+    <style name="transparentRoundButton" parent="transparentButton">
+        <item name="android:background">@drawable/transparent_round_btn</item>
+    </style>
+
+
+    <style name="search_text">
+        <item name="android:padding">@dimen/paddingS</item>
+        <item name="android:layout_margin">@dimen/paddingS</item>
+        <item name="android:background">@color/lgray2</item>
+        <item name="android:drawablePadding">@dimen/paddingS</item>
+    </style>
+
+    <style name="MaterialDialogSheet" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/MaterialDialogSheetAnimation</item>
+    </style>
+
+    <style name="MaterialDialogSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
+
+    <style name="TransparentProgressDialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleStyle">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

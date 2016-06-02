@@ -2,6 +2,7 @@ package com.prasilabs.dropme.backend.logicEngines;
 
 import com.google.appengine.api.datastore.Query;
 import com.googlecode.objectify.Key;
+import com.prasilabs.dropme.backend.annotions.Cron;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.Ride;
@@ -11,6 +12,8 @@ import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
+import com.prasilabs.dropme.backend.services.geofire.GeoFireManager;
+import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
 import com.prasilabs.dropme.backend.utils.RideUtil;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.GeoFireKeyGenerator;
@@ -99,6 +102,38 @@ public class RideLogicEngine extends CoreLogicEngine
         return apiResponse;
     }
 
+    @Cron
+    public ApiResponse deleteInactiveGeoRideKeys()
+    {
+        ApiResponse apiResponse = new ApiResponse();
+
+        try {
+            Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.LESS_THAN, new Date(System.currentTimeMillis()));
+            List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.IS_GEO_REMOVED_STR, false).list();
+
+            for (Ride ride : rideList)
+            {
+                String rideGeoKEy = GeoFireKeyGenerator.generateRideKey(ride.getId());
+
+                GeoFireManager.removeGeoPoint(rideGeoKEy);
+
+                ride.setGeoRemoved(true);
+            }
+
+            OfyService.ofy().save().entities(rideList).now();
+
+            ConsoleLog.i(TAG, "removed " + rideList.size() + " geopoints from the geoFire server");
+
+            apiResponse.setStatus(true);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return apiResponse;
+    }
+
     public RideDetail getRideDetail(long id)
     {
         List<Long> ids = new ArrayList<>();
@@ -157,7 +192,7 @@ public class RideLogicEngine extends CoreLogicEngine
             {
                 ConsoleLog.i(TAG, "removing expired or closed");
                 String key = GeoFireKeyGenerator.generateRideKey(ride.getId());
-                //TODO background instance GeoFireManager.getGeoFire().removeLocation(key);
+                PushQueueController.callRemoveGeoPtPush(key); //TODO not working. Error do in backendinstances Wait for geo fire to fix that
             }
         }
 
