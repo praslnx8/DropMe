@@ -26,7 +26,7 @@ import butterknife.BindView;
 public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implements RideSelectPresenter.GetRidesCallBack
 {
     private static final String TAG = RideSelectActivity.class.getSimpleName();
-    RideSelectPresenter rideSelectPresenter = RideSelectPresenter.newInstance();
+    RideSelectPresenter rideSelectPresenter = new RideSelectPresenter();
 
     @BindView(R.id.top_layout)
     LinearLayout topLayout;

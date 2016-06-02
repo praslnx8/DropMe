@@ -12,20 +12,21 @@ import com.prasilabs.dropme.customs.LocalPreference;
  */
 public class GCredential
 {
+    private static String prevEmail;
     private static GoogleAccountCredential googleAccountCredential;
 
     public static GoogleAccountCredential getGoogleCredential(Context context)
     {
-        if(googleAccountCredential == null)
+        String email = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
+        if(email != null)
         {
-            googleAccountCredential = GoogleAccountCredential.usingAudience(context, AuthConstants.AUDIENCE_PRE_TEXT + AuthConstants.WEB_CLIENT_ID);
-            googleAccountCredential.setSelectedAccountName(LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null));
+            if (googleAccountCredential == null || prevEmail == null || !email.equals(prevEmail))
+            {
+                googleAccountCredential = GoogleAccountCredential.usingAudience(context, AuthConstants.AUDIENCE_PRE_TEXT + AuthConstants.WEB_CLIENT_ID);
+                googleAccountCredential.setSelectedAccountName(email);
+                prevEmail = email;
+            }
         }
         return googleAccountCredential;
-    }
-
-    public static void clearCredentialOnLogout()
-    {
-        googleAccountCredential = null;
     }
 }

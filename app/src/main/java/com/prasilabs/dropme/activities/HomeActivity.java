@@ -21,7 +21,10 @@ import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.customs.FragmentNavigator;
+import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.managers.UserManager;
+import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
+import com.prasilabs.dropme.modelengines.RideModelEngine;
 import com.prasilabs.dropme.modules.home.views.HomeFragment;
 import com.prasilabs.dropme.utils.ViewUtil;
 
@@ -31,6 +34,7 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
 {
     @BindView(R.id.container)
     LinearLayout containerLayout;
+    private long prevBackPresTime;
 
     public static void callHomeActivity(Context context)
     {
@@ -95,12 +99,26 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START))
+        {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        }
+        else
+        {
+            if(System.currentTimeMillis() - prevBackPresTime < 2000)
+            {
+                HomeGeoModelEngine.getInstance().clearUserData();
+                RideModelEngine.getInstance().clearData();
+                super.onBackPressed();
+            }
+            else
+            {
+                ViewUtil.ts(this, "Press again to close the app");
+                prevBackPresTime = System.currentTimeMillis();
+            }
         }
     }
 
@@ -126,6 +144,8 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
@@ -145,6 +165,14 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
 
         } else if (id == R.id.nav_help) {
 
+        } else if (id == R.id.nav_logout)
+        {
+            LocalPreference.clearLoginSharedPreferences(this);
+            HomeGeoModelEngine.getInstance().clearUserData();
+            RideModelEngine.getInstance().clearData();
+            Intent intent = new Intent(this,SplashActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

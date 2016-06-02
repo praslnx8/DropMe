@@ -17,21 +17,17 @@ public class MarkerUtil
 
     public static int getMarkerResId(MarkerInfo markerInfo)
     {
-        int resourceID = R.drawable.user;
+        int resourceID = R.drawable.user_standing;
 
         if(markerInfo != null)
         {
             if (markerInfo.getMarkerType().equals(MarkerType.Bike.name()))
             {
-                //TODO
-            }
-            else if(markerInfo.getMarkerType().equals(MarkerType.Biker.name()))
-            {
-
+                resourceID = R.drawable.bike;
             }
             else if(markerInfo.getMarkerType().equals(MarkerType.Car.name()))
             {
-
+                resourceID = R.drawable.ic_car;
             }
             else if(markerInfo.getMarkerType().equals(MarkerType.User.name()))
             {

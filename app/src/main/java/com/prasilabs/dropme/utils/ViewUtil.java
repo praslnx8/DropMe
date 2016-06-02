@@ -19,6 +19,14 @@ import com.squareup.picasso.RequestCreator;
  */
 public class ViewUtil
 {
+    public static void ts(Context context, String message)
+    {
+        if(context != null && !TextUtils.isEmpty(message))
+        {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public static void t(Context context, String message)
     {
         if(context != null && !TextUtils.isEmpty(message))

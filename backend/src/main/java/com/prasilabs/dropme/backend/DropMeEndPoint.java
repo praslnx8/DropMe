@@ -49,6 +49,8 @@ import static com.google.api.server.spi.config.ApiMethod.HttpMethod.POST;
 )
 public class DropMeEndPoint
 {
+    private static final String TAG = DropMeEndPoint.class.getSimpleName();
+
     @ApiMethod(name = "loginsignup")
     public VDropMeUser loginsignup(User user, VDropMeUser vDropMeUser) throws OAuthRequestException
     {
@@ -116,7 +118,7 @@ public class DropMeEndPoint
         return apiResponse;
     }
 
-    @ApiMethod(name = "createRide")
+    @ApiMethod(name = "createRide", path = "createRide", httpMethod = POST)
     public RideInput createRide(@Named("hash") String hash, RideInput rideInput) throws OAuthRequestException
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
@@ -135,7 +137,17 @@ public class DropMeEndPoint
     @ApiMethod(name = "getRideDetail")
     public RideDetail getRideDetail(@Named("rideId") long rideId)
     {
-        return RideLogicEngine.getInstance().getRideDetail(rideId);
+        try
+        {
+            ConsoleLog.i(TAG, "ride id is : "+ rideId);
+            return RideLogicEngine.getInstance().getRideDetail(rideId);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return null;
     }
 
     @ApiMethod(name = "getCurrentRide")
@@ -154,13 +166,13 @@ public class DropMeEndPoint
     }
 
     @ApiMethod(name = "cancelRide")
-    public ApiResponse cancelRide(@Named("hash") String hash, @Named("rideId") long rideId) throws OAuthRequestException
+    public ApiResponse cancelRide(@Named("hash") String hash, @Named("deviceId") String deviceId) throws OAuthRequestException
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
 
         if(dropMeUser != null)
         {
-            return RideLogicEngine.getInstance().cancelRide(dropMeUser, rideId);
+            return RideLogicEngine.getInstance().cancelRide(dropMeUser, deviceId);
         }
         else
         {
@@ -186,11 +198,16 @@ public class DropMeEndPoint
 
 
     @ApiMethod(name = "test")
-    public void test(@Named("password") String password)
+    public void test(@Named("password") String password) throws OAuthRequestException
     {
-        if(password.equals("prasi123"))
+        if(password.equals("prasi12345"))
         {
             Experiments.test();
+        }
+        else
+        {
+            ConsoleLog.i(TAG, "password is wrong");
+            throw new OAuthRequestException("password is wrong");
         }
     }
 }

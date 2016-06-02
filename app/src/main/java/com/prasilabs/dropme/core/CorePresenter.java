@@ -16,6 +16,7 @@ public abstract class CorePresenter
     private static final String TAG = CorePresenter.class.getSimpleName();
     private BroadcastReceiver broadcastReceiver;
 
+    public CorePresenter(){}
 
     public void onCreate()
     {

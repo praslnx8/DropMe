@@ -87,7 +87,7 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
         {
             super(itemView);
 
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public void render(CoreActivity coreActivity, RideDetail rideDetail)

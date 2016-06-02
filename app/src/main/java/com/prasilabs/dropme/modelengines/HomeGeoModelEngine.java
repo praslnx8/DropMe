@@ -102,6 +102,7 @@ public class HomeGeoModelEngine
         String key = createGeoPtKey(rideLite);
         if(key != null)
         {
+            ConsoleLog.i(TAG, "adding vehicle geopt to firebase  " + key);
             FireBaseConfig.getGeoFire().setLocation(key, new GeoLocation(latLng.latitude, latLng.longitude));
         }
     }
@@ -174,9 +175,10 @@ public class HomeGeoModelEngine
                         {
                             final long id = getIdFromGeoKey(key);
 
-                            if(id == 0)
+                            if(id != 0)
                             {
-                                if (key.contains(GeoUserStr)) {
+                                if (key.contains(GeoUserStr))
+                                {
                                     if (id != UserManager.getDropMeUser(CoreApp.getAppContext()).getId()) {
                                         MarkerInfo markerInfo = new MarkerInfo();
                                         markerInfo.setKey(key);
@@ -190,11 +192,16 @@ public class HomeGeoModelEngine
                                             geoCallBack.getMarker(markerInfo);
                                         }
                                     }
-                                } else if (key.contains(GeoRideStr)) {
+                                }
+                                else if (key.contains(GeoRideStr))
+                                {
+                                    ConsoleLog.i(TAG, "rider found and id is : " + id);
                                     RideModelEngine.getInstance().getRideDetail(id, new RideModelEngine.RideDetailCallBack() {
                                         @Override
-                                        public void getRideDetail(RideDetail rideDetail) {
-                                            if (rideDetail != null) {
+                                        public void getRideDetail(RideDetail rideDetail)
+                                        {
+                                            if (rideDetail != null)
+                                            {
                                                 MarkerInfo markerInfo = new MarkerInfo();
                                                 markerInfo.setKey(key);
                                                 markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
@@ -207,9 +214,15 @@ public class HomeGeoModelEngine
 
                                                 geoMarkerMap.put(key, markerInfo);
 
-                                                if (geoCallBack != null) {
+                                                if (geoCallBack != null)
+                                                {
                                                     geoCallBack.getMarker(markerInfo);
                                                 }
+                                            }
+                                            else
+                                            {
+                                                ConsoleLog.w(TAG, "expired or closed rider location. Need to remove");
+                                                removePoint(key);
                                             }
                                         }
                                     });
@@ -228,12 +241,16 @@ public class HomeGeoModelEngine
                         ConsoleLog.i(TAG, "marker exited");
                         MarkerInfo markerInfo = geoMarkerMap.get(key);
 
-                        if (markerInfo != null) {
+                        if (markerInfo != null)
+                        {
                             geoMarkerMap.remove(key);
-                            if (geoCallBack != null) {
+                            if (geoCallBack != null)
+                            {
                                 geoCallBack.removeMarker(markerInfo);
                             }
-                        } else {
+                        }
+                        else
+                        {
                             ConsoleLog.w(TAG, "marker info is null for key : " + key);
                         }
                     }
@@ -316,6 +333,11 @@ public class HomeGeoModelEngine
         long id = DataUtil.stringToLong(sid);
 
         return id;
+    }
+
+    public void clearUserData()
+    {
+         homeGeoModelEngine = null;
     }
 
     public interface GeoCallBack

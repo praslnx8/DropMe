@@ -15,15 +15,9 @@ import java.util.List;
  */
 public class RideSelectPresenter extends CorePresenter
 {
-
     private static final String TAG = RideSelectPresenter.class.getSimpleName();
 
-    public static RideSelectPresenter newInstance()
-    {
-        return new RideSelectPresenter();
-    }
-
-    private RideSelectPresenter(){}
+    public RideSelectPresenter(){}
 
     public void getRideDetailList(final GetRidesCallBack getRidesCallBack)
     {

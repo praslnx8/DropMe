@@ -91,9 +91,25 @@ public class HomePresenter extends CorePresenter
         RideModelEngine.getInstance().getCurrentRide();
     }
 
-    public void cancelRide(CancelRideCallBack cancelRideCallBack)
+    public void cancelRide(final CancelRideCallBack cancelRideCallBack)
     {
-        //TODO
+        RideModelEngine.getInstance().cancelRide(new RideModelEngine.CancleRideCallBack() {
+            @Override
+            public void cancel(boolean isSuccess)
+            {
+                if(cancelRideCallBack != null)
+                {
+                    if (isSuccess)
+                    {
+                        cancelRideCallBack.rideCanceled();
+                    }
+                    else
+                    {
+                        cancelRideCallBack.rideCancelFailed("Unable to cancel the current rides");
+                    }
+                }
+            }
+        });
     }
 
     @Override

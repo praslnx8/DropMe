@@ -33,7 +33,7 @@ import butterknife.OnClick;
 /**
  * Created by prasi on 27/5/16.
  */
-public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.MapChange
+public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.MapChange, HomePresenter.CancelRideCallBack
 {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private HomePresenter homePresenter = HomePresenter.newInstance(this);
@@ -78,6 +78,8 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
 
             mapLoader = new MapLoader(mapView,savedInstanceState);
 
+            isProgress = true;
+            ViewUtil.showProgressView(getContext(), topLayout, true);
             mapLoader.loadMap(new MapLoader.MapLoaderCallBack() {
                 @Override
                 public void mapLoaded()
@@ -90,8 +92,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
                 }
             });
 
-            isProgress = true;
-            ViewUtil.showProgressView(getContext(), topLayout, true);
+
         }
 
         return getFragmentView();
@@ -113,8 +114,10 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @OnClick(R.id.cancel_btn)
     protected void cancelClicked()
     {
+        isProgress = true;
+        ViewUtil.showProgressView(getContext(), topLayout, true);
         ConsoleLog.i(TAG, "cancel clicked");
-        homePresenter.getCurrentRide();
+        homePresenter.cancelRide(this);
     }
 
     @OnClick(R.id.book_ride_btn)
@@ -152,7 +155,13 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         mapView.onDestroy();
+        homeFragment = null;
     }
 
     @Override
@@ -214,5 +223,38 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
             }
 
         }
+    }
+
+    @Override
+    public void rideCanceled()
+    {
+        if(isProgress)
+        {
+            ViewUtil.hideProgressView(getContext(), topLayout);
+            isProgress = false;
+        }
+        if(mapLoader != null)
+        {
+            mapLoader.removeMarker(MarkerUtil.SOURCE_MARKER_KEY);
+            mapLoader.removeMarker(MarkerUtil.DEST_MARKER_KEY);
+            mapLoader.clearPolyLine();
+
+            homeButtonLayout.setVisibility(View.VISIBLE);
+            cancelButtonLayout.setVisibility(View.GONE);
+
+            LatLng currentLatlng = DropMeLocatioListener.getLatLng(getContext());
+            mapLoader.moveToLoc(currentLatlng);
+        }
+    }
+
+    @Override
+    public void rideCancelFailed(String message)
+    {
+        if(isProgress)
+        {
+            ViewUtil.hideProgressView(getContext(), topLayout);
+            isProgress = false;
+        }
+        ViewUtil.t(getContext(), "Unable to cancel the ride");
     }
 }

@@ -13,6 +13,7 @@ import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
+import com.prasilabs.util.DataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class RideModelEngine extends CoreModelEngine
         return instance;
     }
 
-    public void createRide(final RideInput rideInput, final RideCreateCallBack rideCreateCallBack)
+    public void createRide(final RideInput input, final RideCreateCallBack rideCreateCallBack)
     {
         callAsync(new AsyncCallBack()
         {
@@ -44,7 +45,7 @@ public class RideModelEngine extends CoreModelEngine
             {
                 try
                 {
-                    RideInput output = CloudConnect.callDropMeApi(false).createRide(UserManager.getDropMeUser(CoreApp.getAppContext()).getHash(), rideInput).execute();
+                    RideInput output = CloudConnect.callDropMeApi(false).createRide(UserManager.getDropMeUser(CoreApp.getAppContext()).getHash(), input).execute();
                     return output;
                 }
                 catch (Exception e)
@@ -59,13 +60,20 @@ public class RideModelEngine extends CoreModelEngine
             {
                 RideInput output = (RideInput) t;
 
-                RideManager.saveRideLite(CoreApp.getAppContext(), output);
+                if(output != null && !DataUtil.isEmpty(output.getId()))
+                {
+                    RideManager.saveRideLite(CoreApp.getAppContext(), output);
 
-                HomeGeoModelEngine.getInstance().addRidePoint(rideInput);
+                    HomeGeoModelEngine.getInstance().addRidePoint(output);
 
-                Intent intent = new Intent();
-                intent.setAction(BroadCastConstant.RIDE_REFRESH_INTENT);
-                LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
+                    Intent intent = new Intent();
+                    intent.setAction(BroadCastConstant.RIDE_REFRESH_INTENT);
+                    LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
+                }
+                else
+                {
+                    ConsoleLog.i(TAG, "ride lite creation has bug :");
+                }
 
                 if(rideCreateCallBack != null)
                 {
@@ -116,12 +124,14 @@ public class RideModelEngine extends CoreModelEngine
 
     public void getRideDetail(final long rideId, final RideDetailCallBack rideDetailCallBack)
     {
+        ConsoleLog.i(TAG, "id is : " + rideId);
         callAsync(new AsyncCallBack() {
             @Override
             public RideDetail async()
             {
                 try
                 {
+                    ConsoleLog.i(TAG, "id is : " + rideId);
                     return CloudConnect.callDropMeApi(false).getRideDetail(rideId).execute();
                 } catch (Exception e) {
                     ConsoleLog.e(e);
@@ -143,7 +153,7 @@ public class RideModelEngine extends CoreModelEngine
     }
 
 
-    public void cancelRide(final long rideId)
+    public void cancelRide(final CancleRideCallBack cancleRideCallBack)
     {
         callAsync(new AsyncCallBack() {
             @Override
@@ -151,7 +161,7 @@ public class RideModelEngine extends CoreModelEngine
             {
                 try
                 {
-                    return CloudConnect.callDropMeApi(false).cancelRide(UserManager.getUserHash(CoreApp.getAppContext()), rideId).execute();
+                    return CloudConnect.callDropMeApi(false).cancelRide(UserManager.getUserHash(CoreApp.getAppContext()), CoreApp.getDeviceId()).execute();
                 }
                 catch (Exception e)
                 {
@@ -164,13 +174,9 @@ public class RideModelEngine extends CoreModelEngine
             public <T> void result(T t)
             {
                 ApiResponse apiResponse = (ApiResponse) t;
-                if(apiResponse.getStatus())
+                if(cancleRideCallBack != null)
                 {
-
-                }
-                else
-                {
-
+                    cancleRideCallBack.cancel(apiResponse.getStatus());
                 }
             }
         });
@@ -215,6 +221,11 @@ public class RideModelEngine extends CoreModelEngine
         }
     }
 
+    public void clearData()
+    {
+        instance = null;
+    }
+
     public interface GetRideDetailListCallBack
     {
         void getRideDetailList(List<RideDetail> rideDetailList);
@@ -229,5 +240,10 @@ public class RideModelEngine extends CoreModelEngine
     public interface RideDetailCallBack
     {
         void getRideDetail(RideDetail rideDetail);
+    }
+
+    public interface CancleRideCallBack
+    {
+        void cancel(boolean isSuccess);
     }
 }

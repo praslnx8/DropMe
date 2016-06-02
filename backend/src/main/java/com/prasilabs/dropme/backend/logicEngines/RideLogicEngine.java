@@ -49,15 +49,14 @@ public class RideLogicEngine extends CoreLogicEngine
 
         if(validateRide(ride))
         {
-            Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
-            Ride existingRide = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, ride.getUserId()).filter(Ride.DEVICE_ID_STR, ride.getDeviceId()).filter(Ride.IS_CLOSED_STR, false).first().now();
+            Ride currentRide = getExistingActiveRide(rideInput.getUserId(), rideInput.getDeviceId());
 
-            if(existingRide == null)
+            if(currentRide == null)
             {
                 ride.setCreated(new Date(System.currentTimeMillis()));
                 ride.setModified(new Date(System.currentTimeMillis()));
                 Key<Ride> rideKey = OfyService.ofy().save().entity(ride).now();
-                ride.setVehicleId(rideKey.getId());
+                ride.setId(rideKey.getId());
             }
             else
             {
@@ -73,30 +72,41 @@ public class RideLogicEngine extends CoreLogicEngine
 
         rideInput = convertToRideInout(ride);
 
+        ConsoleLog.i(TAG, "ride is is : " + rideInput.getId());
+
         return rideInput;
     }
 
     public RideInput getCurrentRide(DropMeUser dropMeUser, String deviceID)
     {
-        Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
-        Ride currentRide = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, dropMeUser.getId()).filter(Ride.DEVICE_ID_STR, deviceID).filter(Ride.IS_CLOSED_STR, false).first().now();
+        Ride ride = getExistingActiveRide(dropMeUser.getId(), deviceID);
 
-        RideInput rideInput = convertToRideInout(currentRide);
+        RideInput rideInput = convertToRideInout(ride);
 
         return rideInput;
     }
 
-    public ApiResponse cancelRide(DropMeUser dropMeUser, long rideId)
+    public ApiResponse cancelRide(DropMeUser dropMeUser, String deviceId)
     {
         ApiResponse apiResponse = new ApiResponse();
 
-        Ride ride = OfyService.ofy().load().type(Ride.class).id(rideId).now();
-
-        if(ride != null && ride.getUserId() == dropMeUser.getId())
+        try
         {
-            ride.setClosed(true);
-            ride.setClosedDate(new Date(System.currentTimeMillis()));
-            OfyService.ofy().save().entity(ride).now();
+            Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
+            List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, dropMeUser.getId()).filter(Ride.DEVICE_ID_STR, deviceId).filter(Ride.IS_CLOSED_STR, false).list();
+
+            if (rideList != null) {
+                for (Ride ride : rideList) {
+                    ride.setClosed(true);
+                    ride.setClosedDate(new Date(System.currentTimeMillis()));
+                }
+                OfyService.ofy().save().entities(rideList).now();
+            }
+            apiResponse.setStatus(true);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
         }
 
         return apiResponse;
@@ -141,7 +151,7 @@ public class RideLogicEngine extends CoreLogicEngine
 
         List<RideDetail> rideDetails = getRideDetailList(ids);
 
-        if(rideDetails.size() > 0)
+        if(rideDetails != null && rideDetails.size() > 0)
         {
             return rideDetails.get(0);
         }
@@ -171,6 +181,7 @@ public class RideLogicEngine extends CoreLogicEngine
                 Vehicle vehicle = OfyService.ofy().load().type(Vehicle.class).id(ride.getVehicleId()).now();
                 if (vehicle != null) {
                     rideDetail.setVehicleNumber(vehicle.getvNumber());
+                    rideDetail.setVehicleType(vehicle.getType());
                 } else {
                     isValid = false;
                 }
@@ -198,6 +209,13 @@ public class RideLogicEngine extends CoreLogicEngine
 
 
         return rideDetails;
+    }
+
+    private Ride getExistingActiveRide(long userId, String deviceId)
+    {
+        Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
+        Ride ride = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, userId).filter(Ride.DEVICE_ID_STR, deviceId).filter(Ride.IS_CLOSED_STR, false).first().now();
+        return ride;
     }
 
     private static RideInput convertToRideInout(Ride ride) {

@@ -165,7 +165,7 @@ public class LocalPreference
     }
 
 
-    public static void ClearLoginSharedPreferences(Context context)
+    public static void clearLoginSharedPreferences(Context context)
     {
         ConsoleLog.i(TAG, "Cleared login");
         SharedPreferences lp = context.getSharedPreferences(SESSION_DATA, Context.MODE_PRIVATE);
@@ -295,7 +295,7 @@ public class LocalPreference
 
 
     //Location data starts
-    public static void storeLocation(Context context, LatLng location, String TAG)
+    public static void storeLocation(Context context, LatLng location, String key)
     {
 
         SharedPreferences prefs = context.getSharedPreferences(SESSION_DATA, Context.MODE_PRIVATE);
@@ -305,26 +305,29 @@ public class LocalPreference
         {
             ConsoleLog.i(TAG, "Saving location is lat: " + location.latitude + " lon : " + location.longitude);
 
-            editor.putLong(TAG + "LAT", Double.doubleToRawLongBits(location.latitude));
-            editor.putLong(TAG + "LON", Double.doubleToRawLongBits(location.longitude));
+            editor.putLong(key + "LAT", Double.doubleToRawLongBits(location.latitude));
+            editor.putLong(key + "LON", Double.doubleToRawLongBits(location.longitude));
             editor.apply();
         }
     }
 
-    public static LatLng getLocationFromPrefs(Context context, String TAG)
+    public static LatLng getLocationFromPrefs(Context context, String key)
     {
         SharedPreferences prefs = context.getSharedPreferences(SESSION_DATA, Context.MODE_PRIVATE);
-        Long lat = prefs.getLong(TAG + "LAT", Long.MAX_VALUE);
-        Long lng = prefs.getLong(TAG + "LON", Long.MAX_VALUE);
+        Long lat = prefs.getLong(key + "LAT", Long.MAX_VALUE);
+        Long lng = prefs.getLong(key + "LON", Long.MAX_VALUE);
         LatLng latLng = computeLatLng(lat, lng);
-        if (latLng == null) {
-            ConsoleLog.i(TAG, "latlng is null");
+        if (latLng == null)
+        {
+            ConsoleLog.i(TAG, "latlng is null for key " + key);
         }
         return latLng;
     }
 
-    private static LatLng computeLatLng(Long lat, Long lng) {
-        if ((lat != Long.MAX_VALUE && lng != Long.MAX_VALUE) && (lat != 0 && lng != 0)) {
+    private static LatLng computeLatLng(Long lat, Long lng)
+    {
+        if ((lat != Long.MAX_VALUE && lng != Long.MAX_VALUE) && (lat != 0 && lng != 0))
+        {
             Double latDbl = Double.longBitsToDouble(lat);
             Double lngDbl = Double.longBitsToDouble(lng);
             return new LatLng(latDbl, lngDbl);

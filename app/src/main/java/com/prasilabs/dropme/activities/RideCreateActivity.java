@@ -196,7 +196,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
                     createAndMakeApiCall(startDate);
 
                 }
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
         }
     }
 
@@ -210,6 +210,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
         rideInput.setSourceLoc(source);
         rideInput.setCurrentLoc(source);
         rideInput.setFarePerKm(farePerKm);
+        rideInput.setVehicleId(vehicleID);
         rideInput.setDeviceId(CoreApp.getDeviceId());
         rideInput.setUserId(UserManager.getDropMeUser(RideCreateActivity.this).getId());
         rideInput.setStartDate(startDate);

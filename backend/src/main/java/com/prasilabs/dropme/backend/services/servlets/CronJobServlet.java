@@ -1,7 +1,6 @@
 package com.prasilabs.dropme.backend.services.servlets;
 
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
-import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
 
 import java.io.IOException;
 
@@ -22,6 +21,6 @@ public class CronJobServlet extends HttpServlet
     {
         ConsoleLog.i(TAG, "cron job servlet started");
 
-        RideLogicEngine.getInstance().deleteInactiveGeoRideKeys();
+        // TODO failed RideLogicEngine.getInstance().deleteInactiveGeoRideKeys();
     }
 }
