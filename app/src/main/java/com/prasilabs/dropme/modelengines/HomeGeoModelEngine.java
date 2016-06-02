@@ -295,7 +295,7 @@ public class HomeGeoModelEngine
         }
     }
 
-    private static String createGeoPtKey(VDropMeUser vDropMeUser)
+    public static String createGeoPtKey(VDropMeUser vDropMeUser)
     {
         if(vDropMeUser != null && vDropMeUser.getId() != null) {
             return GeoUserStr + splitter + CoreApp.getDeviceId() + splitter + vDropMeUser.getId();
@@ -303,7 +303,7 @@ public class HomeGeoModelEngine
         return null;
     }
 
-    private static String createGeoPtKey(RideInput rideLite)
+    public static String createGeoPtKey(RideInput rideLite)
     {
         if(rideLite != null && rideLite.getId() != null)
         {

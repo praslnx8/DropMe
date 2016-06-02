@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
@@ -59,6 +60,8 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
     Spinner selectVehicleSpinner;
     @BindView(R.id.select_fare_rate)
     Spinner fareRateSpinner;
+    @BindView(R.id.top_layout)
+    LinearLayout topLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -215,6 +218,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
         rideInput.setUserId(UserManager.getDropMeUser(RideCreateActivity.this).getId());
         rideInput.setStartDate(startDate);
 
+        ViewUtil.showProgressView(this, topLayout, true);
         rideCreatePresenter.createRide(rideInput);
     }
 
@@ -246,6 +250,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
     @Override
     public void rideCreated()
     {
+        ViewUtil.hideProgressView(this, topLayout);
         ViewUtil.t(this, "Your ride is created...");
         finish();
     }
@@ -253,6 +258,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
     @Override
     public void rideCreateFailed()
     {
+        ViewUtil.hideProgressView(this, topLayout);
         ViewUtil.t(this, "unabel to create Ride");
         ConsoleLog.i(TAG, "unabel to create Ride");
     }
