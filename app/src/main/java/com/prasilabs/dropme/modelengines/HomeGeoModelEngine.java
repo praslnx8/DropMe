@@ -179,7 +179,9 @@ public class HomeGeoModelEngine
                             {
                                 if (key.contains(GeoUserStr))
                                 {
-                                    if (id != UserManager.getDropMeUser(CoreApp.getAppContext()).getId()) {
+                                    VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
+                                    if (vDropMeUser ==null || id != vDropMeUser.getId())
+                                    {
                                         MarkerInfo markerInfo = new MarkerInfo();
                                         markerInfo.setKey(key);
                                         markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
@@ -337,7 +339,9 @@ public class HomeGeoModelEngine
 
     public void clearUserData()
     {
-         homeGeoModelEngine = null;
+        homeGeoModelEngine = null;
+        geoMarkerMap.clear();
+        homeQuery = null;
     }
 
     public interface GeoCallBack
@@ -346,5 +350,7 @@ public class HomeGeoModelEngine
 
         void removeMarker(MarkerInfo markerInfo);
     }
+
+
 
 }

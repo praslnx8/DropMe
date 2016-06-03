@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class UserManager
 {
+    private static VDropMeUser vDropMeUser;
     public static boolean saveDropMeUser(Context context, VDropMeUser vDropMeUser)
     {
         boolean isSucces = false;
@@ -40,6 +41,7 @@ public class UserManager
             {
                 LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.ROLES_STR, null);
             }
+            vDropMeUser = null;
 
             isSucces = true;
         }
@@ -60,44 +62,42 @@ public class UserManager
 
     public static VDropMeUser getDropMeUser(Context context)
     {
-        VDropMeUser vDropMeUser = null;
+        if(vDropMeUser == null)
+        {
+            String name = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.NAME_STR, null);
+            String hash = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.HASH_STR, null);
+            String loginType = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.LOGIN_TYPE_STR, null);
+            String email = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
+            long created = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.LOGIN_TYPE_STR, 0L);
+            DateTime createdDate = null;
+            if (created != 0L) {
+                createdDate = new DateTime(created);
+            }
+            String picture = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.PICTURE_STR, null);
+            String gender = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.GENDER_STR, null);
+            long id = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.ID_STR, 0L);
+            Long idL = null;
+            if (id != 0L) {
+                idL = id;
+            }
+            String mobile = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.MOBILE_STR, null);
+            boolean mobileVerified = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.MOBILE_VERIFIED_STR, false);
+            List<String> roles = LocalPreference.getSessionStringArrayData(context, PojoConstants.UserConstant.ROLES_STR, null);
 
-        String name = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.NAME_STR, null);
-        String hash = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.HASH_STR, null);
-        String loginType = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.LOGIN_TYPE_STR, null);
-        String email = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
-        long created = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.LOGIN_TYPE_STR, 0L);
-        DateTime createdDate = null;
-        if(created != 0L)
-        {
-            createdDate = new DateTime(created);
-        }
-        String picture = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.PICTURE_STR, null);
-        String gender = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.GENDER_STR, null);
-        long id = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.ID_STR, 0L);
-        Long idL = null;
-        if(id != 0L)
-        {
-            idL = id;
-        }
-        String mobile = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.MOBILE_STR, null);
-        boolean mobileVerified = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.MOBILE_VERIFIED_STR, false);
-        List<String> roles = LocalPreference.getSessionStringArrayData(context, PojoConstants.UserConstant.ROLES_STR, null);
-
-        if(!TextUtils.isEmpty(hash) && !TextUtils.isEmpty(name) && idL != null && !TextUtils.isEmpty(loginType) && !TextUtils.isEmpty(email))
-        {
-            vDropMeUser = new VDropMeUser();
-            vDropMeUser.setName(name);
-            vDropMeUser.setHash(hash);
-            vDropMeUser.setEmail(email);
-            vDropMeUser.setLoginType(loginType);
-            vDropMeUser.setCreated(createdDate);
-            vDropMeUser.setPicture(picture);
-            vDropMeUser.setGender(gender);
-            vDropMeUser.setId(idL);
-            vDropMeUser.setMobile(mobile);
-            vDropMeUser.setMobileVerified(mobileVerified);
-            vDropMeUser.setRoles(roles);
+            if (!TextUtils.isEmpty(hash) && !TextUtils.isEmpty(name) && idL != null && !TextUtils.isEmpty(loginType) && !TextUtils.isEmpty(email)) {
+                vDropMeUser = new VDropMeUser();
+                vDropMeUser.setName(name);
+                vDropMeUser.setHash(hash);
+                vDropMeUser.setEmail(email);
+                vDropMeUser.setLoginType(loginType);
+                vDropMeUser.setCreated(createdDate);
+                vDropMeUser.setPicture(picture);
+                vDropMeUser.setGender(gender);
+                vDropMeUser.setId(idL);
+                vDropMeUser.setMobile(mobile);
+                vDropMeUser.setMobileVerified(mobileVerified);
+                vDropMeUser.setRoles(roles);
+            }
         }
 
         return vDropMeUser;

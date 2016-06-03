@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.constants.PermisionConstant;
 import com.prasilabs.dropme.constants.PojoConstants;
 import com.prasilabs.dropme.core.CoreFragment;
+import com.prasilabs.dropme.customs.JsonUtil;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
@@ -48,7 +50,6 @@ import com.prasilabs.dropme.utils.ViewUtil;
 import com.prasilabs.enums.Gender;
 import com.prasilabs.enums.LoginType;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -229,45 +230,44 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             public void onCompleted(JSONObject object, GraphResponse response)
             {
                 ConsoleLog.i(TAG, "graph req resp came");
-                try
+
+                JSONObject fbGraphObject = response.getJSONObject();
+                // JSONObject fbGraphObject = fbJsonData.getJSONObject("graphObject");
+                String fbId = JsonUtil.checkHasString(fbGraphObject,"id");
+                //String fbUserName = "";
+                String fbEmail = JsonUtil.checkHasString(fbGraphObject,"email");
+                if(TextUtils.isEmpty(fbEmail))
                 {
-                    JSONObject fbGraphObject = response.getJSONObject();
-                    // JSONObject fbGraphObject = fbJsonData.getJSONObject("graphObject");
-                    String fbId = fbGraphObject.getString("id");
-                    //String fbUserName = "";
-                    String fbEmail = fbGraphObject.getString("email");
-                    String fbFirstName = fbGraphObject.getString("first_name");
-                    String fbLastName = fbGraphObject.getString("last_name");
-                    String fbGender = fbGraphObject.getString("gender");
-                    String fbVerifiedEmail = fbGraphObject.getString("verified");
 
-                    String pictureUrl = "http://graph.facebook.com/"+fbId+"/picture?type=large";
-
-                    final VDropMeUser vDropMeUser = new VDropMeUser();
-                    vDropMeUser.setName(fbFirstName + " " + fbLastName);
-                    vDropMeUser.setPicture(pictureUrl);
-                    vDropMeUser.setEmail(fbEmail);
-                    //vDropMeUser.setGender(0); //TODO
-                    vDropMeUser.setLoginType(LoginType.FaceBook.name());
-
-                    LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
-                    LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
-
-                    ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
-                    MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
-                        @Override
-                        public void verify(boolean status, String phone)
-                        {
-                            vDropMeUser.setMobile(phone);
-                            vDropMeUser.setMobileVerified(status);
-
-                            splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
-                        }
-                    });
-
-                } catch (JSONException e) {
-                   ConsoleLog.e(e);
                 }
+                String fbFirstName = JsonUtil.checkHasString(fbGraphObject,"first_name");
+                String fbLastName = JsonUtil.checkHasString(fbGraphObject,"last_name");
+                String fbGender = JsonUtil.checkHasString(fbGraphObject,"gender");
+                String fbVerifiedEmail = JsonUtil.checkHasString(fbGraphObject,"verified");
+
+                String pictureUrl = "http://graph.facebook.com/"+fbId+"/picture?type=large";
+
+                final VDropMeUser vDropMeUser = new VDropMeUser();
+                vDropMeUser.setName(fbFirstName + " " + fbLastName);
+                vDropMeUser.setPicture(pictureUrl);
+                vDropMeUser.setEmail(fbEmail);
+                //vDropMeUser.setGender(0); //TODO
+                vDropMeUser.setLoginType(LoginType.FaceBook.name());
+
+                LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
+                LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
+
+                ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
+                MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
+                    @Override
+                    public void verify(boolean status, String phone)
+                    {
+                        vDropMeUser.setMobile(phone);
+                        vDropMeUser.setMobileVerified(status);
+
+                        splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
+                    }
+                });
             }
         });
 
