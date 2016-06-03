@@ -27,7 +27,8 @@ public class DropMeAuthenticator implements Authenticator
 
             if(dropMeUser != null && dropMeUser.getEmail() != null)
             {
-                User user = new User(dropMeUser.getName(), dropMeUser.getEmail());
+                User user = new User(String.valueOf(dropMeUser.getId()), dropMeUser.getEmail());
+
                 return user;
             }
         }

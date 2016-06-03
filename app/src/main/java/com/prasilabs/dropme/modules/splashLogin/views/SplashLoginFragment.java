@@ -46,6 +46,7 @@ import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.mobileVerification.MobileVerificationManager;
 import com.prasilabs.dropme.modules.splashLogin.presenter.SplashLoginPresenter;
+import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.ViewUtil;
 import com.prasilabs.enums.Gender;
 import com.prasilabs.enums.LoginType;
@@ -64,7 +65,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 {
     private static final String TAG = SplashLoginFragment.class.getSimpleName();
 
-    private SplashLoginPresenter splashLoginPresenter = SplashLoginPresenter.newInstance();
+    private SplashLoginPresenter splashLoginPresenter = SplashLoginPresenter.newInstance(this);
     private static final int RC_SIGN_IN = 0;
     private static final int RC_SIGN_IN_SUCCESS = -1;
     private static ProgressDialog progressDialog;
@@ -141,8 +142,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     }
                     else
                     {
-                        HomeActivity.callHomeActivity(getContext());
-                        getCoreActivity().finish();
+                        callHomeActivity();
                     }
                 }
             },2000);
@@ -182,8 +182,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             }
             else
             {
-                HomeActivity.callHomeActivity(getContext());
-                getCoreActivity().finish();
+                callHomeActivity();
             }
         }
 
@@ -265,7 +264,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                         vDropMeUser.setMobile(phone);
                         vDropMeUser.setMobileVerified(status);
 
-                        splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
+                        splashLoginPresenter.login(vDropMeUser);
                     }
                 });
             }
@@ -300,8 +299,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
         UserManager.saveDropMeUser(getContext(), vDropMeUser);
         ViewUtil.hideProgressView(getContext(), logiBtnLayout);
 
-        HomeActivity.callHomeActivity(getContext());
-        getCoreActivity().finish();
+
+        callHomeActivity();
     }
 
     @Override
@@ -309,6 +308,51 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     {
         ViewUtil.t(getContext(), message);
         ViewUtil.hideProgressView(getContext(), logiBtnLayout);
+    }
+
+    @Override
+    public void locationEnabled()
+    {
+        callHomeActivity();
+    }
+
+    private void callHomeActivity()
+    {
+        VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
+        if(vDropMeUser != null && !TextUtils.isEmpty(vDropMeUser.getHash()) && vDropMeUser.getId() != null && vDropMeUser.getId() != 0)
+        {
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
+                if (DropMeLocatioListener.getInstance().isLocationEnabled(getContext())) {
+                    HomeActivity.callHomeActivity(getContext());
+                    getCoreActivity().finish();
+                }
+                else
+                {
+                    Snackbar.make(getFragmentView(), "Please Enable GPS.",
+                            Snackbar.LENGTH_LONG)
+                            .setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    Intent intnt = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    intnt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intnt);
+                                }
+                            })
+                            .show();
+                }
+            }
+            else
+            {
+                getLocationPermissions();
+            }
+        }
+        else
+        {
+            //No need. called only after login
+            //ConsoleLog.i(TAG, "Login to continue");
+        }
     }
 
     @Override
@@ -356,7 +400,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
             ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
 
-            splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
+            splashLoginPresenter.login(vDropMeUser);
 
            /* MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
                 @Override
@@ -378,6 +422,13 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     public void onConnectionSuspended(int i)
     {
 
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        callHomeActivity();
     }
 
     @Override
@@ -440,6 +491,31 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
         }
     }
 
+
+    private void getLocationPermissions()
+    {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getCoreActivity(), Manifest.permission.GET_ACCOUNTS))
+        {
+            Snackbar.make(getFragmentView(), "Require access to Access Location.",
+                    Snackbar.LENGTH_LONG)
+                    .setAction("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestPermissions(
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    PermisionConstant.REQUEST_FINE_LOCATION);
+                        }
+                    })
+                    .show();
+        }
+        else
+        {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PermisionConstant.REQUEST_FINE_LOCATION);
+        }
+    }
+
+
     private void connectToGooglePlus() {
         progressDialog.show();
         if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
@@ -459,7 +535,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == PermisionConstant.REQUEST_READ_CONTACT) {
+        if (requestCode == PermisionConstant.REQUEST_READ_CONTACT)
+        {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                Snackbar.make(getRootView(), R.string.permision_available_contacts,
 //                        Snackbar.LENGTH_SHORT).show();
@@ -468,7 +545,20 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 Snackbar.make(getFragmentView(), "No permision. cannot getUser",
                         Snackbar.LENGTH_SHORT).show();
             }
-        } else {
+        }
+        else if(requestCode == PermisionConstant.REQUEST_FINE_LOCATION)
+        {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Snackbar.make(getRootView(), R.string.permision_available_contacts,
+//                        Snackbar.LENGTH_SHORT).show();
+                callHomeActivity();
+            } else {
+                Snackbar.make(getFragmentView(), "No permision. cannot open app",
+                        Snackbar.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }

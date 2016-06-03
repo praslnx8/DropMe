@@ -41,6 +41,18 @@ public class DropMeLocatioListener implements LocationListener
 
     private DropMeLocatioListener() {}
 
+    public boolean isLocationEnabled(Context context)
+    {
+        this.context = context;
+
+        if(lm == null)
+        {
+            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
     public void registerLoc(Context context)
     {
         this.context = context;
@@ -152,6 +164,10 @@ public class DropMeLocatioListener implements LocationListener
     {
         if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
+            Intent intent = new Intent();
+            intent.setAction(BroadCastConstant.LOCATION_ENABLED_CONSTANT);
+            LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
+
             if(checkLocationPermission(CoreApp.getAppContext()))
             {
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 50, this);

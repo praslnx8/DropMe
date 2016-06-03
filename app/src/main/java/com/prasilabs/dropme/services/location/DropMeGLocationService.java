@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -121,7 +120,8 @@ public class DropMeGLocationService extends IntentService {
      */
     private void locationUpdated(Intent intent)
     {
-        Log.v(TAG, ACTION_LOCATION_UPDATED);
+
+        ConsoleLog.i(TAG, "location update recieved");
 
         // Extra new location
         Location location = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
@@ -132,6 +132,10 @@ public class DropMeGLocationService extends IntentService {
             LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
             LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
             DropMeLocatioListener.informLocation(this);
+        }
+        else
+        {
+            ConsoleLog.w(TAG, "location is null");
         }
     }
 

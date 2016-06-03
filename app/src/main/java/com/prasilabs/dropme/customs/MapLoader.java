@@ -50,7 +50,7 @@ public class MapLoader
                 mapLoaderCallBack.mapLoaded();
 
                 if (ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    gMap.setMyLocationEnabled(true);
+                    //gMap.setMyLocationEnabled(true);
                 }
             }
         });

@@ -6,4 +6,5 @@ package com.prasilabs.dropme.constants;
 public class PermisionConstant
 {
     public static final int REQUEST_READ_CONTACT=3;
+    public static final int REQUEST_FINE_LOCATION=4;
 }

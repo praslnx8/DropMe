@@ -36,7 +36,8 @@ public class VehicleLogicEngine
         ApiResponse apiResponse = new ApiResponse();
 
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
-        if(dropMeUser != null) {
+        if(dropMeUser != null)
+        {
             vVehicle.setOwnerId(dropMeUser.getId());
 
             Vehicle vehicle = convertToVehicle(vVehicle);
