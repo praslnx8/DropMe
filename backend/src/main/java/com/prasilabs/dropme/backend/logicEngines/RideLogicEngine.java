@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.backend.logicEngines;
 
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.prasilabs.dropme.backend.annotions.Cron;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
@@ -42,43 +43,49 @@ public class RideLogicEngine extends CoreLogicEngine
 
     public RideLogicEngine(){}
 
-    public RideInput createRide(RideInput rideInput)
+    public RideInput createRide(User user, RideInput rideInput)
     {
-        Ride ride = convertToRide(rideInput);
-        RideUtil.calculateAndSetExpiry(ride);
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
+        if(dropMeUser != null) {
+            rideInput.setUserId(dropMeUser.getId());
 
-        if(validateRide(ride))
-        {
-            Ride currentRide = getExistingActiveRide(rideInput.getUserId(), rideInput.getDeviceId());
+            Ride ride = convertToRide(rideInput);
+            RideUtil.calculateAndSetExpiry(ride);
 
-            if(currentRide == null)
-            {
-                ride.setCreated(new Date(System.currentTimeMillis()));
-                ride.setModified(new Date(System.currentTimeMillis()));
-                Key<Ride> rideKey = OfyService.ofy().save().entity(ride).now();
-                ride.setId(rideKey.getId());
-            }
-            else
-            {
-                ConsoleLog.w(TAG, "ride already exist");
+            if (validateRide(ride)) {
+                Ride currentRide = getExistingActiveRide(rideInput.getUserId(), rideInput.getDeviceId());
+
+                if (currentRide == null) {
+                    ride.setCreated(new Date(System.currentTimeMillis()));
+                    ride.setModified(new Date(System.currentTimeMillis()));
+                    Key<Ride> rideKey = OfyService.ofy().save().entity(ride).now();
+                    ride.setId(rideKey.getId());
+                } else {
+                    ConsoleLog.w(TAG, "ride already exist");
+                    ride = null;
+                }
+            } else {
+                ConsoleLog.w(TAG, "validation failed");
                 ride = null;
             }
+
+            rideInput = convertToRideInout(ride);
         }
         else
         {
-            ConsoleLog.w(TAG, "validation failed");
-            ride = null;
+            ConsoleLog.w(TAG, "user is null");
         }
 
-        rideInput = convertToRideInout(ride);
-
         ConsoleLog.i(TAG, "ride is is : " + rideInput.getId());
+
 
         return rideInput;
     }
 
-    public RideInput getCurrentRide(DropMeUser dropMeUser, String deviceID)
+    public RideInput getCurrentRide(User user, String deviceID)
     {
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
+
         Ride ride = getExistingActiveRide(dropMeUser.getId(), deviceID);
 
         RideInput rideInput = convertToRideInout(ride);
@@ -86,23 +93,32 @@ public class RideLogicEngine extends CoreLogicEngine
         return rideInput;
     }
 
-    public ApiResponse cancelRide(DropMeUser dropMeUser, String deviceId)
+    public ApiResponse cancelRide(User user, String deviceId)
     {
         ApiResponse apiResponse = new ApiResponse();
 
         try
         {
-            Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
-            List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, dropMeUser.getId()).filter(Ride.DEVICE_ID_STR, deviceId).filter(Ride.IS_CLOSED_STR, false).list();
+            DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
 
-            if (rideList != null) {
-                for (Ride ride : rideList) {
-                    ride.setClosed(true);
-                    ride.setClosedDate(new Date(System.currentTimeMillis()));
+            if(dropMeUser != null)
+            {
+                Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
+                List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, dropMeUser.getId()).filter(Ride.DEVICE_ID_STR, deviceId).filter(Ride.IS_CLOSED_STR, false).list();
+
+                if (rideList != null) {
+                    for (Ride ride : rideList) {
+                        ride.setClosed(true);
+                        ride.setClosedDate(new Date(System.currentTimeMillis()));
+                    }
+                    OfyService.ofy().save().entities(rideList).now();
                 }
-                OfyService.ofy().save().entities(rideList).now();
+                apiResponse.setStatus(true);
             }
-            apiResponse.setStatus(true);
+            else
+            {
+                ConsoleLog.w(TAG, "user is null");
+            }
         }
         catch (Exception e)
         {

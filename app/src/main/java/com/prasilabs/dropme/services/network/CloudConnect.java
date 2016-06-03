@@ -10,6 +10,7 @@ import com.prasilabs.dropme.constants.PojoConstants;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.services.oauth.DropMeCredential;
 import com.prasilabs.dropme.services.oauth.FCredential;
 import com.prasilabs.dropme.services.oauth.GCredential;
 import com.prasilabs.enums.LoginType;
@@ -48,6 +49,10 @@ public class CloudConnect
                     ConsoleLog.i(TAG, "google oauth");
                     httpRequestInitializer = GCredential.getGoogleCredential(CoreApp.getAppContext());
                 }
+            }
+            else
+            {
+                httpRequestInitializer = DropMeCredential.getDropMECredentialInitializer();
             }
 
             DropMeApi.Builder builder = new DropMeApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), httpRequestInitializer);

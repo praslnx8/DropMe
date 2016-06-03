@@ -91,7 +91,7 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
         ViewUtil.hideProgressView(this, topLayout);
         if(rideDetailList != null && rideDetailList.size() > 0)
         {
-            rideSelectAdapter.addListItem(rideDetailList);
+            rideSelectAdapter.clearAndAddItem(rideDetailList);
             ridersListView.setVisibility(View.VISIBLE);
             emptyJokerLayout.setVisibility(View.GONE);
         }

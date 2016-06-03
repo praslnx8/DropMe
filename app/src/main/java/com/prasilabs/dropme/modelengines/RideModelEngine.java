@@ -11,7 +11,6 @@ import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.RideManager;
-import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
 import com.prasilabs.util.DataUtil;
 
@@ -45,7 +44,7 @@ public class RideModelEngine extends CoreModelEngine
             {
                 try
                 {
-                    RideInput output = CloudConnect.callDropMeApi(false).createRide(UserManager.getDropMeUser(CoreApp.getAppContext()).getHash(), input).execute();
+                    RideInput output = CloudConnect.callDropMeApi(false).createRide(input).execute();
                     return output;
                 }
                 catch (Exception e)
@@ -98,7 +97,7 @@ public class RideModelEngine extends CoreModelEngine
             {
                 try
                 {
-                    RideInput rideInput = CloudConnect.callDropMeApi(false).getCurrentRide(UserManager.getDropMeUser(CoreApp.getAppContext()).getHash(), CoreApp.getDeviceId()).execute();
+                    RideInput rideInput = CloudConnect.callDropMeApi(false).getCurrentRide(CoreApp.getDeviceId()).execute();
                     return rideInput;
                 }
                 catch (Exception e)
@@ -161,7 +160,7 @@ public class RideModelEngine extends CoreModelEngine
             {
                 try
                 {
-                    return CloudConnect.callDropMeApi(false).cancelRide(UserManager.getUserHash(CoreApp.getAppContext()), CoreApp.getDeviceId()).execute();
+                    return CloudConnect.callDropMeApi(false).cancelRide(CoreApp.getDeviceId()).execute();
                 }
                 catch (Exception e)
                 {
@@ -174,6 +173,7 @@ public class RideModelEngine extends CoreModelEngine
             public <T> void result(T t)
             {
                 ApiResponse apiResponse = (ApiResponse) t;
+                RideManager.saveRideLite(CoreApp.getAppContext(), new RideInput());
                 if(cancleRideCallBack != null)
                 {
                     cancleRideCallBack.cancel(apiResponse.getStatus());
@@ -192,7 +192,7 @@ public class RideModelEngine extends CoreModelEngine
                 @Override
                 public List<RideDetail> async() {
                     try {
-                        return CloudConnect.callDropMeApi(false).getRideDetailList(UserManager.getUserHash(CoreApp.getAppContext()), idsList).execute().getItems();
+                        return CloudConnect.callDropMeApi(false).getRideDetailList(idsList).execute().getItems();
                     } catch (Exception e) {
                         ConsoleLog.e(e);
                     }

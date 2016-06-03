@@ -2,6 +2,7 @@ package com.prasilabs.dropme.backend.utils;
 
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
+import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.enums.UserRole;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
@@ -47,12 +48,16 @@ public class AdminUtil
         }
         else
         {
-            throw new OAuthRequestException("oauth user is not found.");
+            OAuthRequestException oauthException = new OAuthRequestException("oauth user is not found.");
+            ConsoleLog.e(oauthException);
+            throw oauthException;
         }
 
         if(isAdminCheck && !isAdmin)
         {
-            throw  new OAuthRequestException("user is not admin");
+            OAuthRequestException oauthException = new OAuthRequestException("User is not admin.");
+            ConsoleLog.e(oauthException);
+            throw oauthException;
         }
 
         return isAdmin;
@@ -81,12 +86,16 @@ public class AdminUtil
         }
         else
         {
-            throw new OAuthRequestException("oauth user is not found.");
+            OAuthRequestException oauthException = new OAuthRequestException("oauth user is not found.");
+            ConsoleLog.e(oauthException);
+            throw oauthException;
         }
 
         if(isAdminCheck && !isAdmin)
         {
-            throw  new OAuthRequestException("user is not admin");
+            OAuthRequestException oauthException = new OAuthRequestException("user is not admin.");
+            ConsoleLog.e(oauthException);
+            throw oauthException;
         }
 
         return dropMeUser;

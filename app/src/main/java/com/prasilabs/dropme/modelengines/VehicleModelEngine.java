@@ -37,7 +37,7 @@ public class VehicleModelEngine extends CoreModelEngine
                 try
                 {
                     VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
-                    return CloudConnect.callDropMeApi(false).addVehicle(vDropMeUser.getHash(), vVehicle).execute();
+                    return CloudConnect.callDropMeApi(false).addVehicle(vVehicle).execute();
                 }
                 catch (Exception e)
                 {

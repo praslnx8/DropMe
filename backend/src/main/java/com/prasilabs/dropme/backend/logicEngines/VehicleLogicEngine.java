@@ -1,8 +1,11 @@
 package com.prasilabs.dropme.backend.logicEngines;
 
+import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
+import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.Vehicle;
 import com.prasilabs.dropme.backend.db.OfyService;
+import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.util.DataUtil;
@@ -13,6 +16,7 @@ import com.prasilabs.util.DataUtil;
 public class VehicleLogicEngine
 {
 
+    private static final String TAG = VehicleLogicEngine.class.getSimpleName();
     private static VehicleLogicEngine vehicleLogicEngine;
 
     public static VehicleLogicEngine getInstance()
@@ -27,21 +31,28 @@ public class VehicleLogicEngine
 
     private VehicleLogicEngine(){}
 
-    public ApiResponse addVehicle(VVehicle vVehicle)
+    public ApiResponse addVehicle(User user, VVehicle vVehicle)
     {
         ApiResponse apiResponse = new ApiResponse();
 
-        Vehicle vehicle = convertToVehicle(vVehicle);
-        boolean isValid = validateVehicle(vehicle);
-        if(isValid)
-        {
-            Key<Vehicle> vehicleKey = OfyService.ofy().save().entity(vehicle).now();
-            apiResponse.setId(vehicleKey.getId());
-            apiResponse.setStatus(true);
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
+        if(dropMeUser != null) {
+            vVehicle.setOwnerId(dropMeUser.getId());
+
+            Vehicle vehicle = convertToVehicle(vVehicle);
+            boolean isValid = validateVehicle(vehicle);
+            if (isValid) {
+                Key<Vehicle> vehicleKey = OfyService.ofy().save().entity(vehicle).now();
+                apiResponse.setId(vehicleKey.getId());
+                apiResponse.setStatus(true);
+            } else {
+                apiResponse.setMessage("not a valid data");
+            }
         }
         else
         {
-            apiResponse.setMessage("not a valid data");
+            apiResponse.setMessage("user is not found");
+            ConsoleLog.w(TAG, "user is not found");
         }
 
         return apiResponse;

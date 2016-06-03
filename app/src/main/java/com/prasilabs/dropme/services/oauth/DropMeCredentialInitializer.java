@@ -8,22 +8,21 @@ import com.prasilabs.constants.CommonConstant;
 import java.io.IOException;
 
 /**
- * Created by prasi on 26/5/16.
+ * Created by prasi on 3/6/16.
  */
-public class FbAccountCredential implements HttpRequestInitializer
+public class DropMeCredentialInitializer implements HttpRequestInitializer
 {
-    private String accesToken;
-
-    public FbAccountCredential(String accesToken)
+    private String hash;
+    public DropMeCredentialInitializer(String hash)
     {
-        this.accesToken = accesToken;
+        this.hash = hash;
     }
 
     @Override
     public void initialize(HttpRequest request) throws IOException
     {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.put(CommonConstant.FBAUTHHEADER, accesToken);
+        httpHeaders.put(CommonConstant.HASHAUTHHEADER, hash);
         request.setHeaders(httpHeaders);
     }
 }

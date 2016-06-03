@@ -6,20 +6,20 @@ package com.prasilabs.dropme.services.oauth;
 public class FCredential
 {
     private static String prevAccesToken;
-    private static FbAccountCredential fbAccountCredential;
+    private static FbCredentialInitializer fbCredentialInitializer;
 
-    public static FbAccountCredential getFbAccountCredential(String accesToken)
+    public static FbCredentialInitializer getFbAccountCredential(String accesToken)
     {
-        if(prevAccesToken != null && prevAccesToken.equals(accesToken) && fbAccountCredential != null)
+        if(prevAccesToken != null && prevAccesToken.equals(accesToken) && fbCredentialInitializer != null)
         {
-            return fbAccountCredential;
+            return fbCredentialInitializer;
         }
         else
         {
-            fbAccountCredential = new FbAccountCredential(accesToken);
+            fbCredentialInitializer = new FbCredentialInitializer(accesToken);
             prevAccesToken = accesToken;
         }
 
-        return fbAccountCredential;
+        return fbCredentialInitializer;
     }
 }

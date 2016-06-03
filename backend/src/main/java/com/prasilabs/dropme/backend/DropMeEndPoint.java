@@ -14,7 +14,6 @@ import com.google.api.server.spi.config.Named;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.prasilabs.constants.AuthConstants;
-import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.debug.Experiments;
 import com.prasilabs.dropme.backend.io.ApiResponse;
@@ -25,6 +24,7 @@ import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
+import com.prasilabs.dropme.backend.security.DropMeAuthenticator;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
 import com.prasilabs.dropme.backend.utils.AdminUtil;
 
@@ -39,7 +39,7 @@ import static com.google.api.server.spi.config.ApiMethod.HttpMethod.POST;
         clientIds = {AuthConstants.WEB_CLIENT_ID,  AuthConstants.ANDROID_CLIENT_ID, com.google.api.server.spi.Constant.API_EXPLORER_CLIENT_ID},
         audiences = {AuthConstants.ANDROID_AUDIENCE},
         scopes = {AuthConstants.EMAIL_SCOPE},
-        authenticators = {FBAuthenticator.class, EndpointsAuthenticator.class}, //add EndpointsAuthenticator to the end of the @authenticators list to make it as a fallback when user provided authenticator fails. Endpoints will try all authenticators and return the first successful one.
+        authenticators = {DropMeAuthenticator.class, FBAuthenticator.class, EndpointsAuthenticator.class}, //add EndpointsAuthenticator to the end of the @authenticators list to make it as a fallback when user provided authenticator fails. Endpoints will try all authenticators and return the first successful one.
 
         namespace = @ApiNamespace(
                 ownerDomain = "backend.dropme.prasilabs.com",
@@ -99,39 +99,39 @@ public class DropMeEndPoint
     }
 
     @ApiMethod(name = "addVehicle")
-    public ApiResponse addVehicle(@Named("hash") String hash, VVehicle vVehicle) throws OAuthRequestException
+    public ApiResponse addVehicle(User user, VVehicle vVehicle) throws OAuthRequestException
     {
+        AdminUtil.checkAndThrow(user);
+
         ApiResponse apiResponse = new ApiResponse();
 
-        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
-
-        if(dropMeUser != null)
+        try
         {
-            vVehicle.setOwnerId(dropMeUser.getId());
-            apiResponse = VehicleLogicEngine.getInstance().addVehicle(vVehicle);
+            apiResponse = VehicleLogicEngine.getInstance().addVehicle(user, vVehicle);
         }
-        else
+        catch (Exception e)
         {
-            throw new OAuthRequestException("User is not found. User needs to logged in");
+            ConsoleLog.e(e);
         }
 
         return apiResponse;
     }
 
     @ApiMethod(name = "createRide", path = "createRide", httpMethod = POST)
-    public RideInput createRide(@Named("hash") String hash, RideInput rideInput) throws OAuthRequestException
+    public RideInput createRide(User user, RideInput rideInput) throws OAuthRequestException
     {
-        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+        AdminUtil.checkAndThrow(user);
 
-        if(dropMeUser != null)
+        try
         {
-            rideInput.setUserId(dropMeUser.getId());
-            return RideLogicEngine.getInstance().createRide(rideInput);
+            return RideLogicEngine.getInstance().createRide(user, rideInput);
         }
-        else
+        catch (Exception e)
         {
-            throw new OAuthRequestException("User is not found. User needs to logged in");
+            ConsoleLog.e(e);
         }
+
+        return null;
     }
 
     @ApiMethod(name = "getRideDetail")
@@ -151,48 +151,54 @@ public class DropMeEndPoint
     }
 
     @ApiMethod(name = "getCurrentRide")
-    public RideInput getCurrentRide(@Named("hash") String hash, @Named("deviceId") String deviceId) throws OAuthRequestException
+    public RideInput getCurrentRide(User user, @Named("deviceId") String deviceId) throws OAuthRequestException
     {
-        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+        AdminUtil.checkAndThrow(user);
 
-        if(dropMeUser != null)
+        try
         {
-            return RideLogicEngine.getInstance().getCurrentRide(dropMeUser, deviceId);
+            return RideLogicEngine.getInstance().getCurrentRide(user, deviceId);
         }
-        else
+        catch (Exception e)
         {
-            throw new OAuthRequestException("User is not found. User needs to logged in");
+            ConsoleLog.e(e);
         }
+
+        return null;
     }
 
     @ApiMethod(name = "cancelRide")
-    public ApiResponse cancelRide(@Named("hash") String hash, @Named("deviceId") String deviceId) throws OAuthRequestException
+    public ApiResponse cancelRide(User user, @Named("deviceId") String deviceId) throws OAuthRequestException
     {
-        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+        AdminUtil.checkAndThrow(user);
 
-        if(dropMeUser != null)
+        try
         {
-            return RideLogicEngine.getInstance().cancelRide(dropMeUser, deviceId);
+            return RideLogicEngine.getInstance().cancelRide(user, deviceId);
         }
-        else
+        catch (Exception e)
         {
-            throw new OAuthRequestException("User is not found. User needs to logged in");
+            ConsoleLog.e(e);
         }
+
+        return null;
     }
 
     @ApiMethod(name = "getRideDetailList",path = "getRideDetailList", httpMethod = POST)
-    public List<RideDetail> getRideDetailList(@Named("hash") String hash, @Named("ids") List<Long> ids) throws OAuthRequestException
+    public List<RideDetail> getRideDetailList(User user, @Named("ids") List<Long> ids) throws OAuthRequestException
     {
-        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserByHash(hash);
+        AdminUtil.checkAndThrow(user);
 
-        if(dropMeUser != null)
+        try
         {
             return RideLogicEngine.getInstance().getRideDetailList(ids);
         }
-        else
+        catch (Exception e)
         {
-            throw new OAuthRequestException("User is not found. User needs to logged in");
+            ConsoleLog.e(e);
         }
+
+        return null;
     }
 
 
