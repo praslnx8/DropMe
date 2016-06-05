@@ -25,26 +25,26 @@ public class RideUtil
 
             double distance = DistanceCalculator.distance(source.getLatitude(), source.getLongitude(), dest.getLatitude(), dest.getLongitude(), "K");
 
-            ConsoleLog.i(TAG, "distance is : " + distance);
+            ConsoleLog.l(TAG, "distance is : " + distance);
             double timeInMins = (double) distance*1000 / speed_in_meters_per_minute;
 
-            ConsoleLog.i(TAG, " time in mins is : " + timeInMins);
+            ConsoleLog.l(TAG, " time in mins is : " + timeInMins);
 
             Date startDate = ride.getStartDate();
             if (startDate == null) {
                 startDate = new Date(System.currentTimeMillis());
             }
-            ConsoleLog.i(TAG, "start time is :" + startDate.toString());
+            ConsoleLog.l(TAG, "start time is :" + startDate.toString());
 
 
             Date expiryDate = new Date(startDate.getTime());
-            ConsoleLog.i(TAG, "now time is : " + expiryDate.toString());
+            ConsoleLog.l(TAG, "now time is : " + expiryDate.toString());
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(expiryDate);
             calendar.add(Calendar.MINUTE, (int) timeInMins);
             expiryDate = calendar.getTime();
 
-            ConsoleLog.i(TAG, "expity time is : " + expiryDate.toString());
+            ConsoleLog.l(TAG, "expity time is : " + expiryDate.toString());
 
             ride.setExpiryDate(expiryDate);
         }

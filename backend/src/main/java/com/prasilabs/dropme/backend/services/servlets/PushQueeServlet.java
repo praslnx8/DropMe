@@ -20,7 +20,7 @@ public class PushQueeServlet extends HttpServlet
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
-        ConsoleLog.i(TAG, "post called");
+        ConsoleLog.l(TAG, "post called");
 
         String operationType = req.getParameter(PushQueueController.OPERATION_TYPE);
 
@@ -33,7 +33,7 @@ public class PushQueeServlet extends HttpServlet
         }
         else
         {
-            ConsoleLog.i(TAG, "unsupported operation. Exiting");
+            ConsoleLog.w(TAG, "unsupported operation. Exiting");
         }
     }
 }

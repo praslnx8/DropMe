@@ -51,7 +51,7 @@ public class BlobManager
 
     public JSONArray uploadBlob(HttpServletRequest request)
     {
-        ConsoleLog.i(TAG, "upload blob called");
+        ConsoleLog.l(TAG, "upload blob called");
         BlobstoreService blobService = BlobstoreServiceFactory.getBlobstoreService();
 
         List<BlobKey> blobs = blobService.getUploads(request).get("file");

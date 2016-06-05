@@ -25,9 +25,9 @@ public class FBAuthenticator implements Authenticator
     @Override
     public User authenticate(HttpServletRequest httpServletRequest)
     {
-        ConsoleLog.i(TAG, "Received authentication request");
+        ConsoleLog.l(TAG, "Received authentication request");
         String token = httpServletRequest.getHeader(CommonConstant.FBAUTHHEADER);
-        ConsoleLog.i(TAG, "Authorization token = " + token);
+        ConsoleLog.l(TAG, "Authorization token = " + token);
 
         if (token != null)
         {

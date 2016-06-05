@@ -93,7 +93,7 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
     public DropMeUser getDropMeUserByHash(String hash)
     {
-        ConsoleLog.i(TAG, "user hash is :" + hash);
+        ConsoleLog.l(TAG, "user hash is :" + hash);
 
         DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.HASH_STR, hash).first().now();
 

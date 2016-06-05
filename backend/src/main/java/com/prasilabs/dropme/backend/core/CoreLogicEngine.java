@@ -34,7 +34,7 @@ public abstract class CoreLogicEngine
 
     protected static <T> List<T> getListDataFromCache(String cacheKey)
     {
-        ConsoleLog.i(TAG, "Getting data from cache : key : " + cacheKey);
+        ConsoleLog.is(TAG, "Getting data from cache : key : " + cacheKey);
 
         syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
         byte[] cacheValue = (byte[]) syncCache.get(cacheKey);
@@ -52,7 +52,7 @@ public abstract class CoreLogicEngine
     @SuppressWarnings("unchecked")
     protected static <T> T getDataFromCache(String cacheKey)
     {
-        ConsoleLog.i(TAG, "Getting data from cache : key : " + cacheKey);
+        ConsoleLog.is(TAG, "Getting data from cache : key : " + cacheKey);
 
         syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
         byte[] cacheValue = (byte[]) syncCache.get(cacheKey);
@@ -146,7 +146,7 @@ public abstract class CoreLogicEngine
     {
         try
         {
-            ConsoleLog.i(TAG, "storing data to cache : key : " + cacheKey + " list size is : " + list.size());
+            ConsoleLog.is(TAG, "storing data to cache : key : " + cacheKey + " list size is : " + list.size());
             syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
             syncCache.put(cacheKey, getByteArrayFromList(list));
 
@@ -186,7 +186,7 @@ public abstract class CoreLogicEngine
     {
         try
         {
-            ConsoleLog.i(TAG, "storing data to cache : key : " + cacheKey);
+            ConsoleLog.is(TAG, "storing data to cache : key : " + cacheKey);
             syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
             syncCache.put(cacheKey, getByteArrayFromData(data));
 

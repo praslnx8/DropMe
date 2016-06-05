@@ -12,12 +12,21 @@ import java.util.logging.Logger;
 public class ConsoleLog
 {
     private static final boolean isLogConsole = true;
+    private static final boolean isInfoConsole = true;
     private static final boolean isErrorConsole = true;
     private static final boolean isWarnConsole = true;
 
-    public static void i(String tag, String message)
+    public static void l(String tag, String message)
     {
         if(isLogConsole && CoreController.isDebug)
+        {
+            Logger.getLogger(tag).info(message);
+        }
+    }
+
+    public static void is(String tag, String message)
+    {
+        if(isInfoConsole)
         {
             Logger.getLogger(tag).info(message);
         }

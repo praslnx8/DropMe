@@ -78,7 +78,7 @@ public class RideLogicEngine extends CoreLogicEngine
             ConsoleLog.w(TAG, "user is null");
         }
 
-        ConsoleLog.i(TAG, "ride is is : " + rideInput.getId());
+        ConsoleLog.l(TAG, "ride is is : " + rideInput.getId());
 
 
         return rideInput;
@@ -150,7 +150,7 @@ public class RideLogicEngine extends CoreLogicEngine
 
             OfyService.ofy().save().entities(rideList).now();
 
-            ConsoleLog.i(TAG, "removed " + rideList.size() + " geopoints from the geoFire server");
+            ConsoleLog.l(TAG, "removed " + rideList.size() + " geopoints from the geoFire server");
 
             apiResponse.setStatus(true);
         }
@@ -219,7 +219,7 @@ public class RideLogicEngine extends CoreLogicEngine
             }
             else
             {
-                ConsoleLog.i(TAG, "removing expired or closed");
+                ConsoleLog.l(TAG, "removing expired or closed");
                 String key = GeoFireKeyGenerator.generateRideKey(ride.getId());
                 PushQueueController.callRemoveGeoPtPush(key); //TODO not working. Error do in backendinstances Wait for geo fire to fix that
             }

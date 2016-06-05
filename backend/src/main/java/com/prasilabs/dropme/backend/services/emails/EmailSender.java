@@ -88,13 +88,13 @@ public class EmailSender
 
             try
             {
-                ConsoleLog.i(TAG, "sending email : subject " + email.getSubject());
+                ConsoleLog.is(TAG, "sending email : subject " + email.getSubject());
 
                 SendGrid.Response response = sendgrid.send(email);
 
-                ConsoleLog.i(TAG, String.valueOf(response.getCode()));
-                ConsoleLog.i(TAG, response.getMessage());
-                ConsoleLog.i(TAG, String.valueOf(response.getStatus()));
+                ConsoleLog.is(TAG, String.valueOf(response.getCode()));
+                ConsoleLog.is(TAG, response.getMessage());
+                ConsoleLog.is(TAG, String.valueOf(response.getStatus()));
 
                 return response.getStatus();
             } catch (SendGridException e) {

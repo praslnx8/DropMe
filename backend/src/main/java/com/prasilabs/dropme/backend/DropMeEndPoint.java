@@ -139,7 +139,7 @@ public class DropMeEndPoint
     {
         try
         {
-            ConsoleLog.i(TAG, "ride id is : "+ rideId);
+            ConsoleLog.l(TAG, "ride id is : "+ rideId);
             return RideLogicEngine.getInstance().getRideDetail(rideId);
         }
         catch (Exception e)
@@ -212,7 +212,7 @@ public class DropMeEndPoint
         }
         else
         {
-            ConsoleLog.i(TAG, "password is wrong");
+            ConsoleLog.w(TAG, "password is wrong");
             throw new OAuthRequestException("password is wrong");
         }
     }

@@ -19,7 +19,7 @@ public class CronJobServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
-        ConsoleLog.i(TAG, "cron job servlet started");
+        ConsoleLog.l(TAG, "cron job servlet started");
 
         // TODO failed RideLogicEngine.getInstance().deleteInactiveGeoRideKeys();
     }

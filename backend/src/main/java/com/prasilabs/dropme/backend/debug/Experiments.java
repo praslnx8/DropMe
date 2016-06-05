@@ -20,7 +20,7 @@ public class Experiments
                 try {
                     for (int i=1;i<=10;i++)
                     {
-                        ConsoleLog.i(TAG, "executing the " + i +"th time");
+                        ConsoleLog.l(TAG, "executing the " + i +"th time");
                         counter.incrementAndGet();
                         Thread.sleep(10);
                     }
@@ -32,6 +32,6 @@ public class Experiments
         });
         thread.start();
 
-        ConsoleLog.i(TAG, "test ended. Hope background will be still working....");
+        ConsoleLog.l(TAG, "test ended. Hope background will be still working....");
     }
 }
