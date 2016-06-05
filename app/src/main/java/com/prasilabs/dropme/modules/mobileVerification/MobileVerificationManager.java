@@ -2,15 +2,7 @@ package com.prasilabs.dropme.modules.mobileVerification;
 
 import android.content.Context;
 
-import com.digits.sdk.android.AuthCallback;
-import com.digits.sdk.android.Digits;
-import com.digits.sdk.android.DigitsException;
-import com.digits.sdk.android.DigitsSession;
 import com.prasilabs.dropme.debug.ConsoleLog;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by prasi on 27/5/16.
@@ -26,7 +18,7 @@ public class MobileVerificationManager
     {
         ConsoleLog.i(TAG, "asking mobile verification");
 
-        TwitterAuthConfig authConfig =  new TwitterAuthConfig(DIGIT_CONSUMER_KEY, DIGIT_CONSUMER_SECRET_KEY);
+        /*TwitterAuthConfig authConfig =  new TwitterAuthConfig(DIGIT_CONSUMER_KEY, DIGIT_CONSUMER_SECRET_KEY);
         Fabric.with(context, new TwitterCore(authConfig), new Digits());
         AuthCallback authCallback = new AuthCallback()
         {
@@ -51,7 +43,7 @@ public class MobileVerificationManager
             }
         };
 
-        Digits.authenticate(authCallback, android.R.style.Theme_Material);
+        Digits.authenticate(authCallback, android.R.style.Theme_Material);*/
     }
 
     public interface VerificationCallBack

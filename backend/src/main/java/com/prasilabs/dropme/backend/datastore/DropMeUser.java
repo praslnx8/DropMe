@@ -32,6 +32,8 @@ public class DropMeUser
     private String mobile;
     @Index
     private int age;
+    @Index
+    private boolean isVerified;
     private String location;
     @Index
     private boolean isMobileVerified;
@@ -162,5 +164,13 @@ public class DropMeUser
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
     }
 }

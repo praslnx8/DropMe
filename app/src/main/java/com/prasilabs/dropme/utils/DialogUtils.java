@@ -20,7 +20,7 @@ public class DialogUtils
     {
         ConsoleLog.i(TAG, "showing menu called");
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        CharSequence[] menuOption = new CharSequence[]{"Call", "View Profile", "Show In Map"};
+        CharSequence[] menuOption = new CharSequence[]{"Call" /*"View Profile",*/ /*"Show In Map"*/};
         builder.setItems(menuOption, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
@@ -38,11 +38,11 @@ public class DialogUtils
                         ViewUtil.t(context, "You cannot make phone calls in this phone");
                     }
                 }
-                else if(which == 1)
+                /*else if(which == 1)
                 {
                     ViewUtil.t(context, "TODO. Profile page");
-                }
-                else if(which == 2)
+                }*/
+                else if(which == 1)
                 {
                     ViewUtil.t(context, "TODO. Map page");
                 }

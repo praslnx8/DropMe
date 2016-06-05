@@ -45,6 +45,7 @@ public class Ride
     private boolean isGeoRemoved;
     private String phoneNo;
 
+    @Index
     private Date created;
     private Date modified;
 

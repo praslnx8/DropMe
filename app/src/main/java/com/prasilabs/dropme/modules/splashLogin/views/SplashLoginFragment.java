@@ -40,6 +40,7 @@ import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.constants.PermisionConstant;
 import com.prasilabs.dropme.constants.PojoConstants;
 import com.prasilabs.dropme.core.CoreFragment;
+import com.prasilabs.dropme.customs.CirclePageIndicator;
 import com.prasilabs.dropme.customs.JsonUtil;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -83,6 +84,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     FrameLayout logiBtnLayout;
     @BindView(R.id.intro_pager)
     ViewPager introPager;
+    @BindView(R.id.pager_indicator)
+    CirclePageIndicator pageIndicator;
 
     public static SplashLoginFragment getInstance()
     {
@@ -124,6 +127,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             splashLayout.setVisibility(View.VISIBLE);
 
             introPager.setAdapter(IntroPagerAdapter.getInstance(getCoreActivity()));
+            pageIndicator.setViewPager(introPager);
 
             fbButton.setFragment(this);
             fbButton.setReadPermissions(Arrays.asList("public_profile", "email"));

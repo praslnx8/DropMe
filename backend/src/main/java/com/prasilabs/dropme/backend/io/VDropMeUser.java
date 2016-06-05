@@ -18,6 +18,7 @@ public class VDropMeUser
     private String loginType;
     private String mobile;
     private String location;
+    private boolean isVerified;
     private boolean isMobileVerified;
     private List<String> roles;
     private Date created;
@@ -124,5 +125,13 @@ public class VDropMeUser
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
     }
 }

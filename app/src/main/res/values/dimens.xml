@@ -50,4 +50,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+
+    <dimen name="circle_indicator_stroke_width">1dp</dimen>
+    <dimen name="circle_indicator_radius">3dp</dimen>
+
 </resources>

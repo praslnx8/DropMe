@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
 //For Digit
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
+    //maven { url 'https://maven.fabric.io/public' }
 }
 
 android {
@@ -27,6 +27,7 @@ android {
 
     dexOptions {
         incremental true
+        preDexLibraries = false
         javaMaxHeapSize "4g"
     }
 }
@@ -36,11 +37,11 @@ android {
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
+        //maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'io.fabric.tools:gradle:1.21.6'
+//        classpath 'io.fabric.tools:gradle:1.21.6'
     }
 }
 
@@ -67,11 +68,11 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.0.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
     //For DIGIT
-    compile 'com.squareup.okhttp:okhttp:2.7.3'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.3'
-    compile('com.digits.sdk.android:digits:1.10.3@aar') {
-        transitive = true;
-    }
+//    compile 'com.squareup.okhttp:okhttp:2.7.3'
+//    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.3'
+//    compile('com.digits.sdk.android:digits:1.10.3@aar') {
+//        transitive = true;
+//    }
     // Firebase
     compile 'com.firebase:firebase-client-android:2.0.3'
     // GeoFire

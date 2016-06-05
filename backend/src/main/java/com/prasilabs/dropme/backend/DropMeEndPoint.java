@@ -36,7 +36,7 @@ import static com.google.api.server.spi.config.ApiMethod.HttpMethod.POST;
 @Api(
         name = "dropMeApi",
         version = "v1",
-        clientIds = {AuthConstants.WEB_CLIENT_ID,  AuthConstants.ANDROID_CLIENT_ID, com.google.api.server.spi.Constant.API_EXPLORER_CLIENT_ID},
+        clientIds = {AuthConstants.WEB_CLIENT_ID,  AuthConstants.ANDROID_PROD_CLIENT_ID, AuthConstants.ANDROID_DEV_CLIENT_ID, com.google.api.server.spi.Constant.API_EXPLORER_CLIENT_ID},
         audiences = {AuthConstants.ANDROID_AUDIENCE},
         scopes = {AuthConstants.EMAIL_SCOPE},
         authenticators = {DropMeAuthenticator.class, FBAuthenticator.class, EndpointsAuthenticator.class}, //add EndpointsAuthenticator to the end of the @authenticators list to make it as a fallback when user provided authenticator fails. Endpoints will try all authenticators and return the first successful one.
