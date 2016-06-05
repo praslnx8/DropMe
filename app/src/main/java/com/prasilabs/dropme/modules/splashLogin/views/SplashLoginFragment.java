@@ -44,7 +44,6 @@ import com.prasilabs.dropme.customs.JsonUtil;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
-import com.prasilabs.dropme.modules.mobileVerification.MobileVerificationManager;
 import com.prasilabs.dropme.modules.splashLogin.presenter.SplashLoginPresenter;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.ViewUtil;
@@ -127,7 +126,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             introPager.setAdapter(IntroPagerAdapter.getInstance(getCoreActivity()));
 
             fbButton.setFragment(this);
-            fbButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends", "user_likes", "user_about_me"));
+            fbButton.setReadPermissions(Arrays.asList("public_profile", "email"));
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -231,6 +230,9 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 ConsoleLog.i(TAG, "graph req resp came");
 
                 JSONObject fbGraphObject = response.getJSONObject();
+
+                ConsoleLog.i(TAG, fbGraphObject.toString());
+
                 // JSONObject fbGraphObject = fbJsonData.getJSONObject("graphObject");
                 String fbId = JsonUtil.checkHasString(fbGraphObject,"id");
                 //String fbUserName = "";
@@ -239,6 +241,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 {
 
                 }
+                String fbName = JsonUtil.checkHasString(fbGraphObject, "name");
                 String fbFirstName = JsonUtil.checkHasString(fbGraphObject,"first_name");
                 String fbLastName = JsonUtil.checkHasString(fbGraphObject,"last_name");
                 String fbGender = JsonUtil.checkHasString(fbGraphObject,"gender");
@@ -247,7 +250,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 String pictureUrl = "http://graph.facebook.com/"+fbId+"/picture?type=large";
 
                 final VDropMeUser vDropMeUser = new VDropMeUser();
-                vDropMeUser.setName(fbFirstName + " " + fbLastName);
+                vDropMeUser.setName(fbName);
                 vDropMeUser.setPicture(pictureUrl);
                 vDropMeUser.setEmail(fbEmail);
                 //vDropMeUser.setGender(0); //TODO
@@ -256,8 +259,10 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
                 LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
 
+                splashLoginPresenter.login(vDropMeUser);
+
                 ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
-                MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
+                /*MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
                     @Override
                     public void verify(boolean status, String phone)
                     {
@@ -266,7 +271,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
                         splashLoginPresenter.login(vDropMeUser);
                     }
-                });
+                });*/
             }
         });
 
@@ -339,8 +344,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                                     intnt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intnt);
                                 }
-                            })
-                            .show();
+                            }).show();
                 }
             }
             else
@@ -365,6 +369,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
         if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null)
         {
+            ConsoleLog.i(TAG, "getting persone profile");
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
             String gplusEmail = Plus.AccountApi.getAccountName(mGoogleApiClient);
             String id = currentPerson.getId();
@@ -402,19 +407,23 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
             splashLoginPresenter.login(vDropMeUser);
 
-           /* MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
+            /*MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
                 @Override
                 public void verify(boolean status, String phone)
                 {
                     vDropMeUser.setMobile(phone);
                     vDropMeUser.setMobileVerified(status);
 
-                    splashLoginPresenter.login(vDropMeUser, SplashLoginFragment.this);
+                    splashLoginPresenter.login(vDropMeUser);
                 }
             });*/
 
             Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             mGoogleApiClient.disconnect();
+        }
+        else
+        {
+            ConsoleLog.w(TAG, "unable to get person info");
         }
     }
 

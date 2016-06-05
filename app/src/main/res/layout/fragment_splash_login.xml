@@ -57,7 +57,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/facebook_btn"
-                    android:text="Login with FACEBOOK"/>
+                    android:text="Login with FACEBOOK"
+                    android:visibility="gone"/>
 
                 <com.facebook.login.widget.LoginButton
                     android:id="@+id/fb_btn"

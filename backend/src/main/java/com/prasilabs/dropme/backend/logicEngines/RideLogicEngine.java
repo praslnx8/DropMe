@@ -46,13 +46,15 @@ public class RideLogicEngine extends CoreLogicEngine
     public RideInput createRide(User user, RideInput rideInput)
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
-        if(dropMeUser != null) {
+        if(dropMeUser != null)
+        {
             rideInput.setUserId(dropMeUser.getId());
 
             Ride ride = convertToRide(rideInput);
             RideUtil.calculateAndSetExpiry(ride);
 
-            if (validateRide(ride)) {
+            if (validateRide(ride))
+            {
                 Ride currentRide = getExistingActiveRide(rideInput.getUserId(), rideInput.getDeviceId());
 
                 if (currentRide == null) {
@@ -254,6 +256,7 @@ public class RideLogicEngine extends CoreLogicEngine
             rideInput.setClosed(ride.isClosed());
             rideInput.setClosedDate(ride.getClosedDate());
             rideInput.setStartDate(ride.getStartDate());
+            rideInput.setPhoneNo(ride.getPhoneNo());
         }
 
         return rideInput;
@@ -277,6 +280,7 @@ public class RideLogicEngine extends CoreLogicEngine
         ride.setVehicleId(rideInput.getVehicleId());
         ride.setDestLoc(rideInput.getDestLoc());
         ride.setDestLocName(rideInput.getDestLocName());
+        ride.setPhoneNo(rideInput.getPhoneNo());
 
         return ride;
     }
@@ -323,6 +327,11 @@ public class RideLogicEngine extends CoreLogicEngine
             {
                 isValid = false;
                 ConsoleLog.w(TAG, "expiry date is not valid");
+            }
+            else if(DataUtil.isEmpty(ride.getPhoneNo()))
+            {
+                isValid = false;
+                ConsoleLog.w(TAG, "phone number is empty");
             }
         }
 

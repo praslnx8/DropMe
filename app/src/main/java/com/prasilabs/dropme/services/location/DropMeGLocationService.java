@@ -28,7 +28,8 @@ import java.util.concurrent.TimeUnit;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class DropMeGLocationService extends IntentService {
+public class DropMeGLocationService extends IntentService
+{
     public static final String ACTION_REQUEST_LOCATION = "request_location";
     public static final String ACTION_LOCATION_UPDATED = "location_updated";
     private static final String TAG = DropMeLocatioListener.class.getSimpleName();
@@ -109,7 +110,8 @@ public class DropMeGLocationService extends IntentService {
             {
                 requestLocationInternal();
             }
-        } else if (ACTION_LOCATION_UPDATED.equals(action))
+        }
+        else if (ACTION_LOCATION_UPDATED.equals(action))
         {
             locationUpdated(intent);
         }

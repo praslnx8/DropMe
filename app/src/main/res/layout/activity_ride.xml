@@ -42,6 +42,16 @@
             android:layout_margin="@dimen/paddingS"
             android:text="Select Fare Rate"/>
 
+        <EditText
+            android:id="@+id/phone_text"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="left"
+            android:inputType="phone"
+            android:layout_margin="@dimen/paddingS"
+            android:hint="Enter Your Phone Number"
+            style="@style/button.primary.transparent" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"

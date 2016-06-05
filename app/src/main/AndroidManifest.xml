@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".core.CoreApp"
@@ -38,8 +39,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RideCreateActivity" />
-        <activity android:name=".activities.RideSelectActivity" />
+        <activity
+            android:name=".activities.RideCreateActivity" />
+        <activity
+            android:name=".activities.RideSelectActivity" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- For facebook -->
         <activity
@@ -51,7 +58,7 @@
         <!-- Meta data -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDCxsGHyXBcUAx30qw9wLsYO1xhQ4VbvnQ"/>
+            android:value="AIzaSyDCxsGHyXBcUAx30qw9wLsYO1xhQ4VbvnQ" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -66,6 +73,7 @@
             android:name=".services.location.DropMeGLocationService"
             android:enabled="true"
             android:exported="false" />
+
     </application>
 
 </manifest>

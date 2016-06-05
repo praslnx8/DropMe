@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -14,6 +15,7 @@ import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CoreAdapter;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.DateUtil;
+import com.prasilabs.dropme.utils.DialogUtils;
 import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 
@@ -67,6 +69,8 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
 
     public class RideSelectViewHolder extends RecyclerView.ViewHolder
     {
+        @BindView(R.id.main_layout)
+        LinearLayout mainLayout;
         @BindView(R.id.distance_text)
         TextView distanceText;
         @BindView(R.id.user_image)
@@ -90,7 +94,7 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
             ButterKnife.bind(this, itemView);
         }
 
-        public void render(CoreActivity coreActivity, RideDetail rideDetail)
+        public void render(final CoreActivity coreActivity, final RideDetail rideDetail)
         {
             ViewUtil.renderImage(userImage, rideDetail.getOwnerPicture(), true);
             LatLng currentLatLng = DropMeLocatioListener.getLatLng(coreActivity);
@@ -99,13 +103,21 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
             genderText.setText(rideDetail.getGender());
             destText.setText(rideDetail.getDestLoc());
             vehicleTypeText.setText(rideDetail.getVehicleType());
-            if(rideDetail.getStartDate() != null) {
+            if(rideDetail.getStartDate() != null)
+            {
                 startText.setText(DateUtil.getRelativeTime(rideDetail.getStartDate().getValue()));
             }
             else
             {
                 startText.setText("Now");
             }
+
+            mainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogUtils.showSelectRideMenu(coreActivity, rideDetail);
+                }
+            });
         }
     }
 }

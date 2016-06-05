@@ -43,6 +43,7 @@ public class Ride
     private Date expiryDate;
     @Index
     private boolean isGeoRemoved;
+    private String phoneNo;
 
     private Date created;
     private Date modified;
@@ -173,5 +174,13 @@ public class Ride
 
     public void setGeoRemoved(boolean geoRemoved) {
         isGeoRemoved = geoRemoved;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 }

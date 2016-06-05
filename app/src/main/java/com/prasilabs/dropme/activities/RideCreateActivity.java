@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
@@ -20,6 +21,7 @@ import com.prasilabs.constants.TempConstant;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
+import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -29,6 +31,7 @@ import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 import com.prasilabs.util.DataUtil;
+import com.prasilabs.util.ValidateUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +65,8 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
     Spinner fareRateSpinner;
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
+    @BindView(R.id.phone_text)
+    EditText phoneText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -165,6 +170,12 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
             }
         });
 
+        VDropMeUser vDropMeUser = UserManager.getDropMeUser(this);
+        if(vDropMeUser != null && !DataUtil.isEmpty(vDropMeUser.getMobile()))
+        {
+            phoneText.setText(vDropMeUser.getMobile());
+        }
+
     }
 
     @Override
@@ -207,6 +218,9 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
     {
         GeoPt source = LocationUtils.convertToGeoPt(DropMeLocatioListener.getLatLng(RideCreateActivity.this));
 
+        String phoneNo = phoneText.getText().toString();
+        UserManager.savePhoneNo(this, phoneNo);
+
         RideInput rideInput = new RideInput();
         rideInput.setDestLoc(destLoc);
         rideInput.setDestLocName(destLocationName);
@@ -217,6 +231,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
         rideInput.setDeviceId(CoreApp.getDeviceId());
         rideInput.setUserId(UserManager.getDropMeUser(RideCreateActivity.this).getId());
         rideInput.setStartDate(startDate);
+        rideInput.setPhoneNo(phoneNo);
 
         ViewUtil.showProgressView(this, topLayout, true);
         rideCreatePresenter.createRide(rideInput);
@@ -240,6 +255,20 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
         else if(DataUtil.isEmpty(destLocationName))
         {
             ViewUtil.t(this, "Please select destination from dropdown");
+            isValid = false;
+        }
+        else if(!ValidateUtil.validateMobile(phoneText.getText().toString()))
+        {
+            if(DataUtil.isEmpty(phoneText.getText().toString()))
+            {
+                phoneText.setError("Required");
+                ViewUtil.t(this, "Please add phone number");
+            }
+            else
+            {
+                phoneText.setError("Add proper number");
+                ViewUtil.t(this, "Please add proper phone number");
+            }
             isValid = false;
         }
 

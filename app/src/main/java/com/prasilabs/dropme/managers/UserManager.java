@@ -60,14 +60,26 @@ public class UserManager
         return hash;
     }
 
+    public static boolean savePhoneNo(Context context, String phone)
+    {
+        boolean isSuccess = false;
+
+        LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.MOBILE_STR, phone);
+        isSuccess = true;
+
+        return isSuccess;
+    }
+
     public static VDropMeUser getDropMeUser(Context context)
     {
-        if(vDropMeUser == null)
+        String email = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
+
+        if(vDropMeUser == null || email == null)
         {
             String name = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.NAME_STR, null);
             String hash = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.HASH_STR, null);
             String loginType = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.LOGIN_TYPE_STR, null);
-            String email = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
+            email = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
             long created = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.LOGIN_TYPE_STR, 0L);
             DateTime createdDate = null;
             if (created != 0L) {

@@ -2,6 +2,8 @@ package com.prasilabs.dropme.customs;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.api.client.util.ArrayMap;
+import com.prasilabs.dropme.debug.ConsoleLog;
 
 import java.util.Map;
 
@@ -27,6 +30,7 @@ import java.util.Map;
  */
 public class MapLoader
 {
+    private static final String TAG = MapLoader.class.getSimpleName();
     private MapView mapView;
     private Bundle savedInstanceState;
     private GoogleMap gMap;
@@ -124,8 +128,19 @@ public class MapLoader
                 MarkerOptions markerOptions = new MarkerOptions();
                 if(resourceId != 0)
                 {
-                    BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(resourceId);
-                    markerOptions.icon(icon);
+                    BitmapDrawable bitmapdraw=(BitmapDrawable) mapView.getContext().getResources().getDrawable(resourceId);
+                    if(bitmapdraw != null)
+                    {
+                        Bitmap bitmap = bitmapdraw.getBitmap();
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+
+                        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(resizedBitmap);
+                        markerOptions.icon(icon);
+                    }
+                    else
+                    {
+                        ConsoleLog.w(TAG, "bitmapDrawable is null");
+                    }
                 }
                 markerOptions.position(latLng);
                 Marker marker = gMap.addMarker(markerOptions);
