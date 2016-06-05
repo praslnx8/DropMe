@@ -24,7 +24,7 @@ public class ConsoleLog
         }
     }
 
-    public static void is(String tag, String message)
+    public static void i(String tag, String message)
     {
         if(isInfoConsole)
         {

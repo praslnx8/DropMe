@@ -11,6 +11,7 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.config.Named;
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.prasilabs.constants.AuthConstants;
@@ -185,13 +186,13 @@ public class DropMeEndPoint
     }
 
     @ApiMethod(name = "getRideDetailList",path = "getRideDetailList", httpMethod = POST)
-    public List<RideDetail> getRideDetailList(User user, @Named("ids") List<Long> ids) throws OAuthRequestException
+    public List<RideDetail> getRideDetailList(User user, @Named("ids") List<Long> ids, GeoPt dest) throws OAuthRequestException
     {
         AdminUtil.checkAndThrow(user);
 
         try
         {
-            return RideLogicEngine.getInstance().getRideDetailList(ids);
+            return RideLogicEngine.getInstance().getRideDetailList(ids, dest);
         }
         catch (Exception e)
         {

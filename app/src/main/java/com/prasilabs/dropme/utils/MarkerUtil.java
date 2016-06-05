@@ -1,6 +1,5 @@
 package com.prasilabs.dropme.utils;
 
-import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.enums.MarkerType;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 
@@ -17,17 +16,17 @@ public class MarkerUtil
 
     public static int getMarkerResId(MarkerInfo markerInfo)
     {
-        int resourceID = R.drawable.user_standing;
+        int resourceID = android.R.drawable.ic_delete;
 
         if(markerInfo != null)
         {
             if (markerInfo.getMarkerType().equals(MarkerType.Bike.name()))
             {
-                resourceID = R.drawable.bike;
+                resourceID = android.R.drawable.ic_btn_speak_now;
             }
             else if(markerInfo.getMarkerType().equals(MarkerType.Car.name()))
             {
-                resourceID = R.drawable.ic_car;
+                resourceID = android.R.drawable.ic_lock_silent_mode;
             }
             else if(markerInfo.getMarkerType().equals(MarkerType.User.name()))
             {

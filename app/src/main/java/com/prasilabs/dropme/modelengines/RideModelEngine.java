@@ -3,7 +3,9 @@ package com.prasilabs.dropme.modelengines;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
+import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.constants.BroadCastConstant;
@@ -12,6 +14,7 @@ import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
+import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.util.DataUtil;
 
 import java.util.ArrayList;
@@ -182,9 +185,10 @@ public class RideModelEngine extends CoreModelEngine
         });
     }
 
-    public void getRideDetailsList(final GetRideDetailListCallBack getRideDetailListCallBack)
+    public void getRideDetailsList(LatLng dest, final GetRideDetailListCallBack getRideDetailListCallBack)
     {
         final List<Long> idsList = HomeGeoModelEngine.getInstance().getAllRides();
+        final GeoPt geoPt = LocationUtils.convertToGeoPt(dest);
 
         if(idsList.size() > 0)
         {
@@ -192,7 +196,7 @@ public class RideModelEngine extends CoreModelEngine
                 @Override
                 public List<RideDetail> async() {
                     try {
-                        return CloudConnect.callDropMeApi(false).getRideDetailList(idsList).execute().getItems();
+                        return CloudConnect.callDropMeApi(false).getRideDetailList(idsList, geoPt).execute().getItems();
                     } catch (Exception e) {
                         ConsoleLog.e(e);
                     }

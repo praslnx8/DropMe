@@ -53,4 +53,13 @@
         <servlet-name>PushQ</servlet-name>
         <url-pattern>/PushQ/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>xmppreceiver</servlet-name>
+        <servlet-class>com.prasilabs.dropme.backend.services.xmpp.XmppRecieverServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xmppreceiver</servlet-name>
+        <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
+    </servlet-mapping>
 </web-app>

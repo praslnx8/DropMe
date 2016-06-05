@@ -74,7 +74,12 @@ public class UserManager
     {
         String email = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
 
-        if(vDropMeUser == null || email == null)
+        if(TextUtils.isEmpty(email))
+        {
+            vDropMeUser = null;
+        }
+
+        if(vDropMeUser == null)
         {
             String name = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.NAME_STR, null);
             String hash = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.HASH_STR, null);

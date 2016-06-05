@@ -18,10 +18,10 @@ import java.util.List;
  */
 public class GcmSender
 {
-    private static final String API_KEY = System.getProperty("gcm.api.key");
     private static final String TAG = GcmSender.class.getSimpleName();
-    private static Sender sender;
 
+    private static final String API_KEY = "AIzaSyDLWzUM17yyaVWWAAw0t5m06wVj3WnYuNA";//System.getProperty("gcm.api.key");
+    private static Sender sender;
 
     public static boolean sendGcmMessage(String msg, GcmRecord gcmRecord)
     {
@@ -40,11 +40,11 @@ public class GcmSender
 
             if(result.getMessageId() != null)
             {
-                ConsoleLog.is(TAG, "message sent to " + gcmRecord.getGcmId());
+                ConsoleLog.i(TAG, "message sent to " + gcmRecord.getGcmId());
                 String canonicalId = result.getCanonicalRegistrationId();
                 if(canonicalId != null)
                 {
-                    ConsoleLog.is(TAG, "gcmID changed");
+                    ConsoleLog.i(TAG, "gcmID changed");
                     gcmRecord.setGcmId(canonicalId);
                     OfyService.ofy().save().entity(gcmRecord).now();
                 }
@@ -75,6 +75,7 @@ public class GcmSender
 
     public static boolean sendGcmMessage(String msg, List<GcmRecord> gcmRecords)
     {
+        boolean isSuccess = false;
         if(sender == null)
         {
             sender = new Sender(API_KEY);
@@ -94,14 +95,27 @@ public class GcmSender
             MulticastResult multicastResult = sender.send(message, gcmIDs, 2);
 
 
+            ConsoleLog.i(TAG, "total gcm sent is : " + multicastResult.getTotal());
+            ConsoleLog.i(TAG, "total gcm success is : " + multicastResult.getSuccess());
+            if(multicastResult.getFailure() > 0)
+            {
+                ConsoleLog.w(TAG, "total gcm failure is : " + multicastResult.getFailure());
+            }
+            if(multicastResult.getCanonicalIds() > 0)
+            {
+                ConsoleLog.w(TAG, "total gcm canonicals is : " + multicastResult.getCanonicalIds());
+            }
 
-
+            if(multicastResult.getSuccess() > 0)
+            {
+                isSuccess = true;
+            }
         }
         catch (IOException e)
         {
             ConsoleLog.e(e);
         }
 
-        return true;
+        return isSuccess;
     }
 }

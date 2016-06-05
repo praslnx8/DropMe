@@ -13,20 +13,25 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.core.CoreActivity;
+import com.prasilabs.dropme.customs.FlowLayout;
 import com.prasilabs.dropme.customs.MyRecyclerView;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.modules.rideSelect.presenters.RideFilter;
 import com.prasilabs.dropme.modules.rideSelect.presenters.RideSelectPresenter;
+import com.prasilabs.dropme.modules.rideSelect.views.RideFilterView;
 import com.prasilabs.dropme.modules.rideSelect.views.RideSelectAdapter;
+import com.prasilabs.dropme.utils.DialogUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
-public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implements RideSelectPresenter.GetRidesCallBack
+public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implements RideSelectPresenter.GetRidesCallBack, RideSelectPresenter.RenderViewCallBack
 {
     private static final String TAG = RideSelectActivity.class.getSimpleName();
-    RideSelectPresenter rideSelectPresenter = new RideSelectPresenter();
+    RideSelectPresenter rideSelectPresenter = new RideSelectPresenter(this);
 
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
@@ -34,6 +39,8 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
     MyRecyclerView ridersListView;
     @BindView(R.id.empty_layout)
     LinearLayout emptyJokerLayout;
+    @BindView(R.id.flow_layout)
+    FlowLayout filterShowLayout;
 
     private RideSelectAdapter rideSelectAdapter;
 
@@ -61,6 +68,9 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
             public void onPlaceSelected(Place place)
             {
                 ConsoleLog.i(TAG, "Place: " + place.getName());
+
+                ViewUtil.showProgressView(RideSelectActivity.this, topLayout, true);
+                rideSelectPresenter.filterByDestination(String.valueOf(place.getName()), place.getLatLng(), RideSelectActivity.this);
             }
 
             @Override
@@ -76,6 +86,19 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
         ViewUtil.showProgressView(this, topLayout, true);
 
         rideSelectPresenter.getRideDetailList(this);
+    }
+
+    @OnClick(R.id.filter_btn)
+    protected void onFilterClicked()
+    {
+        DialogUtils.showRideSelectFilter(this, new DialogUtils.FilterDialogCallBack() {
+            @Override
+            public void filterApplied()
+            {
+                ViewUtil.showProgressView(RideSelectActivity.this, topLayout, true);
+                rideSelectPresenter.filter(RideSelectActivity.this);
+            }
+        });
     }
 
     @Override
@@ -100,5 +123,29 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
             emptyJokerLayout.setVisibility(View.VISIBLE);
             ridersListView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void renderFilterData()
+    {
+        filterShowLayout.removeAllViews();
+
+        RideFilter rideFilter = RideFilter.getInstance();
+
+        List<View> rideFilterView = rideFilter.getRideFilterViews(this, new RideFilterView.FilterCancelCallBack()
+        {
+            @Override
+            public void filterDeleted()
+            {
+                ViewUtil.showProgressView(RideSelectActivity.this, topLayout, true);
+                rideSelectPresenter.filter(RideSelectActivity.this);
+            }
+        });
+
+        for(View view : rideFilterView)
+        {
+            filterShowLayout.addView(view);
+        }
+
     }
 }

@@ -87,6 +87,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     @BindView(R.id.pager_indicator)
     CirclePageIndicator pageIndicator;
 
+    private boolean isHomeActivityCalled;
+
     public static SplashLoginFragment getInstance()
     {
         if(splashLoginFragment == null)
@@ -101,6 +103,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     {
         super.onCreate(savedInstanceState);
 
+        isHomeActivityCalled = false;
         FacebookSdk.sdkInitialize(getActivity()); //For facebook
         callbackManager = CallbackManager.Factory.create();
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -327,39 +330,34 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
     private void callHomeActivity()
     {
-        VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
-        if(vDropMeUser != null && !TextUtils.isEmpty(vDropMeUser.getHash()) && vDropMeUser.getId() != null && vDropMeUser.getId() != 0)
+        if(!isHomeActivityCalled)
         {
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
-                if (DropMeLocatioListener.getInstance().isLocationEnabled(getContext())) {
-                    HomeActivity.callHomeActivity(getContext());
-                    getCoreActivity().finish();
+            VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
+            if (vDropMeUser != null && !TextUtils.isEmpty(vDropMeUser.getHash()) && vDropMeUser.getId() != null && vDropMeUser.getId() != 0) {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    if (DropMeLocatioListener.getInstance().isLocationEnabled(getContext())) {
+                        isHomeActivityCalled = true;
+                        HomeActivity.callHomeActivity(getContext());
+                        getCoreActivity().finish();
+                    } else {
+                        Snackbar.make(getFragmentView(), "Please Enable GPS.",
+                                Snackbar.LENGTH_LONG)
+                                .setAction("OK", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intnt = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                        intnt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intnt);
+                                    }
+                                }).show();
+                    }
+                } else {
+                    getLocationPermissions();
                 }
-                else
-                {
-                    Snackbar.make(getFragmentView(), "Please Enable GPS.",
-                            Snackbar.LENGTH_LONG)
-                            .setAction("OK", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view)
-                                {
-                                    Intent intnt = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                    intnt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intnt);
-                                }
-                            }).show();
-                }
+            } else {
+                //No need. called only after login
+                //ConsoleLog.i(TAG, "Login to continue");
             }
-            else
-            {
-                getLocationPermissions();
-            }
-        }
-        else
-        {
-            //No need. called only after login
-            //ConsoleLog.i(TAG, "Login to continue");
         }
     }
 

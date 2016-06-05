@@ -1,5 +1,6 @@
 package com.prasilabs.dropme.backend.logicEngines;
 
+import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
@@ -15,6 +16,7 @@ import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
 import com.prasilabs.dropme.backend.services.geofire.GeoFireManager;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
+import com.prasilabs.dropme.backend.utils.DistanceCalculator;
 import com.prasilabs.dropme.backend.utils.RideUtil;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.GeoFireKeyGenerator;
@@ -179,6 +181,11 @@ public class RideLogicEngine extends CoreLogicEngine
 
     public List<RideDetail> getRideDetailList(List<Long> ids)
     {
+        return getRideDetailList(ids,null);
+    }
+
+    public List<RideDetail> getRideDetailList(List<Long> ids, GeoPt dest)
+    {
         List<RideDetail> rideDetails = new ArrayList<>();
 
         Map<Long, Ride> rideMap = OfyService.ofy().load().type(Ride.class).ids(ids);
@@ -211,6 +218,15 @@ public class RideLogicEngine extends CoreLogicEngine
                     rideDetail.setOwnerPicture(dropMeUser.getPicture());
                 } else {
                     isValid = false;
+                }
+
+                if(dest != null)
+                {
+                    GeoPt geoPt = rideDetail.getDestLatLng();
+                    if(!DistanceCalculator.isFit(geoPt, dest, 0.5))
+                    {
+                        isValid = false;
+                    }
                 }
 
                 if (isValid) {

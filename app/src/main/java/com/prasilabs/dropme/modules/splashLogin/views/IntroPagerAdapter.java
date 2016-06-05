@@ -73,11 +73,13 @@ public class IntroPagerAdapter extends PagerAdapter
         }
         return 1f;*/
 
-        if(position == 0) {
+        /*if(position == 0) {
             return 0.90f;
         }else if(position==(getCount()-1)){
             return 0.90f;
         }
-        return 1f;
+        return 1f;*/
+
+        return super.getPageWidth(position);
     }
 }

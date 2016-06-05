@@ -5,6 +5,7 @@ import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.prasilabs.dropme.backend.datastore.CacheKeyValue;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
+import com.prasilabs.dropme.backend.datastore.GcmRecord;
 import com.prasilabs.dropme.backend.datastore.Ride;
 import com.prasilabs.dropme.backend.datastore.Vehicle;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
@@ -27,6 +28,7 @@ public class OfyService
             ObjectifyService.register(DropMeUser.class);
             ObjectifyService.register(Vehicle.class);
             ObjectifyService.register(Ride.class);
+            ObjectifyService.register(GcmRecord.class);
         }
         catch (Exception e)
         {

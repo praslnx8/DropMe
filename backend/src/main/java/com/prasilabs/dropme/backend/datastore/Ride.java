@@ -18,6 +18,7 @@ public class Ride
     public static final String EXPIRY_DATE_STR = "expiryDate";
     public static final String IS_CLOSED_STR = "isClosed";
     public static final String IS_GEO_REMOVED_STR = "isGeoRemoved";
+    public static final String DEST_LOC_STR = "destLoc";
 
     @Id
     private Long id;

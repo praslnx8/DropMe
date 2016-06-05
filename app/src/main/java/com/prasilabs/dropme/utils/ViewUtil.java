@@ -96,7 +96,7 @@ public class ViewUtil
         {
             try
             {
-                RequestCreator requestCreator = Picasso.with(view.getContext()).load(url).placeholder(R.drawable.ic_file);
+                RequestCreator requestCreator = Picasso.with(view.getContext()).load(url).placeholder(android.R.drawable.ic_menu_camera);
                 if(isCircle)
                 {
                     requestCreator.transform(new CircleTransform());
