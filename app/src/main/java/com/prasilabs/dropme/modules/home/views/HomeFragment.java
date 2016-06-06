@@ -8,16 +8,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.RideCreateActivity;
 import com.prasilabs.dropme.activities.RideSelectActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.core.CoreFragment;
-import com.prasilabs.dropme.customs.DirectionManager;
-import com.prasilabs.dropme.customs.MapLoader;
+import com.prasilabs.dropme.customs.MapBoxMapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.home.presenters.HomePresenter;
 import com.prasilabs.dropme.pojo.MarkerInfo;
@@ -38,7 +37,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     private static final String TAG = HomeFragment.class.getSimpleName();
     private HomePresenter homePresenter = HomePresenter.newInstance(this);
     private static HomeFragment homeFragment;
-    private MapLoader mapLoader;
+    private MapBoxMapLoader mapLoader;
     private boolean isProgress;
 
     public static HomeFragment getHomeFragment()
@@ -76,11 +75,10 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
         {
             setFragmentView(inflater.inflate(R.layout.fragment_home, container, false));
 
-            mapLoader = new MapLoader(mapView,savedInstanceState);
+            mapLoader = new MapBoxMapLoader(mapView,savedInstanceState);
 
-            isProgress = true;
-            ViewUtil.showProgressView(getContext(), topLayout, true);
-            mapLoader.loadMap(new MapLoader.MapLoaderCallBack() {
+            homeButtonLayout.setVisibility(View.GONE);
+            mapLoader.loadMap(new MapBoxMapLoader.MapLoaderCallBack() {
                 @Override
                 public void mapLoaded()
                 {
@@ -88,14 +86,20 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
 
                     DropMeGLocationService.start(getContext());
 
+                    isProgress = true;
+                    ViewUtil.showProgressView(getContext(), topLayout, true);
                     homePresenter.getCurrentRide();
                 }
             });
-
-
         }
 
         return getFragmentView();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
     @Override
@@ -185,6 +189,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @Override
     public void addSourceAndDestination(RideInput rideInput)
     {
+        ConsoleLog.i(TAG, "add source and destination called");
         if(isProgress)
         {
             ViewUtil.hideProgressView(getContext(), topLayout);
@@ -201,7 +206,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
                 mapLoader.removeMarker(MarkerUtil.DEST_MARKER_KEY);
                 mapLoader.addMarker(MarkerUtil.SOURCE_MARKER_KEY, currentLatlng, MarkerUtil.SOURCE_MARKER);
                 mapLoader.addMarker(MarkerUtil.DEST_MARKER_KEY, destLatLng, MarkerUtil.DEST_MARKER);
-                new DirectionManager().showDirection(mapLoader, currentLatlng, destLatLng);
+                mapLoader.showDirection(currentLatlng, destLatLng, true);
 
                 homeButtonLayout.setVisibility(View.GONE);
                 cancelButtonLayout.setVisibility(View.VISIBLE);

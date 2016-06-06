@@ -48,7 +48,7 @@
 
     <!-- Buttons -->
     <style name="social_button" parent="button.primary">
-        <item name="android:background">@color/tprimary</item>
+        <item name="android:background">@color/primary</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_alignParentBottom">true</item>
@@ -101,18 +101,18 @@
 
     <style name="button.primary.transparent.big" parent="button.primary">
         <item name="android:background">@drawable/primary_transparent_btn</item>
-        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textColor">@color/primary_text</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="button.primary.transparent" parent="button.primary">
         <item name="android:background">@drawable/primary_transparent_btn</item>
-        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textColor">@color/primary_text</item>
     </style>
 
     <style name="button.primary.transparent.small" parent="button.primary.small">
         <item name="android:background">@drawable/primary_transparent_btn_small</item>
-        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textColor">@color/primary_text</item>
     </style>
 
     <style name="button.secondary.transparent" parent="button.secondary">

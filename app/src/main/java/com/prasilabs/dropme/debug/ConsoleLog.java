@@ -34,6 +34,14 @@ public class ConsoleLog
             Logger.getLogger(tag).severe(message);
         }
     }
+
+    public static void t(Throwable throwable)
+    {
+        if(CoreApp.appDebug)
+        {
+            throwable.printStackTrace();
+        }
+    }
     public static void e(Exception e)
     {
         if(CoreApp.appDebug)

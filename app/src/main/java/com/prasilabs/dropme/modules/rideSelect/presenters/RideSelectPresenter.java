@@ -37,7 +37,10 @@ public class RideSelectPresenter extends CorePresenter
             public void getRideDetailList(List<RideDetail> rideDetailList)
             {
                 persistentAllRideDetailList.clear();
-                persistentAllRideDetailList.addAll(rideDetailList);
+                if(rideDetailList != null)
+                {
+                    persistentAllRideDetailList.addAll(rideDetailList);
+                }
                 if(getRidesCallBack != null)
                 {
                     getRidesCallBack.getRides(rideDetailList);
@@ -63,7 +66,10 @@ public class RideSelectPresenter extends CorePresenter
             public void getRideDetailList(List<RideDetail> rideDetailList)
             {
                 persistentDestRideDetailList.clear();
-                persistentDestRideDetailList.addAll(rideDetailList);
+                if(rideDetailList != null)
+                {
+                    persistentDestRideDetailList.addAll(rideDetailList);
+                }
                 if(getRidesCallBack != null)
                 {
                     getRidesCallBack.getRides(rideDetailList);

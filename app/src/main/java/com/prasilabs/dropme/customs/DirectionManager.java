@@ -173,8 +173,8 @@ public class DirectionManager
 
 // Adding all the points in the route to LineOptions
                     lineOptions.addAll(points);
-                    lineOptions.width(12);
-                    lineOptions.color(Color.RED);
+                    lineOptions.width(5);
+                    lineOptions.color(Color.DKGRAY);
                     lineOptions.geodesic(true);
 
                 }

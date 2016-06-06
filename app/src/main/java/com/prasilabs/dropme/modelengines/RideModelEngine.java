@@ -176,7 +176,7 @@ public class RideModelEngine extends CoreModelEngine
             public <T> void result(T t)
             {
                 ApiResponse apiResponse = (ApiResponse) t;
-                RideManager.saveRideLite(CoreApp.getAppContext(), new RideInput());
+                RideManager.saveRideLite(CoreApp.getAppContext(), null);
                 if(cancleRideCallBack != null)
                 {
                     cancleRideCallBack.cancel(apiResponse.getStatus());
@@ -196,7 +196,15 @@ public class RideModelEngine extends CoreModelEngine
                 @Override
                 public List<RideDetail> async() {
                     try {
-                        return CloudConnect.callDropMeApi(false).getRideDetailList(idsList, geoPt).execute().getItems();
+                        List<RideDetail> rideDetailList = CloudConnect.callDropMeApi(false).getRideDetailList(idsList, geoPt).execute().getItems();
+                        if(rideDetailList != null)
+                        {
+                            ConsoleLog.i(TAG, "list size is : " + rideDetailList.size());
+                        }
+                        else
+                        {
+                            ConsoleLog.i(TAG, "list is null");
+                        }
                     } catch (Exception e) {
                         ConsoleLog.e(e);
                     }

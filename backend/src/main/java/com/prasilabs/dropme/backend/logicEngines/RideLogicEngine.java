@@ -80,8 +80,6 @@ public class RideLogicEngine extends CoreLogicEngine
             ConsoleLog.w(TAG, "user is null");
         }
 
-        ConsoleLog.l(TAG, "ride is is : " + rideInput.getId());
-
 
         return rideInput;
     }
@@ -110,8 +108,10 @@ public class RideLogicEngine extends CoreLogicEngine
                 Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
                 List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, dropMeUser.getId()).filter(Ride.DEVICE_ID_STR, deviceId).filter(Ride.IS_CLOSED_STR, false).list();
 
-                if (rideList != null) {
-                    for (Ride ride : rideList) {
+                if (rideList != null)
+                {
+                    for (Ride ride : rideList)
+                    {
                         ride.setClosed(true);
                         ride.setClosedDate(new Date(System.currentTimeMillis()));
                     }

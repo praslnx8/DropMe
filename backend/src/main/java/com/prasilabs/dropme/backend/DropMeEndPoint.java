@@ -192,7 +192,16 @@ public class DropMeEndPoint
 
         try
         {
-            return RideLogicEngine.getInstance().getRideDetailList(ids, dest);
+            List<RideDetail> rideDetailList = RideLogicEngine.getInstance().getRideDetailList(ids, dest);
+            if(rideDetailList != null)
+            {
+                ConsoleLog.i(TAG, "list size is : " + rideDetailList.size());
+            }
+            else
+            {
+                ConsoleLog.i(TAG, "list is null");
+            }
+            return rideDetailList;
         }
         catch (Exception e)
         {

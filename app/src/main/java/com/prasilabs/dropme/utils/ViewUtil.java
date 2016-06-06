@@ -66,10 +66,9 @@ public class ViewUtil
             }
 
 
-
             for (int i = 0; i < viewGroup.getChildCount(); i++)
             {
-                viewGroup.getChildAt(i).setVisibility(View.GONE);
+                viewGroup.getChildAt(i).setVisibility(View.INVISIBLE);
             }
             viewGroup.addView(view);
         }
