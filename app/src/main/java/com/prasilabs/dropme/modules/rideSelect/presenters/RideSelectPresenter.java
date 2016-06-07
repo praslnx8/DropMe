@@ -30,7 +30,7 @@ public class RideSelectPresenter extends CorePresenter
 
     public void getRideDetailList(final GetRidesCallBack getRidesCallBack)
     {
-        ConsoleLog.i(TAG, "ride select called on the presenter");
+        ConsoleLog.i(TAG, "all ride select called on the presenter");
         RideModelEngine.getInstance().getRideDetailsList(null, new RideModelEngine.GetRideDetailListCallBack()
         {
             @Override

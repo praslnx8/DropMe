@@ -1,5 +1,6 @@
 package com.prasilabs.dropme.utils;
 
+import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.enums.MarkerType;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 
@@ -22,15 +23,19 @@ public class MarkerUtil
         {
             if (markerInfo.getMarkerType().equals(MarkerType.Bike.name()))
             {
-                resourceID = android.R.drawable.ic_btn_speak_now;
+                resourceID = R.drawable.ic_marker_bike;
             }
             else if(markerInfo.getMarkerType().equals(MarkerType.Car.name()))
             {
-                resourceID = android.R.drawable.ic_lock_silent_mode;
+                resourceID = R.drawable.ic_marker_car;
             }
-            else if(markerInfo.getMarkerType().equals(MarkerType.User.name()))
+            else if(markerInfo.getMarkerType().equals(MarkerType.UserMale.name()))
             {
-
+                resourceID = R.drawable.ic_person;
+            }
+            else if(markerInfo.getMarkerType().equals(MarkerType.UserFeMale.name()))
+            {
+                resourceID = R.drawable.ic_marker_female;
             }
         }
 

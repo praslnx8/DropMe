@@ -186,6 +186,22 @@ public class RideLogicEngine extends CoreLogicEngine
 
     public List<RideDetail> getRideDetailList(List<Long> ids, GeoPt dest)
     {
+        ConsoleLog.i(TAG, "input ids list is : " + ids.size());
+
+        if(dest != null)
+        {
+            if((dest.getLatitude() > 0 || dest.getLatitude() < 0) && (dest.getLongitude() >0 || dest.getLongitude() < 0))
+            {
+                //do nothing
+            }
+            else
+            {
+                dest = null;
+            }
+            ConsoleLog.i(TAG, "dest is not null and invalid. Setting to null");
+            dest = null;
+        }
+
         List<RideDetail> rideDetails = new ArrayList<>();
 
         Map<Long, Ride> rideMap = OfyService.ofy().load().type(Ride.class).ids(ids);
@@ -214,7 +230,7 @@ public class RideLogicEngine extends CoreLogicEngine
                 if (dropMeUser != null) {
                     rideDetail.setGender(dropMeUser.getGender());
                     rideDetail.setOwnerName(dropMeUser.getName());
-                    rideDetail.setOwnerPhone(dropMeUser.getMobile());
+                    rideDetail.setOwnerPhone(ride.getPhoneNo());
                     rideDetail.setOwnerPicture(dropMeUser.getPicture());
                 } else {
                     isValid = false;
@@ -227,10 +243,19 @@ public class RideLogicEngine extends CoreLogicEngine
                     {
                         isValid = false;
                     }
+                    else
+                    {
+                        ConsoleLog.i(TAG, "distance is more");
+                    }
                 }
 
-                if (isValid) {
+                if (isValid)
+                {
                     rideDetails.add(rideDetail);
+                }
+                else
+                {
+                    ConsoleLog.i(TAG, "invalid ride");
                 }
             }
             else

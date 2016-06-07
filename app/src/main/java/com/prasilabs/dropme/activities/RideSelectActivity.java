@@ -84,7 +84,6 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
         ridersListView.setAdapter(rideSelectAdapter);
 
         ViewUtil.showProgressView(this, topLayout, true);
-
         rideSelectPresenter.getRideDetailList(this);
     }
 
@@ -110,10 +109,11 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
     @Override
     public void getRides(List<RideDetail> rideDetailList)
     {
-        ConsoleLog.i(TAG, "ridelist came for the views");
+        ConsoleLog.i(TAG, "ridelist came for the views ");
         ViewUtil.hideProgressView(this, topLayout);
         if(rideDetailList != null && rideDetailList.size() > 0)
         {
+            ConsoleLog.i(TAG, "ride list size is : " + rideDetailList.size());
             rideSelectAdapter.clearAndAddItem(rideDetailList);
             ridersListView.setVisibility(View.VISIBLE);
             emptyJokerLayout.setVisibility(View.GONE);

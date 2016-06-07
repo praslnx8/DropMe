@@ -7,9 +7,6 @@ public enum MarkerType
 {
     Car,
     Bike,
-    User,
-    MeRider,
-    Rider,
-    Biker,
-    MeBiker
+    UserMale,
+    UserFeMale,
 }

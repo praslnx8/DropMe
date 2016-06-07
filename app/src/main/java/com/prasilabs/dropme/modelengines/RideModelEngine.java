@@ -205,6 +205,7 @@ public class RideModelEngine extends CoreModelEngine
                         {
                             ConsoleLog.i(TAG, "list is null");
                         }
+                        return rideDetailList;
                     } catch (Exception e) {
                         ConsoleLog.e(e);
                     }

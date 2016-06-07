@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.backend.utils;
 
 import com.google.appengine.api.datastore.GeoPt;
+import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
 /**
  * Created by kiran on 12/9/2015.
@@ -8,6 +9,7 @@ import com.google.appengine.api.datastore.GeoPt;
 
 public class DistanceCalculator
 {
+	private static final String TAG = DistanceCalculator.class.getSimpleName();
 	//        System.out.println(distance(32.9697, -96.80322, 29.46786, -98.53506, "M") + " Miles\n");
 //        System.out.println(distance(32.9697, -96.80322, 29.46786, -98.53506, "K") + " Kilometers\n");
 //        System.out.println(distance(32.9697, -96.80322, 29.46786, -98.53506, "N") + " Nautical Miles\n");
@@ -16,7 +18,15 @@ public class DistanceCalculator
 	{
 		if(geoPt1 != null && geoPt2 != null)
 		{
-			double distance  = DistanceCalculator.distance(geoPt1.getLatitude(), geoPt1.getLongitude(), geoPt2.getLatitude(), geoPt2.getLongitude(), "K");
+			ConsoleLog.i(TAG, geoPt1.toString());
+			ConsoleLog.i(TAG, geoPt2.toString());
+
+			Float lat1 = geoPt1.getLatitude();
+			Float lon1 = geoPt1.getLongitude();
+			Float lat2 = geoPt2.getLatitude();
+			Float lon2 = geoPt2.getLongitude();
+			double distance  = DistanceCalculator.distance(lat1.doubleValue(), lon1.doubleValue(), lat2.doubleValue(), lon2.doubleValue(), "K");
+			ConsoleLog.i(TAG, "distane is : " + distance);
 			if(distance < distanceInKM)
 			{
 				return true;

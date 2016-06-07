@@ -10,12 +10,17 @@
         android:layout_height="match_parent"
         android:id="@+id/top_layout">
 
-        <com.mapbox.mapboxsdk.maps.MapView
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!--<com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             mapbox:access_token="pk.eyJ1IjoicHJhc2xueDgiLCJhIjoiY2lvcjltMXV3MDAzZnUwbTgxcWVvMjAyayJ9.bYEuK4yO9sxedj3Ler19Kg"/>
-
+-->
         <LinearLayout
             android:id="@+id/home_button_layout"
             android:layout_width="match_parent"

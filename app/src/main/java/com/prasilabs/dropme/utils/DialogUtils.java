@@ -34,6 +34,7 @@ public class DialogUtils
                 if(which == 0)
                 {
                     String phoneUrl = "tel:" + rideDetail.getOwnerPhone();
+                    ConsoleLog.i(TAG, "phone url is : " + phoneUrl);
                     Intent in = new Intent(Intent.ACTION_CALL, Uri.parse(phoneUrl));
                     try
                     {

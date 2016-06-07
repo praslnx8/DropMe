@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.RideCreateActivity;
 import com.prasilabs.dropme.activities.RideSelectActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.core.CoreFragment;
-import com.prasilabs.dropme.customs.MapBoxMapLoader;
+import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.home.presenters.HomePresenter;
 import com.prasilabs.dropme.pojo.MarkerInfo;
@@ -37,7 +37,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     private static final String TAG = HomeFragment.class.getSimpleName();
     private HomePresenter homePresenter = HomePresenter.newInstance(this);
     private static HomeFragment homeFragment;
-    private MapBoxMapLoader mapLoader;
+    private MapLoader mapLoader;
     private boolean isProgress;
 
     public static HomeFragment getHomeFragment()
@@ -75,10 +75,10 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
         {
             setFragmentView(inflater.inflate(R.layout.fragment_home, container, false));
 
-            mapLoader = new MapBoxMapLoader(mapView,savedInstanceState);
+            mapLoader = new MapLoader(mapView,savedInstanceState);
 
             homeButtonLayout.setVisibility(View.GONE);
-            mapLoader.loadMap(new MapBoxMapLoader.MapLoaderCallBack() {
+            mapLoader.loadMap(new MapLoader.MapLoaderCallBack() {
                 @Override
                 public void mapLoaded()
                 {
@@ -157,14 +157,15 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()
+    {
+        mapView.onDestroy();
         super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
         homeFragment = null;
     }
 

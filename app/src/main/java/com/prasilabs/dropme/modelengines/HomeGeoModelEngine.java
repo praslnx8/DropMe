@@ -26,6 +26,7 @@ import com.prasilabs.util.GeoFireKeyGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by prasi on 27/5/16.
@@ -185,7 +186,7 @@ public class HomeGeoModelEngine
                                         MarkerInfo markerInfo = new MarkerInfo();
                                         markerInfo.setKey(key);
                                         markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
-                                        markerInfo.setMarkerType(MarkerType.User.name());
+                                        markerInfo.setMarkerType(MarkerType.UserMale.name());
                                         markerInfo.setUserOrVehicle(UserOrVehicle.User.name());
 
                                         geoMarkerMap.put(key, markerInfo);
@@ -204,21 +205,31 @@ public class HomeGeoModelEngine
                                         {
                                             if (rideDetail != null)
                                             {
-                                                MarkerInfo markerInfo = new MarkerInfo();
-                                                markerInfo.setKey(key);
-                                                markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
-                                                if (rideDetail.getVehicleType().equals(VehicleType.Bike.name())) {
-                                                    markerInfo.setMarkerType(MarkerType.Bike.name());
-                                                } else {
-                                                    markerInfo.setMarkerType(MarkerType.Car.name());
-                                                }
-                                                markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
-
-                                                geoMarkerMap.put(key, markerInfo);
-
-                                                if (geoCallBack != null)
+                                                RideInput rideInput = RideManager.getRideLite(CoreApp.getAppContext());
+                                                if(rideInput != null && rideInput.getId() != null && Objects.equals(rideInput.getId(), rideDetail.getRideId()))
                                                 {
-                                                    geoCallBack.getMarker(markerInfo);
+                                                    ConsoleLog.i(TAG, "rider is me :) ");
+                                                }
+                                                else
+                                                {
+                                                    MarkerInfo markerInfo = new MarkerInfo();
+                                                    markerInfo.setKey(key);
+                                                    markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
+                                                    if (rideDetail.getVehicleType().equals(VehicleType.Bike.name())) {
+                                                        markerInfo.setMarkerType(MarkerType.Bike.name());
+                                                    } else {
+                                                        markerInfo.setMarkerType(MarkerType.Car.name());
+                                                    }
+                                                    markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
+
+                                                    geoMarkerMap.put(key, markerInfo);
+
+                                                    ConsoleLog.i(TAG, "rider is included");
+                                                    if (geoCallBack != null)
+                                                    {
+                                                        ConsoleLog.i(TAG, "rider sent to callback");
+                                                        geoCallBack.getMarker(markerInfo);
+                                                    }
                                                 }
                                             }
                                             else
