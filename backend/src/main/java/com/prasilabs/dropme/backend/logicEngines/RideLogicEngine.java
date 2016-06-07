@@ -45,6 +45,41 @@ public class RideLogicEngine extends CoreLogicEngine
 
     public RideLogicEngine(){}
 
+    public ApiResponse updateRide(User user, RideInput rideInput)
+    {
+        ApiResponse apiResponse = new ApiResponse();
+
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
+
+        Ride ride = convertToRide(rideInput);
+
+        Ride rideFromDb = OfyService.ofy().load().type(Ride.class).id(ride.getId()).now();
+
+        if(rideFromDb != null)
+        {
+            if(rideFromDb.getUserId() == dropMeUser.getId())
+            {
+                rideFromDb.setCurrentLoc(rideInput.getCurrentLoc());
+
+                Key<Ride> rideKey = OfyService.ofy().save().entity(rideFromDb).now();
+
+                apiResponse.setStatus(true);
+                apiResponse.setId(rideKey.getId());
+            }
+            else
+            {
+                ConsoleLog.s(TAG, "secirity issue. User try to edit other data");
+                apiResponse.setMessage("you are not the right user to update the ride");
+            }
+        }
+        else
+        {
+            apiResponse.setMessage("ride not found not found");
+        }
+
+        return apiResponse;
+    }
+
     public RideInput createRide(User user, RideInput rideInput)
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());

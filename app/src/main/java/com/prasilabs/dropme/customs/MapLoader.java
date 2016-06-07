@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.api.client.util.ArrayMap;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.utils.MarkerUtil;
 
 import java.util.Map;
 
@@ -174,8 +175,12 @@ public class MapLoader
     {
         if(isClear)
         {
-            gMap.clear();
+           clearPolyLine();
         }
+        removeMarker(MarkerUtil.SOURCE_MARKER_KEY);
+        removeMarker(MarkerUtil.DEST_MARKER_KEY);
+        addMarker(MarkerUtil.SOURCE_MARKER_KEY, sourceLatLng, MarkerUtil.SOURCE_MARKER);
+        addMarker(MarkerUtil.DEST_MARKER_KEY, destLatLng, MarkerUtil.DEST_MARKER);
 
         new DirectionManager().showDirection(this, sourceLatLng, destLatLng);
     }

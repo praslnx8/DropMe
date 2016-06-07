@@ -88,7 +88,7 @@ public class HomeGeoModelEngine
                 if(isCallServer)
                 {
                     rideLite.setSourceLoc(LocationUtils.convertToGeoPt(latLng));
-                    RideModelEngine.getInstance().createRide(); //TODO
+                    RideModelEngine.getInstance().createRide(rideLite, null);
                 }
             }
         }

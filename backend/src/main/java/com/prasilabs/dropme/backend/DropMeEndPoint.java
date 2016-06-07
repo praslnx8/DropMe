@@ -135,6 +135,25 @@ public class DropMeEndPoint
         return null;
     }
 
+    @ApiMethod(name = "updateRide")
+    public ApiResponse updateRide(User user,RideInput rideInput) throws OAuthRequestException
+    {
+        AdminUtil.checkAndThrow(user);
+
+        ApiResponse apiResponse = new ApiResponse();
+
+        try
+        {
+            apiResponse = RideLogicEngine.getInstance().updateRide(user,rideInput);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return apiResponse;
+    }
+
     @ApiMethod(name = "getRideDetail")
     public RideDetail getRideDetail(@Named("rideId") long rideId)
     {

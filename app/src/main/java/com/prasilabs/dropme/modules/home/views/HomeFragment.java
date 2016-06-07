@@ -203,10 +203,6 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
                 LatLng currentLatlng = DropMeLocatioListener.getLatLng(getContext());
                 LatLng destLatLng = LocationUtils.convertToLatLng(rideInput.getDestLoc());
 
-                mapLoader.removeMarker(MarkerUtil.SOURCE_MARKER_KEY);
-                mapLoader.removeMarker(MarkerUtil.DEST_MARKER_KEY);
-                mapLoader.addMarker(MarkerUtil.SOURCE_MARKER_KEY, currentLatlng, MarkerUtil.SOURCE_MARKER);
-                mapLoader.addMarker(MarkerUtil.DEST_MARKER_KEY, destLatLng, MarkerUtil.DEST_MARKER);
                 mapLoader.showDirection(currentLatlng, destLatLng, true);
 
                 homeButtonLayout.setVisibility(View.GONE);

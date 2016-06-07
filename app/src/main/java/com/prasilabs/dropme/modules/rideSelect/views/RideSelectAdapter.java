@@ -98,7 +98,15 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
         {
             ViewUtil.renderImage(userImage, rideDetail.getOwnerPicture(), true);
             LatLng currentLatLng = DropMeLocatioListener.getLatLng(coreActivity);
-            distanceText.setText(LocationUtils.formatDistanceBetween(currentLatLng, LocationUtils.convertToLatLng(rideDetail.getDestLatLng())));
+            String distancestr = LocationUtils.formatDistanceBetween(currentLatLng, LocationUtils.convertToLatLng(rideDetail.getCurrentLatLng()));
+            if(distancestr != null)
+            {
+                distanceText.setText(distancestr);
+            }
+            else
+            {
+                distanceText.setText("N/A");
+            }
             nameText.setText(rideDetail.getOwnerName());
             genderText.setText(rideDetail.getGender());
             destText.setText(rideDetail.getDestLoc());
@@ -114,7 +122,8 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
 
             mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v)
+                {
                     DialogUtils.showSelectRideMenu(coreActivity, rideDetail);
                 }
             });

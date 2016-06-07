@@ -38,6 +38,42 @@ public class RideModelEngine extends CoreModelEngine
         return instance;
     }
 
+    public void updateRide(final RideInput rideInput, final RideCreateCallBack rideCreateCallBack)
+    {
+        callAsync(new AsyncCallBack() {
+            @Override
+            public ApiResponse async()
+            {
+                try
+                {
+                    return CloudConnect.callDropMeApi(false).updateRide(rideInput).execute();
+                }
+                catch (Exception e)
+                {
+                    ConsoleLog.e(e);
+                }
+
+                return null;
+            }
+
+            @Override
+            public <T> void result(T t)
+            {
+                ApiResponse apiResponse  = (ApiResponse) t;
+
+                if(apiResponse != null)
+                {
+                    rideInput.setId(apiResponse.getId());
+                }
+                else
+                {
+                    rideInput.setId(null);
+                }
+
+            }
+        });
+    }
+
     public void createRide(final RideInput input, final RideCreateCallBack rideCreateCallBack)
     {
         callAsync(new AsyncCallBack()
