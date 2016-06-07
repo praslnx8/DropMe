@@ -11,6 +11,7 @@ import java.util.Date;
 public class RideDetail
 {
     private long rideId;
+    private GeoPt currentLatLng;
     private GeoPt destLatLng;
     private String destLoc;
     private String ownerName;
@@ -99,5 +100,13 @@ public class RideDetail
 
     public void setVehicleNumber(VNumber vehicleNumber) {
         this.vehicleNumber = vehicleNumber;
+    }
+
+    public GeoPt getCurrentLatLng() {
+        return currentLatLng;
+    }
+
+    public void setCurrentLatLng(GeoPt currentLatLng) {
+        this.currentLatLng = currentLatLng;
     }
 }

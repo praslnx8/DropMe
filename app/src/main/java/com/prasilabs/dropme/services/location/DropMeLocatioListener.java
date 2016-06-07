@@ -103,7 +103,7 @@ public class DropMeLocatioListener implements LocationListener
             LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
             LocalPreference.saveLoginDataInShared(context,LocationConstant.PREV_LOC_TIME_STR, oldTime);
             LocalPreference.saveLoginDataInShared(context,LocationConstant.CURRENT_LOC_TIME_STR, System.currentTimeMillis());
-            informLocation(context);
+            informLocation(context, true);
 
             stopLocationUpdates(context);
         }
@@ -132,7 +132,7 @@ public class DropMeLocatioListener implements LocationListener
             //LatLng oldLoc = LocalPreference.getLocationFromPrefs(context, MyConstant.CURRENT_LATLNG_TEXT);
 
             LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
-            informLocation(context);
+            informLocation(context, true);
 
             stopLocationUpdates(context);
         }
@@ -190,7 +190,7 @@ public class DropMeLocatioListener implements LocationListener
 
                 //LatLng oldLoc = LocalPreference.getLocationFromPrefs(context, MyConstant.CURRENT_LATLNG_TEXT);
                 LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
-                informLocation(context);
+                informLocation(context, true);
             }
         }
         else
@@ -209,9 +209,9 @@ public class DropMeLocatioListener implements LocationListener
         }
     }
 
-    public static void informLocation(Context context)
+    public static void informLocation(Context context, boolean isCallServer)
     {
-        HomeGeoModelEngine.getInstance().locationChanged();
+        HomeGeoModelEngine.getInstance().locationChanged(isCallServer);
 
         Intent locationIntent = new Intent();
         locationIntent.setAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);

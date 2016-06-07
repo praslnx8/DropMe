@@ -219,6 +219,7 @@ public class RideLogicEngine extends CoreLogicEngine
                 rideDetail.setStartDate(ride.getStartDate());
                 rideDetail.setDestLatLng(ride.getDestLoc());
                 rideDetail.setDestLoc(ride.getDestLocName());
+                rideDetail.setCurrentLatLng(ride.getCurrentLoc());
                 Vehicle vehicle = OfyService.ofy().load().type(Vehicle.class).id(ride.getVehicleId()).now();
                 if (vehicle != null) {
                     rideDetail.setVehicleNumber(vehicle.getvNumber());

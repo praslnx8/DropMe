@@ -15,6 +15,7 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 import com.prasilabs.dropme.constants.LocationConstant;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -125,15 +126,35 @@ public class DropMeGLocationService extends IntentService
 
         ConsoleLog.i(TAG, "location update recieved");
 
-        // Extra new location
         Location location = intent.getParcelableExtra(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
 
         if (location != null)
         {
-            // Store the new lat lon in phone data, irrespective of time or co-ordinate changes
+            LatLng oldLatLng = LocalPreference.getLocationFromPrefs(this, LocationConstant.CURRENT_LOC_STR);
+            LatLng aggrOldLatLng = LocalPreference.getLocationFromPrefs(this, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
             LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
-            DropMeLocatioListener.informLocation(this);
+
+            double distance = 0.0;
+            double aggrDistance = 0.0;
+            if(oldLatLng != null)
+            {
+                distance = Math.round(SphericalUtil.computeDistanceBetween(oldLatLng, latLngLocation));
+            }
+            if(aggrOldLatLng != null)
+            {
+                aggrDistance = Math.round(SphericalUtil.computeDistanceBetween(aggrOldLatLng, latLngLocation));
+            }
+
+            if(oldLatLng == null || aggrDistance > 200)
+            {
+                LocalPreference.storeLocation(this, latLngLocation, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
+                DropMeLocatioListener.informLocation(this, true);
+            }
+            if(oldLatLng == null || distance > 100)
+            {
+                LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
+                DropMeLocatioListener.informLocation(this, false);
+            }
         }
         else
         {

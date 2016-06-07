@@ -66,7 +66,7 @@ public class HomeGeoModelEngine
         }
     }
 
-    public void locationChanged()
+    public void locationChanged(boolean isCallServer)
     {
         ConsoleLog.i(TAG, "location changed");
         RideInput rideInput = RideManager.getRideLite(CoreApp.getAppContext());
@@ -84,6 +84,12 @@ public class HomeGeoModelEngine
                 String userKey = createGeoPtKey(UserManager.getDropMeUser(CoreApp.getAppContext()));
                 removePoint(userKey);
                 addGeopt(rideLite, latLng);
+
+                if(isCallServer)
+                {
+                    rideLite.setSourceLoc(LocationUtils.convertToGeoPt(latLng));
+                    RideModelEngine.getInstance().createRide(); //TODO
+                }
             }
         }
     }
