@@ -25,6 +25,7 @@ public class GcmSender
 
     public static boolean sendGcmMessage(String msg, GcmRecord gcmRecord)
     {
+        ConsoleLog.i(TAG, "sending gcm");
         boolean success = false;
 
         if(sender == null)
@@ -69,6 +70,8 @@ public class GcmSender
         {
             ConsoleLog.e(e);
         }
+
+        ConsoleLog.i(TAG, "gcmm sent with status " + success);
 
         return success;
     }

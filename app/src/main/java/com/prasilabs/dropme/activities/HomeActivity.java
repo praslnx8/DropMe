@@ -26,6 +26,7 @@ import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.modelengines.RideModelEngine;
 import com.prasilabs.dropme.modules.home.views.HomeFragment;
+import com.prasilabs.dropme.services.gcm.DropMeGcmListenerService;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 import butterknife.BindView;
@@ -62,6 +63,8 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         FragmentNavigator.navigateToFragment(this, HomeFragment.getHomeFragment(), false, containerLayout.getId());
 
         setNavigationHeaderData(navigationView);
+
+        DropMeGcmListenerService.startIntentService(this);
     }
 
     @Override

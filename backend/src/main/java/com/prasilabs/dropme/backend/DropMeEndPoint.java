@@ -18,11 +18,13 @@ import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.debug.Experiments;
 import com.prasilabs.dropme.backend.io.ApiResponse;
+import com.prasilabs.dropme.backend.io.GcmRecordIO;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
+import com.prasilabs.dropme.backend.logicEngines.GcmLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
 import com.prasilabs.dropme.backend.security.DropMeAuthenticator;
@@ -230,7 +232,24 @@ public class DropMeEndPoint
         return null;
     }
 
+    @ApiMethod(name = "addGcmId")
+    public ApiResponse addGcmId(User user, GcmRecordIO gcmRecordIO) throws OAuthRequestException
+    {
+        AdminUtil.checkAndThrow(user);
 
+        ApiResponse apiResponse = new ApiResponse();
+
+        try
+        {
+            apiResponse = GcmLogicEngine.getInstance().addGcmRecord(gcmRecordIO);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return apiResponse;
+    }
 
     @ApiMethod(name = "test")
     public void test(@Named("password") String password) throws OAuthRequestException

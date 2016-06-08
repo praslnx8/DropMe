@@ -1,5 +1,6 @@
 package com.prasilabs.dropme.backend.datastore;
 
+import com.google.appengine.api.datastore.GeoPt;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -7,13 +8,12 @@ import com.googlecode.objectify.annotation.Index;
 import java.util.Date;
 
 /**
- * Created by prasi on 5/6/16.
+ * Created by prasi on 8/6/16.
  */
 @Entity
-public class GcmRecord
+public class UserLocation
 {
     public static final String USER_ID_STR = "userId";
-    public static final String GCM_ID_STR = "gcmId";
     public static final String DEVICE_ID_STR = "deviceId";
 
     @Id
@@ -21,9 +21,9 @@ public class GcmRecord
     @Index
     private long userId;
     @Index
-    private String gcmId;
-    @Index
     private String deviceId;
+    @Index
+    private GeoPt currentLoc;
     @Index
     private Date created;
     private Date modified;
@@ -44,12 +44,20 @@ public class GcmRecord
         this.userId = userId;
     }
 
-    public String getGcmId() {
-        return gcmId;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setGcmId(String gcmId) {
-        this.gcmId = gcmId;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public GeoPt getCurrentLoc() {
+        return currentLoc;
+    }
+
+    public void setCurrentLoc(GeoPt currentLoc) {
+        this.currentLoc = currentLoc;
     }
 
     public Date getCreated() {
@@ -58,14 +66,6 @@ public class GcmRecord
 
     public void setCreated(Date created) {
         this.created = created;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
     }
 
     public Date getModified() {

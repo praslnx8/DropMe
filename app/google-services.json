@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "805210209614",
+    "project_id": "prasilabs-dropme"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805210209614:android:1acc5d21c8d29500",
+        "android_client_info": {
+          "package_name": "com.prasilabs.dropme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805210209614-trlrtrer8iu33evfoeiiiu1q5vm0mlbe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prasilabs.dropme",
+            "certificate_hash": "C1B31E8CAF2E7EE0A29C2590E6054E75425195B7"
+          }
+        },
+        {
+          "client_id": "805210209614-qqc3ne1uvt7rkdld82tmo5vjvajjn9lq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prasilabs.dropme",
+            "certificate_hash": "D0150D45589DB6720CF8414521CAD3D375E8F543"
+          }
+        },
+        {
+          "client_id": "805210209614-skiaj65jd3njqllro684p5rmvr02d5bp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBBAoTE2ubyssOw06M13Q-ayspsKqLUYQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

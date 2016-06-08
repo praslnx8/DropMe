@@ -7,6 +7,7 @@ import com.prasilabs.dropme.backend.datastore.CacheKeyValue;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.GcmRecord;
 import com.prasilabs.dropme.backend.datastore.Ride;
+import com.prasilabs.dropme.backend.datastore.RideAlert;
 import com.prasilabs.dropme.backend.datastore.Vehicle;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
@@ -29,6 +30,7 @@ public class OfyService
             ObjectifyService.register(Vehicle.class);
             ObjectifyService.register(Ride.class);
             ObjectifyService.register(GcmRecord.class);
+            ObjectifyService.register(RideAlert.class);
         }
         catch (Exception e)
         {

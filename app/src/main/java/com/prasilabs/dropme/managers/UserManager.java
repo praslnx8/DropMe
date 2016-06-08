@@ -53,6 +53,13 @@ public class UserManager
         return isSucces;
     }
 
+    public static long getUserId(Context context)
+    {
+        long id = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.ID_STR, 0L);
+
+        return id;
+    }
+
     public static String getUserHash(Context context)
     {
         String hash = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.HASH_STR, null);

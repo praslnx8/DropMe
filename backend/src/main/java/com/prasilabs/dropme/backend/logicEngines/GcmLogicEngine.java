@@ -1,0 +1,106 @@
+package com.prasilabs.dropme.backend.logicEngines;
+
+import com.google.appengine.api.datastore.Query;
+import com.googlecode.objectify.Key;
+import com.prasilabs.dropme.backend.core.CoreLogicEngine;
+import com.prasilabs.dropme.backend.datastore.GcmRecord;
+import com.prasilabs.dropme.backend.db.OfyService;
+import com.prasilabs.dropme.backend.debug.ConsoleLog;
+import com.prasilabs.dropme.backend.io.ApiResponse;
+import com.prasilabs.dropme.backend.io.GcmRecordIO;
+import com.prasilabs.dropme.backend.services.gcm.GcmSender;
+import com.prasilabs.util.DataUtil;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by prasi on 8/6/16.
+ */
+public class GcmLogicEngine extends CoreLogicEngine
+{
+    private static final String TAG = GcmLogicEngine.class.getSimpleName();
+
+    private static GcmLogicEngine instance;
+
+    public static GcmLogicEngine getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new GcmLogicEngine();
+        }
+
+        return instance;
+    }
+
+    private GcmLogicEngine(){}
+
+    public ApiResponse addGcmRecord(GcmRecordIO gcmRecordIo)
+    {
+        ApiResponse apiResponse = new ApiResponse();
+
+        GcmRecord gcmRecord = convertGcmRecortIO(gcmRecordIo);
+
+        if(gcmRecord != null)
+        {
+            GcmRecord existing = OfyService.ofy().load().type(GcmRecord.class).filter(GcmRecord.DEVICE_ID_STR, gcmRecord.getDeviceId()).first().now();
+            if(existing != null)
+            {
+                existing.setGcmId(gcmRecord.getGcmId());
+                existing.setUserId(gcmRecord.getUserId());
+                existing.setModified(new Date(System.currentTimeMillis()));
+
+                Key<GcmRecord> gcmRecordKey = OfyService.ofy().save().entity(existing).now();
+                apiResponse.setStatus(true);
+                apiResponse.setId(gcmRecordKey.getId());
+            }
+            else
+            {
+                gcmRecord.setCreated(new Date(System.currentTimeMillis()));
+                gcmRecord.setModified(new Date(System.currentTimeMillis()));
+                Key<GcmRecord> gcmRecordKey = OfyService.ofy().save().entity(gcmRecord).now();
+                apiResponse.setStatus(true);
+                apiResponse.setId(gcmRecordKey.getId());
+            }
+
+            GcmSender.sendGcmMessage("hello",gcmRecord);
+        }
+        else
+        {
+            ConsoleLog.w(TAG, "not a valid input");
+        }
+
+        return apiResponse;
+    }
+
+    public List<String> getGcmIdOfUsers(List<Long> userIds)
+    {
+        List<String> gcmIdList = new ArrayList<>();
+
+        Query.Filter filter = new Query.FilterPredicate(GcmRecord.USER_ID_STR, Query.FilterOperator.IN, userIds);
+        List<GcmRecord> gcmRecordList = OfyService.ofy().load().type(GcmRecord.class).filter(filter).list();
+
+        for(GcmRecord gcmRecord : gcmRecordList)
+        {
+            gcmIdList.add(gcmRecord.getGcmId());
+        }
+
+        return gcmIdList;
+    }
+
+    private static GcmRecord convertGcmRecortIO(GcmRecordIO gcmRecordIO)
+    {
+        GcmRecord gcmRecord = null;
+
+        if(gcmRecordIO != null && !DataUtil.isEmpty(gcmRecordIO.getGcmId()) && !DataUtil.isEmpty(gcmRecordIO.getDeviceId()) && !DataUtil.isEmpty(gcmRecordIO.getUserId()))
+        {
+            gcmRecord = new GcmRecord();
+            gcmRecord.setUserId(gcmRecordIO.getUserId());
+            gcmRecord.setDeviceId(gcmRecordIO.getDeviceId());
+            gcmRecord.setGcmId(gcmRecordIO.getGcmId());
+        }
+
+        return gcmRecord;
+    }
+}

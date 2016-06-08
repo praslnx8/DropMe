@@ -3,6 +3,7 @@ package com.prasilabs.dropme.backend.logicEngines;
 import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.api.datastore.Query;
 import com.googlecode.objectify.Key;
+import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.Ride;
 import com.prasilabs.dropme.backend.datastore.RideAlert;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * Created by prasi on 8/6/16.
  */
-public class RideAlertLogicEngine
+public class RideAlertLogicEngine extends CoreLogicEngine
 {
     private static RideAlertLogicEngine instance;
 
@@ -106,12 +107,10 @@ public class RideAlertLogicEngine
             {
                 rideAlertIterator.remove();
             }
-            else if(rideAlert.getG //TODOdropMeUser.getGender().equals())
+            else if(!(rideAlert.getGender() != null && dropMeUser.getGender().equals(rideAlert.getGender())))
             {
-
-
+                rideAlertIterator.remove();
             }
-
         }
 
 

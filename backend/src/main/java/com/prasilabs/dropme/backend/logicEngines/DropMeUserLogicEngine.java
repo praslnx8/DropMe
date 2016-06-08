@@ -5,7 +5,6 @@ import com.googlecode.objectify.Key;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.db.OfyService;
-import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.security.HashGenerator;
 import com.prasilabs.util.DataUtil;
@@ -100,8 +99,6 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
     public DropMeUser getDropMeUserByHash(String hash)
     {
-        ConsoleLog.l(TAG, "user hash is :" + hash);
-
         DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.HASH_STR, hash).first().now();
 
         return dropMeUser;
