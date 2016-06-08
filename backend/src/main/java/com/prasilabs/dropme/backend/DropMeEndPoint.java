@@ -74,7 +74,7 @@ public class DropMeEndPoint
     {
         try
         {
-            return DropMeUserLogicEngine.getInstance().getDropMeUserById(id);
+            return DropMeUserLogicEngine.getInstance().getVDropMeUserById(id);
         }
         catch (Exception e)
         {
@@ -89,7 +89,7 @@ public class DropMeEndPoint
     {
         try
         {
-            return VehicleLogicEngine.getInstance().getVehicleById(id);
+            return VehicleLogicEngine.getInstance().getVVehicleById(id);
         }
         catch (Exception e)
         {

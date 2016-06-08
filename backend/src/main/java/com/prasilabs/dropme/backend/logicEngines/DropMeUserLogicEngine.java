@@ -68,7 +68,14 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         }
     }
 
-    public VDropMeUser getDropMeUserById(long id)
+    public DropMeUser getDropMeUserById(long id)
+    {
+        DropMeUser dropMeUser = getDropMeUser(id);
+
+        return dropMeUser;
+    }
+
+    public VDropMeUser getVDropMeUserById(long id)
     {
         DropMeUser dropMeUser = getDropMeUser(id);
 

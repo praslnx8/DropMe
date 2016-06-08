@@ -59,7 +59,14 @@ public class VehicleLogicEngine
         return apiResponse;
     }
 
-    public VVehicle getVehicleById(long id)
+    public Vehicle getVehicleById(long id)
+    {
+        Vehicle vehicle = OfyService.ofy().load().type(Vehicle.class).id(id).now();
+
+        return vehicle;
+    }
+
+    public VVehicle getVVehicleById(long id)
     {
         Vehicle vehicle = OfyService.ofy().load().type(Vehicle.class).id(id).now();
 
