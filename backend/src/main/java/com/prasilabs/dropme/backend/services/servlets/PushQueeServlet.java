@@ -1,7 +1,9 @@
 package com.prasilabs.dropme.backend.services.servlets;
 
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
+import com.prasilabs.dropme.backend.logicEngines.RideAlertLogicEngine;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
+import com.prasilabs.util.DataUtil;
 
 import java.io.IOException;
 
@@ -30,6 +32,14 @@ public class PushQueeServlet extends HttpServlet
             //TODO not working. Error bacjenf instance...
             // Wait for Geofire to work on auto backend instance. calling backend instance has lots of procedures
             // GeoFireManager.removeGeoPoint(key);
+        }
+        else if(operationType.equals(PushQueueController.SEND_RIDE_ALERT_OPER))
+        {
+            String srideId = req.getParameter(PushQueueController.RIDE_ID_KEY);
+
+            long rideID = DataUtil.stringToLong(srideId);
+
+            RideAlertLogicEngine.getInstance().sendRideAlertsForRide(rideID);
         }
         else
         {

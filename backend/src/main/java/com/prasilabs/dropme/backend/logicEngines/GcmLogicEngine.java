@@ -64,7 +64,7 @@ public class GcmLogicEngine extends CoreLogicEngine
                 apiResponse.setId(gcmRecordKey.getId());
             }
 
-            GcmSender.sendGcmMessage("hello",gcmRecord);
+            GcmSender.sendGcmMessage(1L, "hello","hello prasanna", gcmRecord.getGcmId());
         }
         else
         {

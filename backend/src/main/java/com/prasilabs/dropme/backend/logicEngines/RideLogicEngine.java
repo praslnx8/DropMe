@@ -94,12 +94,17 @@ public class RideLogicEngine extends CoreLogicEngine
             {
                 Ride currentRide = getExistingActiveRide(rideInput.getUserId(), rideInput.getDeviceId());
 
-                if (currentRide == null) {
+                if (currentRide == null)
+                {
                     ride.setCreated(new Date(System.currentTimeMillis()));
                     ride.setModified(new Date(System.currentTimeMillis()));
                     Key<Ride> rideKey = OfyService.ofy().save().entity(ride).now();
                     ride.setId(rideKey.getId());
-                } else {
+
+                    PushQueueController.sendRideAlert(ride);
+                }
+                else
+                {
                     ConsoleLog.w(TAG, "ride already exist");
                     ride = null;
                 }

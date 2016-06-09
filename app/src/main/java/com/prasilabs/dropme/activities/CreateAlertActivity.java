@@ -17,11 +17,15 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.api.client.util.DateTime;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideAlertIo;
 import com.prasilabs.dropme.core.CoreActivity;
+import com.prasilabs.dropme.customs.RangeTimePickerDialog;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.rideAlerts.presenters.AlertCreatePresenter;
 import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
+import com.prasilabs.enums.Gender;
+import com.prasilabs.enums.VehicleType;
 
 import java.util.Calendar;
 
@@ -31,7 +35,7 @@ import butterknife.OnClick;
 /**
  * Created by prasi on 9/6/16.
  */
-public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter>
+public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> implements AlertCreatePresenter.CreateAlertCallBack
 {
     private static final String TAG = CreateAlertActivity.class.getSimpleName();
     private AlertCreatePresenter alertCreatePresenter = new AlertCreatePresenter();
@@ -114,7 +118,7 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter>
     protected void onTimeStart()
     {
         final Calendar calendar = Calendar.getInstance();
-        new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute)
             {
@@ -126,14 +130,23 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter>
                 startBtn.setText(hourOfDay + " : " + minute);
 
             }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+
+        if(endTime != null)
+        {
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTimeInMillis(endTime.getValue());
+            rangeTimePickerDialog.setMax(calendar1.get(Calendar.HOUR_OF_DAY), calendar1.get(Calendar.MINUTE));
+        }
+
+        rangeTimePickerDialog.show();
     }
 
     @OnClick(R.id.end_btn)
     protected void onTimeEnd()
     {
         final Calendar calendar = Calendar.getInstance();
-        new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute)
             {
@@ -145,13 +158,55 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter>
                 endBtn.setText(hourOfDay + " : " + minute);
 
             }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+
+        if(startTime != null)
+        {
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTimeInMillis(startTime.getValue());
+            rangeTimePickerDialog.setMin(calendar1.get(Calendar.HOUR_OF_DAY), calendar1.get(Calendar.MINUTE));
+        }
+
+        rangeTimePickerDialog.show();
     }
 
     @OnClick(R.id.create_btn)
     protected void createAlert()
     {
+        if(isValid())
+        {
+            RideAlertIo rideAlertIo = new RideAlertIo();
+            rideAlertIo.setSource(sourceLatLng);
+            rideAlertIo.setSourceName(sourceLocName);
+            rideAlertIo.setDest(destLatLng);
+            rideAlertIo.setDestName(destLocName);
 
+            if(maleBtn.isChecked() && !femaleBtn.isChecked())
+            {
+                rideAlertIo.setGender(Gender.Male.name());
+            }
+            else if(!maleBtn.isChecked() && femaleBtn.isChecked())
+            {
+                rideAlertIo.setGender(Gender.Female.name());
+            }
+
+            if(carBtn.isChecked() && !bikeBtn.isChecked())
+            {
+                rideAlertIo.setVehicleType(VehicleType.Car.name());
+            }
+            else if(!carBtn.isChecked() && bikeBtn.isChecked())
+            {
+                rideAlertIo.setVehicleType(VehicleType.Bike.name());
+            }
+
+            if(startTime != null && endTime != null)
+            {
+                rideAlertIo.setStartTime(startTime);
+                rideAlertIo.setEndTime(endTime);
+            }
+
+            alertCreatePresenter.createAlert(rideAlertIo, this);
+        }
     }
 
     private boolean isValid()
@@ -181,5 +236,17 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter>
     protected AlertCreatePresenter setCorePresenter()
     {
         return alertCreatePresenter;
+    }
+
+    @Override
+    public void alertCreated()
+    {
+        ViewUtil.t(this, "Your alert is created. You will be notified whenever a ride matches your alert. Happy travel");
+    }
+
+    @Override
+    public void alertCreateFailed()
+    {
+        ViewUtil.t(this, "Unable to create alert. Make sure you filled the right values. if so sorry for the trouble");
     }
 }

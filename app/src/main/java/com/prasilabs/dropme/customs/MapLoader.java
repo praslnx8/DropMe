@@ -29,12 +29,13 @@ import java.util.Map;
 /**
  * Created by prasi on 12/12/15.
  */
-public class MapLoader
+public class MapLoader implements GoogleMap.OnInfoWindowClickListener
 {
     private static final String TAG = MapLoader.class.getSimpleName();
     private MapView mapView;
     private Bundle savedInstanceState;
     private GoogleMap gMap;
+    private MapMarkerClick mapMarkerClick;
     private boolean disableMapchangeListener;
     private Map<String, Marker> markerMap = new ArrayMap<>();
 
@@ -202,6 +203,22 @@ public class MapLoader
         }
     }
 
+    public void listenToMarkerClick(MapMarkerClick mapMarkerClick)
+    {
+        this.mapMarkerClick = mapMarkerClick;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker)
+    {
+        String id = marker.getId();
+
+        if(mapMarkerClick != null)
+        {
+            mapMarkerClick.markerClicked(id);
+        }
+    }
+
     public interface MapLoaderCallBack
     {
         void mapLoaded();
@@ -210,5 +227,10 @@ public class MapLoader
     public interface MapChangeCallBack
     {
         void getLatLng(LatLng latLng);
+    }
+
+    public interface MapMarkerClick
+    {
+        void markerClicked(String id);
     }
 }

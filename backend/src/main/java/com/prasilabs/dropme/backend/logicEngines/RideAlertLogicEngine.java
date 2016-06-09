@@ -1,16 +1,19 @@
 package com.prasilabs.dropme.backend.logicEngines;
 
-import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
+import com.prasilabs.dropme.backend.annotions.PushQ;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.Ride;
 import com.prasilabs.dropme.backend.datastore.RideAlert;
 import com.prasilabs.dropme.backend.datastore.Vehicle;
 import com.prasilabs.dropme.backend.db.OfyService;
+import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.RideAlertIo;
+import com.prasilabs.dropme.backend.services.gcm.GcmSenderUtil;
 import com.prasilabs.dropme.backend.utils.GeoFilter;
 import com.prasilabs.util.DataUtil;
 
@@ -25,6 +28,8 @@ import java.util.List;
  */
 public class RideAlertLogicEngine extends CoreLogicEngine
 {
+    private static final String TAG = RideAlertLogicEngine.class.getSimpleName();
+
     private static RideAlertLogicEngine instance;
 
     private RideAlertLogicEngine(){}
@@ -81,6 +86,32 @@ public class RideAlertLogicEngine extends CoreLogicEngine
         }
 
         return apiResponse;
+    }
+
+    @PushQ
+    public void sendRideAlertsForRide(long rideId)
+    {
+        if(rideId != 0)
+        {
+            Ride ride = OfyService.ofy().load().type(Ride.class).id(rideId).now();
+            if (ride != null) {
+                List<RideAlert> rideAlertList = getRidesBasedOnRide(ride);
+
+                List<Long> userIds = new ArrayList<>();
+
+                for (RideAlert rideAlert : rideAlertList) {
+                    userIds.add(rideAlert.getId());
+                }
+
+                List<String> gcmIDs = GcmLogicEngine.getInstance().getGcmIdOfUsers(userIds);
+
+                GcmSenderUtil.sendRideInfoPushForAlert(ride, gcmIDs);
+            }
+        }
+        else
+        {
+            ConsoleLog.w(TAG, "ride id is 0");
+        }
     }
 
     public List<RideAlert> getRidesBasedOnRide(Ride ride)

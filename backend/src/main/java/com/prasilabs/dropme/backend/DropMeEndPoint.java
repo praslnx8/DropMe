@@ -26,6 +26,7 @@ import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.GcmLogicEngine;
+import com.prasilabs.dropme.backend.logicEngines.RideAlertLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
 import com.prasilabs.dropme.backend.security.DropMeAuthenticator;
@@ -261,7 +262,7 @@ public class DropMeEndPoint
 
         try
         {
-
+            apiResponse = RideAlertLogicEngine.getInstance().createRideAlert(user, rideAlertIo);
         }
         catch (Exception e)
         {

@@ -5,12 +5,12 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+import com.prasilabs.constants.GcmConstants;
 import com.prasilabs.dropme.backend.datastore.GcmRecord;
 import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +23,7 @@ public class GcmSender
     private static final String API_KEY = "AIzaSyDLWzUM17yyaVWWAAw0t5m06wVj3WnYuNA";//System.getProperty("gcm.api.key");
     private static Sender sender;
 
-    public static boolean sendGcmMessage(String msg, GcmRecord gcmRecord)
+    public static boolean sendGcmMessage(long id, String jobType, String msg, String gcmId)
     {
         ConsoleLog.i(TAG, "sending gcm");
         boolean success = false;
@@ -33,50 +33,48 @@ public class GcmSender
             sender = new Sender(API_KEY);
         }
 
-        Message message = new Message.Builder().addData("message", msg).build();
+        GcmRecord gcmRecord = OfyService.ofy().load().type(GcmRecord.class).filter(GcmRecord.GCM_ID_STR, gcmId).first().now();
 
-        try
-        {
-            Result result = sender.send(message, gcmRecord.getGcmId(), 2);
+        if(gcmRecord != null) {
+            Message message = new Message.Builder().addData(GcmConstants.ID_KEY, String.valueOf(id)).addData(GcmConstants.JOB_TYPE_KEY, jobType).addData(GcmConstants.MESSAGE_KEY, msg).build();
 
-            if(result.getMessageId() != null)
-            {
-                ConsoleLog.i(TAG, "message sent to " + gcmRecord.getGcmId());
-                String canonicalId = result.getCanonicalRegistrationId();
-                if(canonicalId != null)
-                {
-                    ConsoleLog.i(TAG, "gcmID changed");
-                    gcmRecord.setGcmId(canonicalId);
-                    OfyService.ofy().save().entity(gcmRecord).now();
+            try {
+                Result result = sender.send(message, gcmRecord.getGcmId(), 2);
+
+                if (result.getMessageId() != null) {
+                    ConsoleLog.i(TAG, "message sent to " + gcmRecord.getGcmId());
+                    String canonicalId = result.getCanonicalRegistrationId();
+                    if (canonicalId != null) {
+                        ConsoleLog.i(TAG, "gcmID changed");
+                        gcmRecord.setGcmId(canonicalId);
+                        OfyService.ofy().save().entity(gcmRecord).now();
+                    }
+
+                    success = true;
+                } else {
+                    String error = result.getErrorCodeName();
+                    if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
+                        ConsoleLog.w(TAG, " registration id " + gcmRecord.getGcmId() + " is invalid");
+                        OfyService.ofy().delete().entity(gcmRecord).now();
+                    } else {
+                        ConsoleLog.w(TAG, "Error sending gcm message to " + gcmRecord.getGcmId());
+                    }
                 }
-
-                success = true;
+            } catch (Exception e) {
+                ConsoleLog.e(e);
             }
-            else
-            {
-                String error = result.getErrorCodeName();
-                if(error.equals(Constants.ERROR_NOT_REGISTERED))
-                {
-                    ConsoleLog.w(TAG, " registration id "+ gcmRecord.getGcmId() +" is invalid");
-                    OfyService.ofy().delete().entity(gcmRecord).now();
-                }
-                else
-                {
-                    ConsoleLog.w(TAG, "Error sending gcm message to " + gcmRecord.getGcmId());
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            ConsoleLog.e(e);
-        }
 
-        ConsoleLog.i(TAG, "gcmm sent with status " + success);
+            ConsoleLog.i(TAG, "gcmm sent with status " + success);
+        }
+        else
+        {
+            ConsoleLog.w(TAG, "gcm record is null");
+        }
 
         return success;
     }
 
-    public static boolean sendGcmMessage(String msg, List<GcmRecord> gcmRecords)
+    public static boolean sendGcmMessage(long id, String msg, String jobType, List<String> gcmIDs)
     {
         boolean isSuccess = false;
         if(sender == null)
@@ -84,14 +82,7 @@ public class GcmSender
             sender = new Sender(API_KEY);
         }
 
-        Message message = new Message.Builder().addData("message", msg).build();
-
-        List<String> gcmIDs = new ArrayList<>();
-
-        for(GcmRecord gcmRecord : gcmRecords)
-        {
-            gcmIDs.add(gcmRecord.getGcmId());
-        }
+        Message message = new Message.Builder().addData(GcmConstants.ID_KEY, String.valueOf(id)).addData(GcmConstants.JOB_TYPE_KEY, jobType).addData(GcmConstants.MESSAGE_KEY, msg).build();
 
         try
         {
