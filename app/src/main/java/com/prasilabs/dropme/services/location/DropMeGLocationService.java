@@ -145,12 +145,13 @@ public class DropMeGLocationService extends IntentService
                 aggrDistance = Math.round(SphericalUtil.computeDistanceBetween(aggrOldLatLng, latLngLocation));
             }
 
-            if(oldLatLng == null || aggrDistance > 200)
+            if(aggrOldLatLng == null || aggrDistance > 200)
             {
                 LocalPreference.storeLocation(this, latLngLocation, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
+                LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
                 DropMeLocatioListener.informLocation(this, true);
             }
-            if(oldLatLng == null || distance > 100)
+            else if(oldLatLng == null || distance > 100)
             {
                 LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
                 DropMeLocatioListener.informLocation(this, false);

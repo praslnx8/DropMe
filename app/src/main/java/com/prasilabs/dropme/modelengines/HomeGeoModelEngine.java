@@ -58,11 +58,13 @@ public class HomeGeoModelEngine
 
     public void addMyGeoPt(LatLng latLng)
     {
-        VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
-        if(vDropMeUser != null)
+        if(latLng != null)
         {
-            String key = createGeoPtKey(vDropMeUser);
-            FireBaseConfig.getGeoFire().setLocation(key, new GeoLocation(latLng.latitude, latLng.longitude));
+            VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
+            if (vDropMeUser != null) {
+                String key = createGeoPtKey(vDropMeUser);
+                FireBaseConfig.getGeoFire().setLocation(key, new GeoLocation(latLng.latitude, latLng.longitude));
+            }
         }
     }
 
