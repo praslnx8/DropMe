@@ -86,6 +86,10 @@ dependencies {
     compile ('com.mapbox.mapboxsdk:mapbox-android-services:1.1.0@aar'){
         transitive=true
     }
+    //MAterial design helper
+    compile 'com.dmitrymalkovich.android:material-design-dimens:1.2'
+    //DB
+    compile 'za.co.cporm:CPOrm:3.0'
 
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile project(path: ':common')

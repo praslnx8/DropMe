@@ -72,11 +72,11 @@ public class UserLocationLogicEngine extends CoreLogicEngine
         ApiResponse apiResponse = new ApiResponse();
 
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
-        DropMeUser reciever = DropMeUserLogicEngine.getInstance().getDropMeUser(recieverID);
+        DropMeUser receiver = DropMeUserLogicEngine.getInstance().getDropMeUser(recieverID);
 
-        if(dropMeUser != null && reciever != null)
+        if(dropMeUser != null && receiver != null)
         {
-            LocationShare existingLocShare = OfyService.ofy().load().type(LocationShare.class).filter(LocationShare.DEVICE_ID_STR, deviceId).filter(LocationShare.USER_ID_STR, dropMeUser.getId()).filter(LocationShare.RECIEVER_ID_STR, reciever.getId()).first().now();
+            LocationShare existingLocShare = OfyService.ofy().load().type(LocationShare.class).filter(LocationShare.DEVICE_ID_STR, deviceId).filter(LocationShare.USER_ID_STR, dropMeUser.getId()).filter(LocationShare.RECIEVER_ID_STR, receiver.getId()).first().now();
 
             if(existingLocShare != null)
             {
@@ -92,7 +92,7 @@ public class UserLocationLogicEngine extends CoreLogicEngine
                 LocationShare locationShare = new LocationShare();
                 locationShare.setUserId(dropMeUser.getId());
                 locationShare.setDeviceId(deviceId);
-                locationShare.setRecieverId(reciever.getId());
+                locationShare.setRecieverId(receiver.getId());
                 locationShare.setCreatedTime(new Date(System.currentTimeMillis()));
                 locationShare.setModifiedTime(new Date(System.currentTimeMillis()));
 

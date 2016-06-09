@@ -19,6 +19,7 @@ import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.debug.Experiments;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.GcmRecordIO;
+import com.prasilabs.dropme.backend.io.RideAlertIo;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
@@ -242,6 +243,25 @@ public class DropMeEndPoint
         try
         {
             apiResponse = GcmLogicEngine.getInstance().addGcmRecord(gcmRecordIO);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return apiResponse;
+    }
+
+    @ApiMethod(name = "createAlert")
+    public ApiResponse createAlert(User user, RideAlertIo rideAlertIo) throws OAuthRequestException
+    {
+        AdminUtil.checkAndThrow(user);
+
+        ApiResponse apiResponse = new ApiResponse();
+
+        try
+        {
+
         }
         catch (Exception e)
         {

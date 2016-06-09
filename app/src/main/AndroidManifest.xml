@@ -51,6 +51,8 @@
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.CreateAlertActivity" />
+        <activity android:name=".activities.DropMeNotificationActivity" />
 
         <!-- For facebook -->
         <activity

@@ -67,13 +67,22 @@
             <com.prasilabs.dropme.customs.FontAweSomeTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="200dp"
+                android:textSize="100dp"
                 android:text="@string/fa_exclamation_circle"/>
 
             <TextView
+                style="@style/Base.TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No riders found for this route. :( "/>
+                android:text="No riders found for this route."/>
+
+            <Button
+                android:id="@+id/create_alert_btn"
+                android:layout_marginTop="@dimen/paddingS"
+                style="@style/button.primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Alert"/>
 
 
         </LinearLayout>

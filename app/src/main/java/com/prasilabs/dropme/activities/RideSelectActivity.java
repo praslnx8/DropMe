@@ -100,6 +100,13 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
         });
     }
 
+    @OnClick(R.id.create_alert_btn)
+    protected void gotoCreateAlert()
+    {
+        CreateAlertActivity.openCreateAlertActivity(this);
+        finish();
+    }
+
     @Override
     protected RideSelectPresenter setCorePresenter()
     {
