@@ -18,17 +18,17 @@ import com.prasilabs.dropme.services.network.CloudConnect;
 /**
  * Created by prasi on 8/6/16.
  */
-public class DropMeGcmListenerService extends IntentService
+public class GcmRegistrationIntentService extends IntentService
 {
-    private static final String TAG = DropMeGcmListenerService.class.getSimpleName();
+    private static final String TAG = GcmRegistrationIntentService.class.getSimpleName();
 
-    public DropMeGcmListenerService() {
+    public GcmRegistrationIntentService() {
         super(TAG);
     }
 
     public static void startIntentService(Context context)
     {
-        Intent intent = new Intent(context, DropMeGcmListenerService.class);
+        Intent intent = new Intent(context, GcmRegistrationIntentService.class);
         context.startService(intent);
     }
 

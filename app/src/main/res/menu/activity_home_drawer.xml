@@ -12,7 +12,7 @@
             android:title="My Rides" />
         <item
             android:id="@+id/nav_my_alerts"
-            android:icon="@drawable/ic_ride_alert"
+            android:icon="@drawable/ic_ride_alerts"
             android:title="My Alerts" />
         <item
             android:id="@+id/nav_my_vehicles"

@@ -26,10 +26,11 @@ public class CloudConnect
     private static DropMeApi dropMeApi;
     private static String serverUrl = "https://prasilabs-dropme.appspot.com/_ah/api/";
     private static String serverUrl_Dev = "https://prasilabs-dropme.appspot.com/_ah/api/"; //"http://10.0.0.12:8080/_ah/api/";
+    private static boolean isLastCallOauth;
 
     public static DropMeApi callDropMeApi(boolean isOauth)
     {
-        if(isOauth || dropMeApi == null)
+        if(isOauth || dropMeApi == null || isLastCallOauth)
         {
             String loginTypeStr = LocalPreference.getLoginDataFromShared(CoreApp.getAppContext(), PojoConstants.UserConstant.LOGIN_TYPE_STR, null);
             String accesToken = LocalPreference.getLoginDataFromShared(CoreApp.getAppContext(), PojoConstants.UserConstant.ACCES_TOKEN_STR, null);
@@ -49,10 +50,12 @@ public class CloudConnect
                     ConsoleLog.i(TAG, "google oauth");
                     httpRequestInitializer = GCredential.getGoogleCredential(CoreApp.getAppContext());
                 }
+                isLastCallOauth = true;
             }
             else
             {
                 httpRequestInitializer = DropMeCredential.getDropMECredentialInitializer();
+                isLastCallOauth = false;
             }
 
             DropMeApi.Builder builder = new DropMeApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), httpRequestInitializer);

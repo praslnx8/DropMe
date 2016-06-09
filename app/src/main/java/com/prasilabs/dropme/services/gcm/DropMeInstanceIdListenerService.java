@@ -13,6 +13,6 @@ public class DropMeInstanceIdListenerService extends InstanceIDListenerService
         super.onTokenRefresh();
 
         // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
-        DropMeGcmListenerService.startIntentService(this);
+        GcmRegistrationIntentService.startIntentService(this);
     }
 }

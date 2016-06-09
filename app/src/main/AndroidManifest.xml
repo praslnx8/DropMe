@@ -95,7 +95,7 @@
         </receiver>
 
         <service
-            android:name="com.prasilabs.dropme.services.gcm.DropMeGcmListenerService"
+            android:name=".services.gcm.DropMeGcmMessageService"
             android:exported="false"
             android:enabled="true">
             <intent-filter>
@@ -112,7 +112,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".services.gcm.DropMeGcmMessageService"
+        <service android:name=".services.gcm.GcmRegistrationIntentService"
             android:enabled="true"/>
 
 

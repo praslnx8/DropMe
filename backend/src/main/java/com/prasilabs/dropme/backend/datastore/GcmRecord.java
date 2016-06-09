@@ -15,6 +15,7 @@ public class GcmRecord
     public static final String USER_ID_STR = "userId";
     public static final String GCM_ID_STR = "gcmId";
     public static final String DEVICE_ID_STR = "deviceId";
+    public static final String IS_DELETED_STR = "isDeleted";
 
     @Id
     private Long id;
@@ -24,6 +25,8 @@ public class GcmRecord
     private String gcmId;
     @Index
     private String deviceId;
+    @Index
+    private boolean isDeleted;
     @Index
     private Date created;
     private Date modified;
@@ -74,5 +77,13 @@ public class GcmRecord
 
     public void setModified(Date modified) {
         this.modified = modified;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

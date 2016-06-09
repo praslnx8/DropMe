@@ -8,7 +8,6 @@ import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.GcmRecordIO;
-import com.prasilabs.dropme.backend.services.gcm.GcmSender;
 import com.prasilabs.util.DataUtil;
 
 import java.util.ArrayList;
@@ -63,8 +62,6 @@ public class GcmLogicEngine extends CoreLogicEngine
                 apiResponse.setStatus(true);
                 apiResponse.setId(gcmRecordKey.getId());
             }
-
-            GcmSender.sendGcmMessage(1L, "hello","hello prasanna", gcmRecord.getGcmId());
         }
         else
         {
@@ -79,7 +76,7 @@ public class GcmLogicEngine extends CoreLogicEngine
         List<String> gcmIdList = new ArrayList<>();
 
         Query.Filter filter = new Query.FilterPredicate(GcmRecord.USER_ID_STR, Query.FilterOperator.IN, userIds);
-        List<GcmRecord> gcmRecordList = OfyService.ofy().load().type(GcmRecord.class).filter(filter).list();
+        List<GcmRecord> gcmRecordList = OfyService.ofy().load().type(GcmRecord.class).filter(filter).filter(GcmRecord.IS_DELETED_STR, false).list();
 
         for(GcmRecord gcmRecord : gcmRecordList)
         {
@@ -87,6 +84,45 @@ public class GcmLogicEngine extends CoreLogicEngine
         }
 
         return gcmIdList;
+    }
+
+    public void updateGcmRecord(String oldGcmID, String newGcmID)
+    {
+        GcmRecord gcmRecord = getGcmRecordByFcmId(oldGcmID);
+
+        if(gcmRecord != null)
+        {
+            gcmRecord.setGcmId(newGcmID);
+            gcmRecord.setDeleted(false);
+
+            OfyService.ofy().save().entity(gcmRecord).now();
+        }
+        else
+        {
+            ConsoleLog.w(TAG, "no entry for the old gcm id");
+        }
+    }
+
+    public void deleteGcmRecord(String gcmId)
+    {
+        GcmRecord gcmRecord = getGcmRecordByFcmId(gcmId);
+
+        if(gcmRecord != null)
+        {
+            gcmRecord.setDeleted(true);
+            OfyService.ofy().save().entity(gcmRecord).now();
+        }
+        else
+        {
+            ConsoleLog.w(TAG, "gcm entry is empty for id : " + gcmId);
+        }
+    }
+
+    public GcmRecord getGcmRecordByFcmId(String gcmID)
+    {
+        GcmRecord gcmRecord = OfyService.ofy().load().type(GcmRecord.class).filter(GcmRecord.GCM_ID_STR, gcmID).first().now();
+
+        return gcmRecord;
     }
 
     private static GcmRecord convertGcmRecortIO(GcmRecordIO gcmRecordIO)
@@ -103,4 +139,6 @@ public class GcmLogicEngine extends CoreLogicEngine
 
         return gcmRecord;
     }
+
+
 }

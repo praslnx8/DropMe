@@ -180,12 +180,15 @@ public class HomeGeoModelEngine
                     {
                         ConsoleLog.i(TAG, "marker entered");
                         MarkerInfo existingMarkerInfo = geoMarkerMap.get(key);
-                        if (existingMarkerInfo != null) {
+                        if (existingMarkerInfo != null)
+                        {
                             existingMarkerInfo.setLoc(new LatLng(location.latitude, location.longitude));
-                            if (geoCallBack != null) {
+                            if (geoCallBack != null)
+                            {
                                 geoCallBack.getMarker(existingMarkerInfo);
                             }
-                        } else
+                        }
+                        else
                         {
                             final long id = getIdFromGeoKey(key);
 
@@ -293,7 +296,8 @@ public class HomeGeoModelEngine
                             if (geoCallBack != null) {
                                 geoCallBack.getMarker(markerInfo);
                             }
-                        } else {
+                        } else
+                        {
                             ConsoleLog.w(TAG, "marker info is null for key : " + key);
                         }
                     }

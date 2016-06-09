@@ -23,4 +23,5 @@ public class DropMeGcmMessageService extends GcmListenerService
 
         ConsoleLog.i(TAG, "message recieved is : " + data.getString("message"));
     }
+
 }
