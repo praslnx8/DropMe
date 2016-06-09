@@ -14,6 +14,7 @@ import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.RideAlertIo;
 import com.prasilabs.dropme.backend.services.gcm.GcmSenderUtil;
+import com.prasilabs.dropme.backend.utils.DistanceCalculator;
 import com.prasilabs.dropme.backend.utils.GeoFilter;
 import com.prasilabs.util.DataUtil;
 
@@ -122,10 +123,25 @@ public class RideAlertLogicEngine extends CoreLogicEngine
     {
         List<RideAlert> rideAlertList = new ArrayList<>();
 
-        Query.Filter sourceFilter = new GeoFilter(RideAlert.SOURCE_PT).getFilter(ride.getCurrentLoc(),500);
-        Query.Filter destFilter = new GeoFilter(RideAlert.DEST_PT).getFilter(ride.getDestLoc(),500);
+        Query.Filter sourceFilter = new GeoFilter(RideAlert.SOURCE_PT).getFilter(ride.getCurrentLoc(),1000);
 
-        List<RideAlert> dataList = OfyService.ofy().load().type(RideAlert.class).filter(sourceFilter).filter(destFilter).filter(RideAlert.IS_DELETED_STR, false).list();
+        List<RideAlert> dataList = OfyService.ofy().load().type(RideAlert.class).filter(sourceFilter).list();
+
+        Iterator<RideAlert> locRideAlertIterator = dataList.iterator();
+
+        while (locRideAlertIterator.hasNext())
+        {
+            RideAlert rideAlert = locRideAlertIterator.next();
+
+            if(rideAlert.isDeleted())
+            {
+                locRideAlertIterator.remove();
+            }
+            else if(!DistanceCalculator.isFit(rideAlert.getDestPt(), ride.getDestLoc(), 1))
+            {
+                locRideAlertIterator.remove();
+            }
+        }
 
         filterForTiming(ride, dataList);
 

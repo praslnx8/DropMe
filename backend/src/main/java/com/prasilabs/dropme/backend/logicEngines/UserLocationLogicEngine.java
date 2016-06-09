@@ -1,7 +1,7 @@
 package com.prasilabs.dropme.backend.logicEngines;
 
-import com.google.api.server.spi.auth.common.User;
 import com.google.appengine.api.datastore.GeoPt;
+import com.google.appengine.api.users.User;
 import com.googlecode.objectify.Key;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;

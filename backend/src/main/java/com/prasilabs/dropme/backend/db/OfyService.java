@@ -6,8 +6,10 @@ import com.googlecode.objectify.ObjectifyService;
 import com.prasilabs.dropme.backend.datastore.CacheKeyValue;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.GcmRecord;
+import com.prasilabs.dropme.backend.datastore.LocationShare;
 import com.prasilabs.dropme.backend.datastore.Ride;
 import com.prasilabs.dropme.backend.datastore.RideAlert;
+import com.prasilabs.dropme.backend.datastore.UserLocation;
 import com.prasilabs.dropme.backend.datastore.Vehicle;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
@@ -27,10 +29,12 @@ public class OfyService
         {
             ObjectifyService.register(CacheKeyValue.class);
             ObjectifyService.register(DropMeUser.class);
-            ObjectifyService.register(Vehicle.class);
-            ObjectifyService.register(Ride.class);
             ObjectifyService.register(GcmRecord.class);
+            ObjectifyService.register(LocationShare.class);
+            ObjectifyService.register(Ride.class);
             ObjectifyService.register(RideAlert.class);
+            ObjectifyService.register(UserLocation.class);
+            ObjectifyService.register(Vehicle.class);
         }
         catch (Exception e)
         {

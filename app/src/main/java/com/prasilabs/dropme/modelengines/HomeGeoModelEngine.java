@@ -33,7 +33,7 @@ import java.util.Objects;
  */
 public class HomeGeoModelEngine
 {
-    private static final double RADIUS_IN_KM = 0.5;
+    private static final double RADIUS_IN_KM = 1;
     private static final String GeoUserStr = "user";
     private static final String GeoRideStr = "veh";
     private static final String splitter = "-";
@@ -76,6 +76,11 @@ public class HomeGeoModelEngine
         {
             LatLng latLng = DropMeLocatioListener.getLatLng(CoreApp.getAppContext());
             addMyGeoPt(latLng);
+
+            if(isCallServer)
+            {
+                UserLocationModelEngine.getInstance().updateUserLocation(CoreApp.getDeviceId(), LocationUtils.convertToGeoPt(latLng), null);
+            }
         }
         else
         {
@@ -90,7 +95,7 @@ public class HomeGeoModelEngine
                 if(isCallServer)
                 {
                     rideLite.setSourceLoc(LocationUtils.convertToGeoPt(latLng));
-                    RideModelEngine.getInstance().createRide(rideLite, null);
+                    RideModelEngine.getInstance().updateRide(rideLite, null);
                 }
             }
         }

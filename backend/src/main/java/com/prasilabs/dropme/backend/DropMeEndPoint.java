@@ -28,6 +28,7 @@ import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.GcmLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideAlertLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideLogicEngine;
+import com.prasilabs.dropme.backend.logicEngines.UserLocationLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.VehicleLogicEngine;
 import com.prasilabs.dropme.backend.security.DropMeAuthenticator;
 import com.prasilabs.dropme.backend.security.FBAuthenticator;
@@ -263,6 +264,23 @@ public class DropMeEndPoint
         try
         {
             apiResponse = RideAlertLogicEngine.getInstance().createRideAlert(user, rideAlertIo);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return apiResponse;
+    }
+
+    @ApiMethod(name = "updateUserLocation")
+    public ApiResponse updateUserLocation(User user, @Named("deviceId") String deviceId, GeoPt currentLoc)
+    {
+        ApiResponse apiResponse = new ApiResponse();
+
+        try
+        {
+            apiResponse = UserLocationLogicEngine.getInstance().updateUserLocation(user, deviceId, currentLoc);
         }
         catch (Exception e)
         {
