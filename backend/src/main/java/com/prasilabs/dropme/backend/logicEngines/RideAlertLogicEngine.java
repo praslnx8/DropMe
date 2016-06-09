@@ -62,6 +62,10 @@ public class RideAlertLogicEngine extends CoreLogicEngine
             apiResponse.setStatus(true);
             apiResponse.setId(rideAlertKey.getId());
         }
+        else
+        {
+            ConsoleLog.w(TAG, "not a valid rideAlert");
+        }
 
         return apiResponse;
     }
@@ -156,11 +160,7 @@ public class RideAlertLogicEngine extends CoreLogicEngine
         if(rideAlertIo != null)
         {
             boolean isValid = true;
-            if(DataUtil.isEmpty(rideAlertIo.getId()))
-            {
-                isValid = false;
-            }
-            else if(rideAlertIo.getSource() == null || rideAlertIo.getDest() == null || DataUtil.isEmpty(rideAlertIo.getSourceName()) || DataUtil.isEmpty(rideAlertIo.getDestName()))
+            if(rideAlertIo.getSource() == null || rideAlertIo.getDest() == null || DataUtil.isEmpty(rideAlertIo.getSourceName()) || DataUtil.isEmpty(rideAlertIo.getDestName()))
             {
                 isValid = false;
             }

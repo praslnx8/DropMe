@@ -140,7 +140,10 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_notification)
+        {
+            //TODO notification
+
             return true;
         }
 
@@ -156,19 +159,31 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_help) {
-
-        } else if (id == R.id.nav_logout)
+        if (id == R.id.nav_home)
+        {
+            // Handle nothing
+        }
+        else if (id == R.id.nav_my_rides)
+        {
+            //TODO go to my rides
+        }
+        else if (id == R.id.nav_my_alerts)
+        {
+            //TODO GO TO MY ALERTS
+        }
+        else if (id == R.id.nav_my_vehicles)
+        {
+            //TODO go to my vehicles
+        }
+        else if (id == R.id.nav_share)
+        {
+            //TODO share
+        }
+        else if (id == R.id.nav_rate)
+        {
+            //TODO go to playstore
+        }
+        else if (id == R.id.nav_logout)
         {
             LocalPreference.clearLoginSharedPreferences(this);
             HomeGeoModelEngine.getInstance().clearUserData();

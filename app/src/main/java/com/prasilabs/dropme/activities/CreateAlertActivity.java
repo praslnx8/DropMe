@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import com.google.android.gms.common.api.Status;
@@ -64,10 +65,16 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
     @BindView(R.id.bike_btn)
     CheckBox bikeBtn;
 
+    @BindView(R.id.timing_btn)
+    CheckBox timingBtn;
+
     @BindView(R.id.start_btn)
     Button startBtn;
     @BindView(R.id.end_btn)
     Button endBtn;
+
+    @BindView(R.id.top_layout)
+    LinearLayout topLayout;
 
 
     @Override
@@ -76,6 +83,11 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_alert_create);
+
+        if(getSupportActionBar() != null)
+        {
+            getSupportActionBar().setTitle("Create Alert");
+        }
 
         PlaceAutocompleteFragment sourceLocFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.source_place_fragment);
         sourceLocFragment.setHint("* Enter Source");
@@ -112,12 +124,22 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
                 ConsoleLog.i(TAG, "An error occurred: " + status);
             }
         });
+
+
     }
 
     @OnClick(R.id.start_btn)
     protected void onTimeStart()
     {
         final Calendar calendar = Calendar.getInstance();
+        if(startTime != null)
+        {
+            calendar.setTimeInMillis(startTime.getValue());
+        }
+        else if(endTime != null)
+        {
+            calendar.setTimeInMillis(endTime.getValue());
+        }
         RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute)
@@ -127,10 +149,16 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
                 calendar.set(Calendar.MINUTE, minute);
                 startTime = new DateTime(calendar.getTime());
 
-                startBtn.setText(hourOfDay + " : " + minute);
+                String ampm = "PM";
+                if(calendar.get(Calendar.AM_PM) == 0)
+                {
+                    ampm = "AM";
+                }
+
+                startBtn.setText(calendar.get(Calendar.HOUR) + " : " + minute + " : " + ampm);
 
             }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+        }, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false);
 
         if(endTime != null)
         {
@@ -139,6 +167,9 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
             rangeTimePickerDialog.setMax(calendar1.get(Calendar.HOUR_OF_DAY), calendar1.get(Calendar.MINUTE));
         }
 
+        rangeTimePickerDialog.setTitle("Choose alert start time");
+        rangeTimePickerDialog.setMessage("Choose the alert starting time");
+
         rangeTimePickerDialog.show();
     }
 
@@ -146,6 +177,14 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
     protected void onTimeEnd()
     {
         final Calendar calendar = Calendar.getInstance();
+        if(endTime != null)
+        {
+            calendar.setTimeInMillis(endTime.getValue());
+        }
+        else if(startTime != null)
+        {
+            calendar.setTimeInMillis(startTime.getValue());
+        }
         RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute)
@@ -155,10 +194,16 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
                 calendar.set(Calendar.MINUTE, minute);
                 endTime = new DateTime(calendar.getTime());
 
-                endBtn.setText(hourOfDay + " : " + minute);
+                String ampm = "PM";
+                if(calendar.get(Calendar.AM_PM) == 0)
+                {
+                    ampm = "AM";
+                }
+
+                endBtn.setText(calendar.get(Calendar.HOUR) + " : " + minute + " : " + ampm);
 
             }
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+        }, calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), false);
 
         if(startTime != null)
         {
@@ -166,6 +211,8 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
             calendar1.setTimeInMillis(startTime.getValue());
             rangeTimePickerDialog.setMin(calendar1.get(Calendar.HOUR_OF_DAY), calendar1.get(Calendar.MINUTE));
         }
+        rangeTimePickerDialog.setTitle("Choose End time");
+        rangeTimePickerDialog.setMessage("Choose the alert end time");
 
         rangeTimePickerDialog.show();
     }
@@ -205,6 +252,7 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
                 rideAlertIo.setEndTime(endTime);
             }
 
+            ViewUtil.showProgressView(this, topLayout, true);
             alertCreatePresenter.createAlert(rideAlertIo, this);
         }
     }
@@ -223,7 +271,7 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
             ViewUtil.t(this, "Choose Destination Location");
             isValid = false;
         }
-        else if(startTime != null && endTime != null && startTime.getValue() < endTime.getValue())
+        else if(timingBtn.isChecked() && startTime != null && endTime != null && startTime.getValue() > endTime.getValue())
         {
             ViewUtil.t(this, "Choose appropriate time");
             isValid = false;
@@ -242,11 +290,13 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
     public void alertCreated()
     {
         ViewUtil.t(this, "Your alert is created. You will be notified whenever a ride matches your alert. Happy travel");
+        finish();
     }
 
     @Override
     public void alertCreateFailed()
     {
         ViewUtil.t(this, "Unable to create alert. Make sure you filled the right values. if so sorry for the trouble");
+        ViewUtil.hideProgressView(this, topLayout);
     }
 }

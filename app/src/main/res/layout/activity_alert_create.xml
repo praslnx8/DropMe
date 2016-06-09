@@ -1,159 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout
+    android:id="@+id/top_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
 
-
-    <ScrollView
-        android:layout_above="@+id/create_btn"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+            android:layout_above="@+id/create_btn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <fragment
-                    android:id="@+id/source_place_fragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <fragment
-                    android:id="@+id/dest_place_fragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
-
-            </android.support.v7.widget.CardView>
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/paddingS">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Subhead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Choose Gender"/>
-
-                <RadioGroup
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/paddingS"
-                    android:layout_margin="@dimen/paddingS">
+                    android:layout_height="wrap_content">
 
-                    <CheckBox
-                        android:id="@+id/male_btn"
-                        android:layout_width="wrap_content"
+                    <fragment
+                        android:id="@+id/source_place_fragment"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Male"/>
+                        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
+                </android.support.v7.widget.CardView>
 
-                    <CheckBox
-                        android:id="@+id/female_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Female"/>
-
-                </RadioGroup>
-
-                <TextView
-                    style="@style/TextAppearance.AppCompat.Subhead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Choose Vehicle Type"/>
-
-                <RadioGroup
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/paddingS"
-                    android:layout_margin="@dimen/paddingS">
+                    android:layout_height="wrap_content">
 
-                    <CheckBox
-                        android:id="@+id/car_btn"
-                        android:layout_width="wrap_content"
+                    <fragment
+                        android:id="@+id/dest_place_fragment"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Car"/>
+                        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                    <CheckBox
-                        android:id="@+id/bike_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bike"/>
-
-                </RadioGroup>
-
+                </android.support.v7.widget.CardView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/start_btn"
-                        style="@style/button.secondary"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_margin="@dimen/paddingXXXS"
-                        android:text="Start Time"/>
+                    android:orientation="vertical"
+                    android:padding="@dimen/paddingS">
 
                     <TextView
-                        style="@style/TextAppearance.AppCompat.Body1"
+                        style="@style/TextAppearance.AppCompat.Subhead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/paddingXS"
-                        android:text="to"/>
+                        android:text="Choose Gender"/>
 
-                    <Button
-                        android:id="@+id/end_btn"
-                        style="@style/button.secondary"
-                        android:layout_width="0dp"
+                    <RadioGroup
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_margin="@dimen/paddingXXXS"
-                        android:text="End Time"/>
+                        android:orientation="horizontal"
+                        android:padding="@dimen/paddingS"
+                        android:layout_margin="@dimen/paddingS">
 
+                        <CheckBox
+                            android:id="@+id/male_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Male"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <CheckBox
+                            android:id="@+id/female_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Female"/>
+
+                    </RadioGroup>
+
+                    <TextView
+                        style="@style/TextAppearance.AppCompat.Subhead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose Vehicle Type"/>
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/paddingS"
+                        android:layout_margin="@dimen/paddingS">
+
+                        <CheckBox
+                            android:id="@+id/car_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Car"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <CheckBox
+                            android:id="@+id/bike_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bike"/>
+
+                    </RadioGroup>
+
+                    <CheckBox
+                        android:id="@+id/timing_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/paddingS"
+                        android:text="Timings"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/start_btn"
+                            style="@style/button.secondary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="@dimen/paddingXXXS"
+                            android:text="Start Time"/>
+
+                        <TextView
+                            style="@style/TextAppearance.AppCompat.Body1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/paddingXS"
+                            android:text="to"/>
+
+                        <Button
+                            android:id="@+id/end_btn"
+                            style="@style/button.secondary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="@dimen/paddingXXXS"
+                            android:text="End Time"/>
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+        <Button
+            android:id="@+id/create_btn"
+            android:layout_alignParentBottom="true"
+            style="@style/button.primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create"/>
 
-    <Button
-        android:id="@+id/create_btn"
-        android:layout_alignParentBottom="true"
-        style="@style/button.primary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create"/>
+    </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
