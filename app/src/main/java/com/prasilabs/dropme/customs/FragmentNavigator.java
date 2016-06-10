@@ -33,7 +33,7 @@ public class FragmentNavigator
 
         if (!coreFragment.isAdded())
         {
-            fragmentTransaction.replace(viewId, coreFragment, coreFragment.getClass().getSimpleName());
+            fragmentTransaction.add(viewId, coreFragment, coreFragment.getClass().getSimpleName());
             if (addToBackStack)
             {
                 fragmentTransaction.addToBackStack(null);

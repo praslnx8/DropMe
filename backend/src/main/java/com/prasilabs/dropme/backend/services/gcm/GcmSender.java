@@ -19,7 +19,7 @@ public class GcmSender
 {
     private static final String TAG = GcmSender.class.getSimpleName();
 
-    private static final String API_KEY = "AIzaSyDLWzUM17yyaVWWAAw0t5m06wVj3WnYuNA";//System.getProperty("gcm.api.key");
+    private static final String API_KEY = "AIzaSyDo3LXdo7rZxENytQeq0HWM1yfupmNNOxU";//System.getProperty("gcm.api.key");
     private static Sender sender;
 
     public static boolean sendGcmMessage(long id, String jobType, String msg, String gcmId)

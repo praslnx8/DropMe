@@ -19,6 +19,7 @@ import com.google.maps.android.SphericalUtil;
 import com.prasilabs.dropme.constants.LocationConstant;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.utils.LocationUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -130,32 +131,39 @@ public class DropMeGLocationService extends IntentService
 
         if (location != null)
         {
-            LatLng oldLatLng = LocalPreference.getLocationFromPrefs(this, LocationConstant.CURRENT_LOC_STR);
-            LatLng aggrOldLatLng = LocalPreference.getLocationFromPrefs(this, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
-            LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            final LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-            double distance = 0.0;
-            double aggrDistance = 0.0;
-            if(oldLatLng != null)
-            {
-                distance = Math.round(SphericalUtil.computeDistanceBetween(oldLatLng, latLngLocation));
-            }
-            if(aggrOldLatLng != null)
-            {
-                aggrDistance = Math.round(SphericalUtil.computeDistanceBetween(aggrOldLatLng, latLngLocation));
-            }
+            LocationUtils.getLocationFromLatLng(this, latLngLocation, new LocationUtils.GetLocationNameCallBack() {
+                @Override
+                public void getLocationName(String location)
+                {
+                    LatLng oldLatLng = LocalPreference.getLocationFromPrefs(DropMeGLocationService.this, LocationConstant.CURRENT_LOC_STR);
+                    LatLng aggrOldLatLng = LocalPreference.getLocationFromPrefs(DropMeGLocationService.this, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
 
-            if(aggrOldLatLng == null || aggrDistance > 400)
-            {
-                LocalPreference.storeLocation(this, latLngLocation, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
-                LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
-                DropMeLocatioListener.informLocation(this, true);
-            }
-            else if(oldLatLng == null || distance > 100)
-            {
-                LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
-                DropMeLocatioListener.informLocation(this, false);
-            }
+                    double distance = 0.0;
+                    double aggrDistance = 0.0;
+                    if(oldLatLng != null)
+                    {
+                        distance = Math.round(SphericalUtil.computeDistanceBetween(oldLatLng, latLngLocation));
+                    }
+                    if(aggrOldLatLng != null)
+                    {
+                        aggrDistance = Math.round(SphericalUtil.computeDistanceBetween(aggrOldLatLng, latLngLocation));
+                    }
+
+                    if(aggrOldLatLng == null || aggrDistance > 400)
+                    {
+                        LocalPreference.storeLocation(DropMeGLocationService.this, latLngLocation, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
+                        LocalPreference.storeLocation(DropMeGLocationService.this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
+                        DropMeLocatioListener.informLocation(DropMeGLocationService.this, true);
+                    }
+                    else if(oldLatLng == null || distance > 100)
+                    {
+                        LocalPreference.storeLocation(DropMeGLocationService.this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
+                        DropMeLocatioListener.informLocation(DropMeGLocationService.this, false);
+                    }
+                }
+            });
         }
         else
         {

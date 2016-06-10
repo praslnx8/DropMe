@@ -161,11 +161,11 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
 
         if (id == R.id.nav_home)
         {
-            // Handle nothing
+            FragmentNavigator.navigateToFragment(this, HomeFragment.getHomeFragment(), false, containerLayout.getId());
         }
         else if (id == R.id.nav_my_rides)
         {
-            //TODO go to my rides
+            GenericActivity.openMyRide(this);
         }
         else if (id == R.id.nav_my_alerts)
         {

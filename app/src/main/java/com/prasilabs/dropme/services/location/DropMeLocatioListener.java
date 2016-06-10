@@ -212,7 +212,6 @@ public class DropMeLocatioListener implements LocationListener
     public static void informLocation(Context context, boolean isCallServer)
     {
         HomeGeoModelEngine.getInstance().locationChanged(isCallServer);
-
         Intent locationIntent = new Intent();
         locationIntent.setAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
         LocalBroadcastManager.getInstance(context).sendBroadcast(locationIntent);

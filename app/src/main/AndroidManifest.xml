@@ -47,12 +47,8 @@
             android:name=".activities.RideCreateActivity" />
         <activity
             android:name=".activities.RideSelectActivity" />
-        <activity
-            android:name=".activities.ProfileActivity"
-            android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.CreateAlertActivity" />
-        <activity android:name=".activities.DropMeNotificationActivity" />
+        <activity android:name=".activities.GenericActivity" />
 
         <!-- For facebook -->
         <activity
@@ -64,7 +60,7 @@
         <!-- Meta data -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDCxsGHyXBcUAx30qw9wLsYO1xhQ4VbvnQ" />
+            android:value="AIzaSyCBBAoTE2ubyssOw06M13Q-ayspsKqLUYQ" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

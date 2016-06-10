@@ -1,10 +1,19 @@
 package com.prasilabs.dropme.utils;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.AsyncTask;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
+import com.prasilabs.dropme.debug.ConsoleLog;
 
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by prasi on 31/5/16.
@@ -61,5 +70,54 @@ public class LocationUtils
             return numberFormat.format(distance / 1000) + DISTANCE_KM_POSTFIX;
         }
         return numberFormat.format(distance) + DISTANCE_M_POSTFIX;
+    }
+
+    public static void getLocationFromLatLng(final Context context, LatLng latLng, final GetLocationNameCallBack getLocationNameCallBack)
+    {
+        new AsyncTask<LatLng, Void, String>()
+        {
+
+            @Override
+            protected String doInBackground(LatLng... params)
+            {
+                LatLng latLng = params[0];
+
+                String locationName = null;
+                Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+                try
+                {
+                    List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+                    if(addressList != null && addressList.size() > 0)
+                    {
+                        Address address = addressList.get(0);
+
+                        locationName = address.getLocality();
+                    }
+                }
+                catch (IOException e)
+                {
+                    ConsoleLog.e(e);
+                }
+
+                return locationName;
+            }
+
+            @Override
+            protected void onPostExecute(String s)
+            {
+                super.onPostExecute(s);
+
+                if(getLocationNameCallBack != null)
+                {
+                    getLocationNameCallBack.getLocationName(s);
+                }
+            }
+        }.execute(latLng);
+    }
+
+    public interface GetLocationNameCallBack
+    {
+        void getLocationName(String location);
     }
 }

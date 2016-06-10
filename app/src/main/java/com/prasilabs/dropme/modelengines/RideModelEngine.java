@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
+import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfo;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.constants.BroadCastConstant;
@@ -15,6 +16,7 @@ import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
 import com.prasilabs.dropme.utils.LocationUtils;
+import com.prasilabs.util.CommonUtil;
 import com.prasilabs.util.DataUtil;
 
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public class RideModelEngine extends CoreModelEngine
 {
     private static final String TAG = RideModelEngine.class.getSimpleName();
     private static RideModelEngine instance;
+
+    private List<MyRideInfo> myRideInfoList = new ArrayList<>();
 
     public static RideModelEngine getInstance()
     {
@@ -270,6 +274,52 @@ public class RideModelEngine extends CoreModelEngine
         }
     }
 
+    public void getMyRideList(boolean isRefresh, final int skip, final int pageSize, final GetRideInfoListCallBack getRideInfoListCallBack)
+    {
+        if(isRefresh || (myRideInfoList.size() <= (skip*pageSize)))
+        {
+            callAsync(new AsyncCallBack() {
+                @Override
+                public List<MyRideInfo> async()
+                {
+                    try
+                    {
+                        return CloudConnect.callDropMeApi(false).getRideListOfUser(skip,pageSize).execute().getItems();
+                    }
+                    catch (Exception e)
+                    {
+                        ConsoleLog.e(e);
+                    }
+                    return null;
+                }
+
+                @Override
+                public <T> void result(T t)
+                {
+                    List<MyRideInfo> myRideInfos = (List<MyRideInfo>) t;
+                    if(myRideInfos != null)
+                    {
+                        myRideInfoList.addAll(myRideInfos);
+                    }
+
+                    if(getRideInfoListCallBack != null)
+                    {
+                        getRideInfoListCallBack.myRideInfoList(myRideInfos, skip);
+                    }
+                }
+            });
+        }
+        else
+        {
+            List<MyRideInfo> myRideInfos = CommonUtil.getSubList(skip,pageSize,myRideInfoList);
+
+            if(getRideInfoListCallBack != null)
+            {
+                getRideInfoListCallBack.myRideInfoList(myRideInfos, skip);
+            }
+        }
+    }
+
     public void clearData()
     {
         instance = null;
@@ -294,5 +344,10 @@ public class RideModelEngine extends CoreModelEngine
     public interface CancleRideCallBack
     {
         void cancel(boolean isSuccess);
+    }
+
+    public interface GetRideInfoListCallBack
+    {
+        void myRideInfoList(List<MyRideInfo> myRideInfoList, int skip);
     }
 }

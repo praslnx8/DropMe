@@ -19,6 +19,7 @@ import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.debug.Experiments;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.GcmRecordIO;
+import com.prasilabs.dropme.backend.io.MyRideInfo;
 import com.prasilabs.dropme.backend.io.RideAlertIo;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
@@ -288,6 +289,24 @@ public class DropMeEndPoint
         }
 
         return apiResponse;
+    }
+
+    @ApiMethod(name = "getRideListOfUser")
+    public List<MyRideInfo> getRideListOfUser(User user, @Named("skip") int skip, @Named("pageSize") int pageSize) throws OAuthRequestException
+    {
+        AdminUtil.checkAndThrow(user);
+
+        try
+        {
+            return RideLogicEngine.getInstance().getRideDetailsOfUser(user,skip,pageSize);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+
     }
 
     @ApiMethod(name = "test")

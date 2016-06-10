@@ -9,4 +9,5 @@ public class BroadCastConstant
     public static final String LOCATION_ENABLED_CONSTANT = "location_enabled";
     public static final String RIDE_REFRESH_INTENT = "ride_refresh";
     public static final String ALERT_LIST_REFRESH_INTENT = "alert_list_refresh";
+    public static final String MY_RIDE_REFRESH_INTENT = "my_ride_refresh_intent";
 }

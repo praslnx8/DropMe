@@ -18,7 +18,7 @@ public class MyRecyclerView extends RecyclerView
     public static final int VERTICAL_MODE = 0;
     public static final int HORIZONTAL_MODE = 1;
 
-    private int offset = 0;
+    private int skip = 0;
     public int pageSize = 10; //default page size
     private int prevItemCount = 0;
 
@@ -98,10 +98,10 @@ public class MyRecyclerView extends RecyclerView
                         {
                             if ((visibleItemCount + pastVisiblesItems) >= (totalItemCount))
                             {
-                                offset += pageSize;
+                                skip ++;
 
                                 isPageLoading = true;
-                                handlePaginationScroll.onScroll(pageSize, offset);
+                                handlePaginationScroll.onScroll(pageSize, skip);
                             }
                         }
                     }
@@ -123,7 +123,7 @@ public class MyRecyclerView extends RecyclerView
 
                 if(newItemCount < prevItemCount)
                 {
-                    offset = 0;
+                    skip = 0;
                     isPageLoading = false;
                 }
                 else if(newItemCount > prevItemCount)
@@ -157,14 +157,14 @@ public class MyRecyclerView extends RecyclerView
         super.setAdapter(adapter);
     }
 
-    public void setOffset(int offset)
+    public void setOffset(int skip)
     {
-        this.offset = offset;
+        this.skip = skip;
     }
 
     public interface HandlePaginationScroll
     {
-        void onScroll(int pageSize, int offset);
+        void onScroll(int pageSize, int skip);
     }
 
     public void setPageSize(int pageSize) {

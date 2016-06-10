@@ -12,6 +12,7 @@ import com.prasilabs.dropme.backend.datastore.Vehicle;
 import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
+import com.prasilabs.dropme.backend.io.MyRideInfo;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
 import com.prasilabs.dropme.backend.services.geofire.GeoFireManager;
@@ -309,6 +310,38 @@ public class RideLogicEngine extends CoreLogicEngine
 
 
         return rideDetails;
+    }
+
+    public List<MyRideInfo> getRideDetailsOfUser(User user, int skip, int resultSize)
+    {
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
+
+        List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(Ride.USER_ID_STR, dropMeUser.getId()).limit(resultSize).offset(resultSize*skip).list();
+
+        List<MyRideInfo> myRideInfoList = new ArrayList<>();
+        for(Ride ride : rideList)
+        {
+            MyRideInfo myRideInfo = new MyRideInfo();
+
+            myRideInfo.setId(ride.getId());
+            myRideInfo.setSourceLoc(ride.getSourceLoc());
+            myRideInfo.setDestLoc(ride.getDestLoc());
+            myRideInfo.setDestLocName(ride.getDestLocName());
+            myRideInfo.setFarePerKm(ride.getFarePerKm());
+
+            if(ride.getExpiryDate().getTime() > System.currentTimeMillis() && !ride.isClosed())
+            {
+                myRideInfo.setCurrent(true);
+            }
+            else
+            {
+                myRideInfo.setCurrent(false);
+            }
+
+            myRideInfoList.add(myRideInfo);
+        }
+
+        return myRideInfoList;
     }
 
     private Ride getExistingActiveRide(long userId, String deviceId)
