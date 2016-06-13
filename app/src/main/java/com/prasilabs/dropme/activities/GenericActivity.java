@@ -12,6 +12,7 @@ import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.customs.FragmentNavigator;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.modules.rideAlerts.view.MyAlertsFragment;
 import com.prasilabs.dropme.modules.rides.views.MyRidesFragment;
 
 import butterknife.BindView;
@@ -23,12 +24,20 @@ public class GenericActivity extends CoreActivity
 {
     private static final String REQUEST_FOR = "requestFor";
     private static final int MY_RIDE = 1;
+    private static final int MY_ALERT = 2;
     private static final String TAG = GenericActivity.class.getSimpleName();
 
     public static void openMyRide(Context context)
     {
         Intent intent = new Intent(context, GenericActivity.class);
         intent.putExtra(REQUEST_FOR, MY_RIDE);
+        context.startActivity(intent);
+    }
+
+    public static void openMyAlert(Context context)
+    {
+        Intent intent = new Intent(context, GenericActivity.class);
+        intent.putExtra(REQUEST_FOR, MY_ALERT);
         context.startActivity(intent);
     }
 
@@ -58,10 +67,25 @@ public class GenericActivity extends CoreActivity
                 getSupportActionBar().setHomeButtonEnabled(true);
             }
         }
+        else if(requestFor == MY_ALERT)
+        {
+            FragmentNavigator.navigateToFragment(this, MyAlertsFragment.getInstance(), false, container.getId());
+            if(getSupportActionBar() != null)
+            {
+                getSupportActionBar().setTitle("My Alerts");
+                getSupportActionBar().setHomeButtonEnabled(true);
+            }
+        }
         else
         {
             ConsoleLog.s(TAG, "inappropriate call");
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
     }
 
     @Override

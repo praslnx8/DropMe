@@ -2,6 +2,7 @@ package com.prasilabs.dropme.backend.logicEngines;
 
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.User;
+import com.google.apphosting.api.DatastorePb.Query.Order.Direction;
 import com.googlecode.objectify.Key;
 import com.prasilabs.dropme.backend.annotions.PushQ;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
@@ -16,6 +17,7 @@ import com.prasilabs.dropme.backend.io.RideAlertIo;
 import com.prasilabs.dropme.backend.services.gcm.GcmSenderUtil;
 import com.prasilabs.dropme.backend.utils.DistanceCalculator;
 import com.prasilabs.dropme.backend.utils.GeoFilter;
+import com.prasilabs.dropme.backend.utils.SortWrapper;
 import com.prasilabs.util.DataUtil;
 
 import java.util.ArrayList;
@@ -166,6 +168,29 @@ public class RideAlertLogicEngine extends CoreLogicEngine
 
 
         return rideAlertList;
+    }
+
+    public List<RideAlertIo> getRideAlerts(User user)
+    {
+        DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
+
+        if(dropMeUser != null)
+        {
+            List<RideAlertIo> rideAlertIoList = new ArrayList<>();
+
+            SortWrapper sortWrapper = new SortWrapper(RideAlert.CREATED_STR, Direction.DESCENDING);
+            List<RideAlert> rideAlertList = OfyService.ofy().load().type(RideAlert.class).filter(RideAlert.USER_ID_STR, dropMeUser.getId()).order(sortWrapper.getSorting()).list();
+
+            for(RideAlert rideAlert : rideAlertList)
+            {
+                RideAlertIo rideAlertIo = concertRideAlert(rideAlert);
+                rideAlertIoList.add(rideAlertIo);
+            }
+
+            return rideAlertIoList;
+        }
+
+        return null;
     }
 
 

@@ -45,8 +45,6 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
 {
     private static final String TAG = RideCreateActivity.class.getSimpleName();
 
-    private RideCreatePresenter rideCreatePresenter = RideCreatePresenter.newInstance(this);
-
     public static void startRideCreateActivity(Context context)
     {
         Intent intent = new Intent(context, RideCreateActivity.class);
@@ -180,7 +178,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
 
     @Override
     protected RideCreatePresenter setCorePresenter() {
-        return rideCreatePresenter;
+        return new RideCreatePresenter(this);
     }
 
     @OnClick(R.id.ride_btn)
@@ -234,7 +232,7 @@ public class RideCreateActivity extends CoreActivity<RideCreatePresenter> implem
         rideInput.setPhoneNo(phoneNo);
 
         ViewUtil.showProgressView(this, topLayout, true);
-        rideCreatePresenter.createRide(rideInput);
+        getPresenter().createRide(rideInput);
     }
 
 

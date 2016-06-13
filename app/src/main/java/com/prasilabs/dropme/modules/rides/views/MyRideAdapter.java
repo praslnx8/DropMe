@@ -2,12 +2,15 @@ package com.prasilabs.dropme.modules.rides.views;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.api.client.util.DateTime;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfo;
+import com.prasilabs.dropme.backend.dropMeApi.model.VVehicle;
 import com.prasilabs.dropme.core.CoreAdapter;
 import com.prasilabs.dropme.utils.DateUtil;
 
@@ -21,8 +24,26 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
 {
     private Context context;
 
-    public MyRideAdapter(Context context)
+    private static MyRideAdapter instance;
+
+    public static MyRideAdapter getInstance(Context context)
     {
+        if(instance == null)
+        {
+            instance = new MyRideAdapter();
+        }
+
+        instance.setContext(context);
+
+        return instance;
+    }
+
+    private MyRideAdapter()
+    {
+
+    }
+
+    private void setContext(Context context) {
         this.context = context;
     }
 
@@ -61,13 +82,26 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
         {
             super(itemView);
 
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public void renderData(Context context, MyRideInfo myRideInfo)
         {
-            timeText.setText(DateUtil.getRelativeTime(myRideInfo.getDate().getValue()));
-            sourceText.setText(myRideInfo.getSourceLocName());
+            DateTime date = myRideInfo.getDate();
+            if(date != null)
+            {
+                timeText.setText(DateUtil.getRelativeTime(date.getValue()));
+            }
+            else
+            {
+                timeText.setText("N/A");
+            }
+            String sourceName = myRideInfo.getSourceLocName();
+            if(TextUtils.isEmpty(sourceName))
+            {
+                sourceName = "N/A";
+            }
+            sourceText.setText(sourceName);
             destText.setText(myRideInfo.getDestLocName());
             if(myRideInfo.getCurrent())
             {
@@ -80,7 +114,15 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
                 statusText.setText("Past");
                 statusText.setTextColor(context.getResources().getColor(R.color.blue));
             }
-            vehicleTypeText.setText(myRideInfo.getVehicle().getType());
+            VVehicle vVehicle = myRideInfo.getVehicle();
+            if(vVehicle != null)
+            {
+                vehicleTypeText.setText(vVehicle.getType());
+            }
+            else
+            {
+                vehicleTypeText.setText("");
+            }
         }
     }
 }

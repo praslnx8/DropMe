@@ -29,14 +29,14 @@ public class MyRidesPresenter extends CorePresenter
     protected void onCreateCalled()
     {
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BroadCastConstant.MY_RIDE_REFRESH_INTENT);
+        intentFilter.addAction(BroadCastConstant.RIDE_ADDED_INTENT);
         registerReciever(intentFilter);
     }
 
     @Override
     protected void broadCastRecieved(Context context, Intent intent)
     {
-        if(intent.getAction().equals(BroadCastConstant.MY_RIDE_REFRESH_INTENT))
+        if(intent.getAction().equals(BroadCastConstant.RIDE_ADDED_INTENT))
         {
             getMyRides(false, skip);
         }
@@ -57,7 +57,7 @@ public class MyRidesPresenter extends CorePresenter
                     }
                     else
                     {
-                        myRideListCallBack.getMyRideIsEmpty();
+                        myRideListCallBack.getMyRideIsEmpty(skip);
                     }
                 }
             }
@@ -68,6 +68,7 @@ public class MyRidesPresenter extends CorePresenter
     {
         void getMyRideList(int skip, List<MyRideInfo> myRideInfoList);
 
-        void getMyRideIsEmpty();
+        void getMyRideIsEmpty(int skip);
     }
+
 }

@@ -45,4 +45,9 @@ public abstract class CoreActivity<T extends CorePresenter> extends AppCompatAct
             corePresenter.onDestroy();
         }
     }
+
+    protected T getPresenter()
+    {
+        return corePresenter;
+    }
 }

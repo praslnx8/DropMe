@@ -31,7 +31,6 @@ import butterknife.OnClick;
 public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implements RideSelectPresenter.GetRidesCallBack, RideSelectPresenter.RenderViewCallBack
 {
     private static final String TAG = RideSelectActivity.class.getSimpleName();
-    RideSelectPresenter rideSelectPresenter = new RideSelectPresenter(this);
 
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
@@ -70,7 +69,7 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
                 ConsoleLog.i(TAG, "Place: " + place.getName());
 
                 ViewUtil.showProgressView(RideSelectActivity.this, topLayout, true);
-                rideSelectPresenter.filterByDestination(String.valueOf(place.getName()), place.getLatLng(), RideSelectActivity.this);
+                getPresenter().filterByDestination(String.valueOf(place.getName()), place.getLatLng(), RideSelectActivity.this);
             }
 
             @Override
@@ -84,7 +83,7 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
         ridersListView.setAdapter(rideSelectAdapter);
 
         ViewUtil.showProgressView(this, topLayout, true);
-        rideSelectPresenter.getRideDetailList(this);
+        getPresenter().getRideDetailList(this);
     }
 
     @OnClick(R.id.filter_btn)
@@ -95,7 +94,7 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
             public void filterApplied()
             {
                 ViewUtil.showProgressView(RideSelectActivity.this, topLayout, true);
-                rideSelectPresenter.filter(RideSelectActivity.this);
+                getPresenter().filter(RideSelectActivity.this);
             }
         });
     }
@@ -110,7 +109,7 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
     @Override
     protected RideSelectPresenter setCorePresenter()
     {
-        return rideSelectPresenter;
+        return new RideSelectPresenter(this);
     }
 
     @Override
@@ -145,7 +144,7 @@ public class RideSelectActivity extends CoreActivity<RideSelectPresenter> implem
             public void filterDeleted()
             {
                 ViewUtil.showProgressView(RideSelectActivity.this, topLayout, true);
-                rideSelectPresenter.filter(RideSelectActivity.this);
+                getPresenter().filter(RideSelectActivity.this);
             }
         });
 

@@ -169,7 +169,7 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         }
         else if (id == R.id.nav_my_alerts)
         {
-            //TODO GO TO MY ALERTS
+            GenericActivity.openMyAlert(this);
         }
         else if (id == R.id.nav_my_vehicles)
         {

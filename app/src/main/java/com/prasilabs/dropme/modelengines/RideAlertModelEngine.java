@@ -10,6 +10,7 @@ import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.CloudConnect;
+import com.prasilabs.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class RideAlertModelEngine extends CoreModelEngine
                 if(apiResponse != null && apiResponse.getStatus() != null && apiResponse.getStatus())
                 {
                     rideAlertIo.setId(apiResponse.getId());
-                    myAlertList.add(rideAlertIo);
+                    myAlertList.add(0,rideAlertIo);
 
                     Intent intent = new Intent();
                     intent.setAction(BroadCastConstant.ALERT_LIST_REFRESH_INTENT);
@@ -77,9 +78,60 @@ public class RideAlertModelEngine extends CoreModelEngine
         });
     }
 
+    public void getMyAlerts(final int skip, final int pageSize, boolean isRefresh, final GetAlertCallBack getAlertCallBack)
+    {
+        if(isRefresh || (myAlertList.size() <= (skip*pageSize)))
+        {
+            callAsync(new AsyncCallBack() {
+                @Override
+                public List<RideAlertIo> async()
+                {
+                    try
+                    {
+                        return CloudConnect.callDropMeApi(false).getAlertListOfUser().execute().getItems();
+                    }
+                    catch (Exception e)
+                    {
+                        ConsoleLog.e(e);
+                    }
+                    return null;
+                }
+
+                @Override
+                public <T> void result(T t)
+                {
+                    List<RideAlertIo> rideAlertIoList = (List<RideAlertIo>) t;
+                    if(rideAlertIoList != null)
+                    {
+                        myAlertList.addAll(rideAlertIoList);
+                    }
+
+                    if(getAlertCallBack != null)
+                    {
+                        getAlertCallBack.getAlertList(skip, rideAlertIoList);
+                    }
+                }
+            });
+        }
+        else
+        {
+            List<RideAlertIo> myRideInfos = CommonUtil.getSubList(skip,pageSize,myAlertList);
+
+            if(getAlertCallBack != null)
+            {
+                getAlertCallBack.getAlertList(skip, myRideInfos);
+            }
+        }
+    }
+
     public interface CreateAlertCallBack
     {
         void alertCreated(ApiResponse apiResponse);
+    }
+
+    public interface GetAlertCallBack
+    {
+        void getAlertList(int skip, List<RideAlertIo> rideAlertIoList);
     }
 
 

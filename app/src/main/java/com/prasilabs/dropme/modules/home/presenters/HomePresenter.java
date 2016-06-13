@@ -27,12 +27,7 @@ public class HomePresenter extends CorePresenter
     private static final String TAG = HomePresenter.class.getSimpleName();
     private List<MarkerInfo> markerInfoList = new ArrayList<>();
 
-    public static HomePresenter newInstance(MapChange mapChange)
-    {
-        return new HomePresenter(mapChange);
-    }
-
-    private HomePresenter(MapChange mapChange)
+    public HomePresenter(MapChange mapChange)
     {
         this.mapChange = mapChange;
     }

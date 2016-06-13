@@ -27,7 +27,6 @@ import butterknife.OnClick;
  */
 public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements MyRidesPresenter.MyRideListCallBack
 {
-    private MyRidesPresenter myRidesPresenter = new MyRidesPresenter(this);
     private boolean isShowLoading;
 
     private static MyRidesFragment instance;
@@ -58,7 +57,7 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
     {
         super.onCreate(savedInstanceState);
 
-        myRideAdapter = new MyRideAdapter(getContext());
+        myRideAdapter = MyRideAdapter.getInstance(getContext());
     }
 
     @Nullable
@@ -87,9 +86,12 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
 
     private void makeApiCall(int skip)
     {
-        ViewUtil.showProgressView(getContext(), topLayout, true);
-        isShowLoading = true;
-        myRidesPresenter.getMyRides(false, skip);
+        if(skip == 0)
+        {
+            ViewUtil.showProgressView(getContext(), topLayout, true);
+            isShowLoading = true;
+        }
+        getPresenter().getMyRides(false, skip);
     }
 
     @OnClick(R.id.create_ride_btn)
@@ -103,7 +105,7 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
     @Override
     protected MyRidesPresenter setCorePresenter()
     {
-        return myRidesPresenter;
+        return new MyRidesPresenter(this);
     }
 
     @Override
@@ -129,15 +131,18 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
     }
 
     @Override
-    public void getMyRideIsEmpty()
+    public void getMyRideIsEmpty(int skip)
     {
-        if(isShowLoading)
+        if(skip == 0)
         {
-            ViewUtil.hideProgressView(getContext(), topLayout);
-            isShowLoading = false;
-        }
+            if(isShowLoading)
+            {
+                ViewUtil.hideProgressView(getContext(), topLayout);
+                isShowLoading = false;
+            }
 
-        myRideListView.setVisibility(View.GONE);
-        emptyLayout.setVisibility(View.VISIBLE);
+            myRideListView.setVisibility(View.GONE);
+            emptyLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

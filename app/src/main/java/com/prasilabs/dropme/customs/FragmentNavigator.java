@@ -8,6 +8,8 @@ import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CoreFragment;
 
+import java.util.List;
+
 
 /**
  * Created by prasi on 7/2/16.
@@ -19,6 +21,8 @@ public class FragmentNavigator
     {
         navigateToFragment(coreActivity, coreFragment, addToBackStack, 0);
     }
+
+
 
     public static void navigateToFragment(CoreActivity coreActivity, CoreFragment coreFragment, boolean addToBackStack, int viewId)
     {
@@ -39,6 +43,22 @@ public class FragmentNavigator
                 fragmentTransaction.addToBackStack(null);
             }
         }
+        fragmentTransaction.commit();
+        fragmentManager.executePendingTransactions();
+    }
+
+    public static void removeFragments(CoreActivity coreActivity)
+    {
+        FragmentManager fragmentManager = coreActivity.getSupportFragmentManager();
+        List<Fragment> fragmentList = fragmentManager.getFragments();
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        for(Fragment fragment : fragmentList)
+        {
+            fragmentTransaction.remove(fragment);
+        }
+
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }

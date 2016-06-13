@@ -39,7 +39,6 @@ import butterknife.OnClick;
 public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> implements AlertCreatePresenter.CreateAlertCallBack
 {
     private static final String TAG = CreateAlertActivity.class.getSimpleName();
-    private AlertCreatePresenter alertCreatePresenter = new AlertCreatePresenter();
 
     public static void openCreateAlertActivity(Context context)
     {
@@ -253,7 +252,7 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
             }
 
             ViewUtil.showProgressView(this, topLayout, true);
-            alertCreatePresenter.createAlert(rideAlertIo, this);
+            getPresenter().createAlert(rideAlertIo, this);
         }
     }
 
@@ -283,7 +282,7 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
     @Override
     protected AlertCreatePresenter setCorePresenter()
     {
-        return alertCreatePresenter;
+        return new AlertCreatePresenter();
     }
 
     @Override

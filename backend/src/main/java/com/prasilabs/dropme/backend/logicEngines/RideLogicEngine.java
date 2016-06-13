@@ -15,6 +15,7 @@ import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.MyRideInfo;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
+import com.prasilabs.dropme.backend.io.VVehicle;
 import com.prasilabs.dropme.backend.services.geofire.GeoFireManager;
 import com.prasilabs.dropme.backend.services.places.PlaceUtil;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
@@ -157,7 +158,7 @@ public class RideLogicEngine extends CoreLogicEngine
                         ride.setClosed(true);
                         ride.setClosedDate(new Date(System.currentTimeMillis()));
                     }
-                    OfyService.ofy().save().entities(rideList).now();
+                    Map<Key<Ride>, Ride> rideMapKey = OfyService.ofy().save().entities(rideList).now();
                 }
                 apiResponse.setStatus(true);
             }
@@ -330,6 +331,8 @@ public class RideLogicEngine extends CoreLogicEngine
             myRideInfo.setDestLocName(ride.getDestLocName());
             myRideInfo.setSourceLocName(ride.getSourceLocName());
             myRideInfo.setFarePerKm(ride.getFarePerKm());
+            VVehicle vehicle = VehicleLogicEngine.getInstance().getVVehicleById(ride.getVehicleId());
+            myRideInfo.setVehicle(vehicle);
             if(ride.getStartDate() != null)
             {
                 myRideInfo.setDate(ride.getStartDate());

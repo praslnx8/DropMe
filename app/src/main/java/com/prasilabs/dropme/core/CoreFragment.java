@@ -45,6 +45,7 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
         }
     }
 
+
     @Override
     public void onDestroy()
     {
@@ -84,5 +85,10 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
     public Context getContext()
     {
         return context;
+    }
+
+    protected T  getPresenter()
+    {
+        return corePresenter;
     }
 }

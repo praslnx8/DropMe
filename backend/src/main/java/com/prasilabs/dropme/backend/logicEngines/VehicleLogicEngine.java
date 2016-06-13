@@ -86,6 +86,7 @@ public class VehicleLogicEngine
             vVehicle.setvNumber(vehicle.getvNumber());
             vVehicle.setDeleted(vehicle.isDeleted());
             vVehicle.setOwnerId(vehicle.getOwnerId());
+            vVehicle.setType(vehicle.getType());
         }
 
         return null;

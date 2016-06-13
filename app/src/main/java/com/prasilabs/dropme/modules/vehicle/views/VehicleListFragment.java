@@ -18,15 +18,13 @@ import butterknife.BindView;
  */
 public class VehicleListFragment extends CoreFragment<VehiclePresenter>
 {
-    private VehiclePresenter vehiclePresenter = new VehiclePresenter();
-
     @BindView(R.id.vehicle_list)
     MyRecyclerView vehicleList;
 
     @Override
     protected VehiclePresenter setCorePresenter()
     {
-        return vehiclePresenter;
+        return new VehiclePresenter();
     }
 
     @Override

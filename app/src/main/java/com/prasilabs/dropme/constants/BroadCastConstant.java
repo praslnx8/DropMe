@@ -6,6 +6,7 @@ package com.prasilabs.dropme.constants;
 public class BroadCastConstant
 {
     public static final String LOCATION_REFRESH_CONSTANT = "location_refresh";
+    public static final String RIDE_ADDED_INTENT = "ride_added";
     public static final String LOCATION_ENABLED_CONSTANT = "location_enabled";
     public static final String RIDE_REFRESH_INTENT = "ride_refresh";
     public static final String ALERT_LIST_REFRESH_INTENT = "alert_list_refresh";

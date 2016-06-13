@@ -35,7 +35,6 @@ import butterknife.OnClick;
 public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.MapChange, HomePresenter.CancelRideCallBack
 {
     private static final String TAG = HomeFragment.class.getSimpleName();
-    private HomePresenter homePresenter = HomePresenter.newInstance(this);
     private static HomeFragment homeFragment;
     private MapLoader mapLoader;
     private boolean isProgress;
@@ -88,7 +87,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
 
                     isProgress = true;
                     ViewUtil.showProgressView(getContext(), topLayout, true);
-                    homePresenter.getCurrentRide();
+                    getPresenter().getCurrentRide();
                 }
             });
         }
@@ -105,7 +104,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @Override
     protected HomePresenter setCorePresenter()
     {
-        return homePresenter;
+        return new HomePresenter(this);
     }
 
     @OnClick(R.id.offer_ride_btn)
@@ -121,7 +120,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
         isProgress = true;
         ViewUtil.showProgressView(getContext(), topLayout, true);
         ConsoleLog.i(TAG, "cancel clicked");
-        homePresenter.cancelRide(this);
+        getPresenter().cancelRide(this);
     }
 
     @OnClick(R.id.book_ride_btn)

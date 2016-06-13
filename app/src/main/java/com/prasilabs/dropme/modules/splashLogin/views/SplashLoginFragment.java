@@ -65,7 +65,6 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 {
     private static final String TAG = SplashLoginFragment.class.getSimpleName();
 
-    private SplashLoginPresenter splashLoginPresenter = SplashLoginPresenter.newInstance(this);
     private static final int RC_SIGN_IN = 0;
     private static final int RC_SIGN_IN_SUCCESS = -1;
     private static ProgressDialog progressDialog;
@@ -266,7 +265,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                 LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.ACCES_TOKEN_STR, accessToken.getToken());
                 LocalPreference.saveLoginDataInShared(getContext(), PojoConstants.UserConstant.LOGIN_TYPE_STR, LoginType.FaceBook.name());
 
-                splashLoginPresenter.login(vDropMeUser);
+                getPresenter().login(vDropMeUser);
 
                 ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
                 /*MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
@@ -300,7 +299,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     @Override
     protected SplashLoginPresenter setCorePresenter()
     {
-        return splashLoginPresenter;
+        return new SplashLoginPresenter(this);
     }
 
     @Override
@@ -407,7 +406,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
 
             ViewUtil.showProgressView(getContext(), logiBtnLayout, true);
 
-            splashLoginPresenter.login(vDropMeUser);
+            getPresenter().login(vDropMeUser);
 
             /*MobileVerificationManager.getVerifiedMobieNumber(getContext(), new MobileVerificationManager.VerificationCallBack() {
                 @Override

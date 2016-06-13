@@ -16,6 +16,9 @@ public class RideAlert
     public static final String SOURCE_PT = "sourcePt";
     public static final String DEST_PT = "destPt";
     public static final String IS_DELETED_STR = "isDeleted";
+    public static final String USER_ID_STR = "userId";
+    public static final String CREATED_STR = "created";
+
 
     @Id
     private Long id;

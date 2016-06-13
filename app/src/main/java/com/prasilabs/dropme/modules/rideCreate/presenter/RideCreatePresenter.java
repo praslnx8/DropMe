@@ -14,12 +14,7 @@ public class RideCreatePresenter extends CorePresenter
 {
     private RideCreatePresenterCallBack rideCreatePresenterCallBack;
 
-    public static RideCreatePresenter newInstance(RideCreatePresenterCallBack rideCreatePresenterCallBack)
-    {
-        return new RideCreatePresenter(rideCreatePresenterCallBack);
-    }
-
-    private RideCreatePresenter(RideCreatePresenterCallBack rideCreatePresenterCallBack)
+    public RideCreatePresenter(RideCreatePresenterCallBack rideCreatePresenterCallBack)
     {
         this.rideCreatePresenterCallBack = rideCreatePresenterCallBack;
     }

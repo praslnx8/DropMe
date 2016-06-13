@@ -1,6 +1,8 @@
 package com.prasilabs.dropme.modelengines;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -9,11 +11,13 @@ import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfo;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
+import com.prasilabs.dropme.backend.dropMeApi.model.VVehicle;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.RideManager;
+import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.services.network.CloudConnect;
 import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.util.CommonUtil;
@@ -21,6 +25,7 @@ import com.prasilabs.util.DataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by prasi on 31/5/16.
@@ -107,6 +112,7 @@ public class RideModelEngine extends CoreModelEngine
                     RideManager.saveRideLite(CoreApp.getAppContext(), output);
 
                     HomeGeoModelEngine.getInstance().addRidePoint(output);
+                    addRideToMyRideList(output);
 
                     Intent intent = new Intent();
                     intent.setAction(BroadCastConstant.RIDE_REFRESH_INTENT);
@@ -130,6 +136,68 @@ public class RideModelEngine extends CoreModelEngine
                 }
             }
         });
+    }
+
+    private void addRideToMyRideList(final RideInput rideInput)
+    {
+
+        callAsync(new AsyncCallBack()
+        {
+            @Override
+            public MyRideInfo async()
+            {
+
+
+                final MyRideInfo myRideInfo = new MyRideInfo();
+
+                myRideInfo.setId(rideInput.getId());
+                myRideInfo.setCurrent(true);
+                myRideInfo.setDestLoc(rideInput.getDestLoc());
+                myRideInfo.setDestLocName(rideInput.getDestLocName());
+                myRideInfo.setFarePerKm(rideInput.getFarePerKm());
+
+                try
+                {
+                    VVehicle vVehicle = CloudConnect.callDropMeApi(false).getVehicleDetail(rideInput.getVehicleId()).execute();
+
+                    myRideInfo.setVehicle(vVehicle);
+                }
+                catch (Exception e)
+                {
+                    ConsoleLog.e(e);
+                }
+
+                LatLng latLng = DropMeLocatioListener.getLatLng(CoreApp.getAppContext());
+                try {
+                    List<Address> addresses = new Geocoder(CoreApp.getAppContext(), Locale.getDefault()).getFromLocation(latLng.latitude, latLng.longitude, 1);
+
+                    if (addresses != null && addresses.size() > 0) {
+                        Address address = addresses.get(0);
+                        myRideInfo.setSourceLocName(address.getSubLocality());
+                    }
+                } catch (Exception e) {
+                    ConsoleLog.e(e);
+                }
+
+                return myRideInfo;
+            }
+
+            @Override
+            public <T> void result(T t)
+            {
+                MyRideInfo myRideInfo = (MyRideInfo) t;
+
+                if(myRideInfo != null)
+                {
+                    myRideInfoList.add(0, myRideInfo);
+                    Intent intent = new Intent(BroadCastConstant.RIDE_ADDED_INTENT);
+                    LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
+                }
+
+            }
+        });
+
+
     }
 
     public void getCurrentRide()

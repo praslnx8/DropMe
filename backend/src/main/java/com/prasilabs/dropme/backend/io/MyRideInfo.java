@@ -1,7 +1,6 @@
 package com.prasilabs.dropme.backend.io;
 
 import com.google.appengine.api.datastore.GeoPt;
-import com.prasilabs.dropme.backend.datastore.Vehicle;
 
 import java.util.Date;
 
@@ -11,7 +10,7 @@ import java.util.Date;
 public class MyRideInfo
 {
     private long id;
-    private Vehicle vehicle;
+    private VVehicle vehicle;
     private GeoPt sourceLoc;
     private GeoPt destLoc;
     private String sourceLocName;
@@ -28,11 +27,11 @@ public class MyRideInfo
         this.id = id;
     }
 
-    public Vehicle getVehicle() {
+    public VVehicle getVehicle() {
         return vehicle;
     }
 
-    public void setVehicle(Vehicle vehicle) {
+    public void setVehicle(VVehicle vehicle) {
         this.vehicle = vehicle;
     }
 

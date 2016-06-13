@@ -74,7 +74,7 @@ public abstract class CoreAdapter<E, T extends RecyclerView.ViewHolder> extends 
         {
             int prevSize = list.size();
             this.list.addAll(list);
-            notifyItemRangeInserted(prevSize, list.size());
+            notifyDataSetChanged();
         }
         else
         {

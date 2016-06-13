@@ -309,6 +309,23 @@ public class DropMeEndPoint
 
     }
 
+    @ApiMethod(name = "getAlertListOfUser")
+    public List<RideAlertIo> getRideAlertsOfUser(User user) throws OAuthRequestException
+    {
+        AdminUtil.checkAndThrow(user);
+
+        try
+        {
+            return RideAlertLogicEngine.getInstance().getRideAlerts(user);
+        }
+        catch (Exception e)
+        {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+    }
+
     @ApiMethod(name = "test")
     public void test(@Named("password") String password) throws OAuthRequestException
     {
