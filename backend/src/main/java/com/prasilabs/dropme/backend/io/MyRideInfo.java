@@ -3,6 +3,8 @@ package com.prasilabs.dropme.backend.io;
 import com.google.appengine.api.datastore.GeoPt;
 import com.prasilabs.dropme.backend.datastore.Vehicle;
 
+import java.util.Date;
+
 /**
  * Created by prasi on 10/6/16.
  */
@@ -12,9 +14,11 @@ public class MyRideInfo
     private Vehicle vehicle;
     private GeoPt sourceLoc;
     private GeoPt destLoc;
+    private String sourceLocName;
     private String destLocName;
     private int farePerKm;
     private boolean isCurrent;
+    private Date date;
 
     public long getId() {
         return id;
@@ -70,5 +74,21 @@ public class MyRideInfo
 
     public void setCurrent(boolean current) {
         isCurrent = current;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getSourceLocName() {
+        return sourceLocName;
+    }
+
+    public void setSourceLocName(String sourceLocName) {
+        this.sourceLocName = sourceLocName;
     }
 }

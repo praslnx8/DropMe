@@ -4,5 +4,4 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // http://mvnrepository.com/artifact/commons-validator/commons-validator
     compile group: 'commons-validator', name: 'commons-validator', version: '1.4.0'
-
 }

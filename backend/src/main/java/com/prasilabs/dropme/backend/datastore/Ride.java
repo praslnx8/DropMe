@@ -30,6 +30,7 @@ public class Ride
 
     private long vehicleId;
     private GeoPt sourceLoc;
+    private String sourceLocName;
     private String destLocName;
     @Index
     private GeoPt destLoc;
@@ -184,5 +185,13 @@ public class Ride
 
     public void setPhoneNo(String phoneNo) {
         this.phoneNo = phoneNo;
+    }
+
+    public String getSourceLocName() {
+        return sourceLocName;
+    }
+
+    public void setSourceLocName(String sourceLocName) {
+        this.sourceLocName = sourceLocName;
     }
 }

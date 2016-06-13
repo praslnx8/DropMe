@@ -16,6 +16,7 @@ import com.prasilabs.dropme.backend.io.MyRideInfo;
 import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
 import com.prasilabs.dropme.backend.services.geofire.GeoFireManager;
+import com.prasilabs.dropme.backend.services.places.PlaceUtil;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
 import com.prasilabs.dropme.backend.utils.DistanceCalculator;
 import com.prasilabs.dropme.backend.utils.RideUtil;
@@ -327,7 +328,16 @@ public class RideLogicEngine extends CoreLogicEngine
             myRideInfo.setSourceLoc(ride.getSourceLoc());
             myRideInfo.setDestLoc(ride.getDestLoc());
             myRideInfo.setDestLocName(ride.getDestLocName());
+            myRideInfo.setSourceLocName(ride.getSourceLocName());
             myRideInfo.setFarePerKm(ride.getFarePerKm());
+            if(ride.getStartDate() != null)
+            {
+                myRideInfo.setDate(ride.getStartDate());
+            }
+            else
+            {
+                myRideInfo.setDate(ride.getCreated());
+            }
 
             if(ride.getExpiryDate().getTime() > System.currentTimeMillis() && !ride.isClosed())
             {
@@ -396,6 +406,7 @@ public class RideLogicEngine extends CoreLogicEngine
         ride.setDestLoc(rideInput.getDestLoc());
         ride.setDestLocName(rideInput.getDestLocName());
         ride.setPhoneNo(rideInput.getPhoneNo());
+        ride.setSourceLocName(PlaceUtil.getLocalityName(rideInput.getSourceLoc()));
 
         return ride;
     }
