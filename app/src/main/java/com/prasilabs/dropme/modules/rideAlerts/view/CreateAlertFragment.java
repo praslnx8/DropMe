@@ -1,11 +1,12 @@
-package com.prasilabs.dropme.activities;
+package com.prasilabs.dropme.modules.rideAlerts.view;
 
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -19,7 +20,7 @@ import com.google.api.client.util.DateTime;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideAlertIo;
-import com.prasilabs.dropme.core.CoreActivity;
+import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.RangeTimePickerDialog;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.rideAlerts.presenters.AlertCreatePresenter;
@@ -34,17 +35,23 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * Created by prasi on 9/6/16.
+ * Created by prasi on 14/6/16.
  */
-public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> implements AlertCreatePresenter.CreateAlertCallBack
+public class CreateAlertFragment extends CoreFragment<AlertCreatePresenter> implements AlertCreatePresenter.CreateAlertCallBack
 {
-    private static final String TAG = CreateAlertActivity.class.getSimpleName();
+    private static final String TAG = CreateAlertFragment.class.getSimpleName();
+    private static CreateAlertFragment instance;
 
-    public static void openCreateAlertActivity(Context context)
+    public static CreateAlertFragment getInstance()
     {
-        Intent intent = new Intent(context, CreateAlertActivity.class);
-        context.startActivity(intent);
+        if(instance == null)
+        {
+            instance = new CreateAlertFragment();
+        }
+
+        return instance;
     }
+
 
     private GeoPt sourceLatLng;
     private String sourceLocName;
@@ -77,54 +84,63 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
-        setContentView(R.layout.activity_alert_create);
-
-        if(getSupportActionBar() != null)
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        if(getFragmentView() == null)
         {
-            getSupportActionBar().setTitle("Create Alert");
+            setFragmentView(inflater.inflate(R.layout.fragment_create_alert, container, false));
+
+            PlaceAutocompleteFragment sourceLocFragment = (PlaceAutocompleteFragment) getCoreActivity().getFragmentManager().findFragmentById(R.id.source_place_fragment);
+            sourceLocFragment.setHint("* Enter Source");
+            sourceLocFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place)
+                {
+                    ConsoleLog.i(TAG, "Place: " + place.getName());
+                    sourceLocName = String.valueOf(place.getName());
+                    sourceLatLng = LocationUtils.convertToGeoPt(place.getLatLng());
+                }
+
+                @Override
+                public void onError(Status status)
+                {
+                    ConsoleLog.i(TAG, "An error occurred: " + status);
+                }
+            });
+
+            PlaceAutocompleteFragment destLocFragment = (PlaceAutocompleteFragment) getCoreActivity().getFragmentManager().findFragmentById(R.id.dest_place_fragment);
+            destLocFragment.setHint("* Enter Destination");
+            destLocFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place)
+                {
+                    ConsoleLog.i(TAG, "Place: " + place.getName());
+                    destLocName = String.valueOf(place.getName());
+                    destLatLng = LocationUtils.convertToGeoPt(place.getLatLng());
+                }
+
+                @Override
+                public void onError(Status status)
+                {
+                    ConsoleLog.i(TAG, "An error occurred: " + status);
+                }
+            });
+
         }
 
-        PlaceAutocompleteFragment sourceLocFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.source_place_fragment);
-        sourceLocFragment.setHint("* Enter Source");
-        sourceLocFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place)
-            {
-                ConsoleLog.i(TAG, "Place: " + place.getName());
-                sourceLocName = String.valueOf(place.getName());
-                sourceLatLng = LocationUtils.convertToGeoPt(place.getLatLng());
-            }
+        return getFragmentView();
+    }
 
-            @Override
-            public void onError(Status status)
-            {
-                ConsoleLog.i(TAG, "An error occurred: " + status);
-            }
-        });
-
-        PlaceAutocompleteFragment destLocFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.dest_place_fragment);
-        destLocFragment.setHint("* Enter Destination");
-        destLocFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place)
-            {
-                ConsoleLog.i(TAG, "Place: " + place.getName());
-                destLocName = String.valueOf(place.getName());
-                destLatLng = LocationUtils.convertToGeoPt(place.getLatLng());
-            }
-
-            @Override
-            public void onError(Status status)
-            {
-                ConsoleLog.i(TAG, "An error occurred: " + status);
-            }
-        });
-
-
+    @Override
+    protected AlertCreatePresenter setCorePresenter()
+    {
+        return new AlertCreatePresenter();
     }
 
     @OnClick(R.id.start_btn)
@@ -139,7 +155,7 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
         {
             calendar.setTimeInMillis(endTime.getValue());
         }
-        RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute)
             {
@@ -184,7 +200,7 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
         {
             calendar.setTimeInMillis(startTime.getValue());
         }
-        RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+        RangeTimePickerDialog rangeTimePickerDialog = new RangeTimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute)
             {
@@ -251,8 +267,8 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
                 rideAlertIo.setEndTime(endTime);
             }
 
-            ViewUtil.showProgressView(this, topLayout, true);
-            getPresenter().createAlert(rideAlertIo, this);
+            ViewUtil.showProgressView(getContext(), topLayout, true);
+            getPresenter().createAlert(rideAlertIo, CreateAlertFragment.this);
         }
     }
 
@@ -262,17 +278,17 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
 
         if(sourceLatLng == null || TextUtils.isEmpty(sourceLocName))
         {
-            ViewUtil.t(this, "Choose Source Location");
+            ViewUtil.t(getContext(), "Choose Source Location");
             isValid = false;
         }
         else if(destLatLng == null || TextUtils.isEmpty(destLocName))
         {
-            ViewUtil.t(this, "Choose Destination Location");
+            ViewUtil.t(getContext(), "Choose Destination Location");
             isValid = false;
         }
         else if(timingBtn.isChecked() && startTime != null && endTime != null && startTime.getValue() > endTime.getValue())
         {
-            ViewUtil.t(this, "Choose appropriate time");
+            ViewUtil.t(getContext(), "Choose appropriate time");
             isValid = false;
         }
 
@@ -280,22 +296,16 @@ public class CreateAlertActivity extends CoreActivity<AlertCreatePresenter> impl
     }
 
     @Override
-    protected AlertCreatePresenter setCorePresenter()
-    {
-        return new AlertCreatePresenter();
-    }
-
-    @Override
     public void alertCreated()
     {
-        ViewUtil.t(this, "Your alert is created. You will be notified whenever a ride matches your alert. Happy travel");
-        finish();
+        ViewUtil.t(getContext(), "Your alert is created. You will be notified whenever a ride matches your alert. Happy travel");
+        getCoreActivity().finish();
     }
 
     @Override
     public void alertCreateFailed()
     {
-        ViewUtil.t(this, "Unable to create alert. Make sure you filled the right values. if so sorry for the trouble");
-        ViewUtil.hideProgressView(this, topLayout);
+        ViewUtil.t(getContext(), "Unable to create alert. Make sure you filled the right values. if so sorry for the trouble");
+        ViewUtil.hideProgressView(getContext(), topLayout);
     }
 }

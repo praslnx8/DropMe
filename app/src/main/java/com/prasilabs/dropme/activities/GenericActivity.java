@@ -13,7 +13,11 @@ import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.customs.FragmentNavigator;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.about.AboutFragment;
+import com.prasilabs.dropme.modules.notifications.views.NotifFragment;
+import com.prasilabs.dropme.modules.rideAlerts.view.CreateAlertFragment;
 import com.prasilabs.dropme.modules.rideAlerts.view.MyAlertsFragment;
+import com.prasilabs.dropme.modules.rideCreate.views.RideCreateFragment;
+import com.prasilabs.dropme.modules.rideSelect.views.RideSelectFragment;
 import com.prasilabs.dropme.modules.rides.views.MyRidesFragment;
 
 import butterknife.BindView;
@@ -28,6 +32,9 @@ public class GenericActivity extends CoreActivity
     private static final int MY_ALERT = 2;
     private static final int MY_NOTIFS = 3;
     private static final int ABOUT = 4;
+    private static final int RIDE_CREATE = 5;
+    private static final int RIDE_SELECT = 6;
+    private static final int ALERT_CREATE = 7;
 
     private static final String TAG = GenericActivity.class.getSimpleName();
 
@@ -56,6 +63,27 @@ public class GenericActivity extends CoreActivity
     {
         Intent intent = new Intent(context, GenericActivity.class);
         intent.putExtra(REQUEST_FOR, ABOUT);
+        context.startActivity(intent);
+    }
+
+    public static void openRideCreate(Context context)
+    {
+        Intent intent = new Intent(context, GenericActivity.class);
+        intent.putExtra(REQUEST_FOR, RIDE_CREATE);
+        context.startActivity(intent);
+    }
+
+    public static void openRideSelect(Context context)
+    {
+        Intent intent = new Intent(context, GenericActivity.class);
+        intent.putExtra(REQUEST_FOR, RIDE_SELECT);
+        context.startActivity(intent);
+    }
+
+    public static void openAlertCreate(Context context)
+    {
+        Intent intent = new Intent(context, GenericActivity.class);
+        intent.putExtra(REQUEST_FOR, ALERT_CREATE);
         context.startActivity(intent);
     }
 
@@ -94,12 +122,46 @@ public class GenericActivity extends CoreActivity
                 getSupportActionBar().setHomeButtonEnabled(true);
             }
         }
+        else if(requestFor == MY_NOTIFS)
+        {
+            FragmentNavigator.navigateToFragment(this, NotifFragment.getInstance(), false, container.getId());
+            if(getSupportActionBar() != null)
+            {
+                getSupportActionBar().setTitle("My Notification");
+                getSupportActionBar().setHomeButtonEnabled(true);
+            }
+        }
         else if(requestFor == ABOUT)
         {
             FragmentNavigator.navigateToFragment(this, AboutFragment.getInstance(), false, container.getId());
             if(getSupportActionBar() != null)
             {
                 getSupportActionBar().setTitle("About Us");
+                getSupportActionBar().setHomeButtonEnabled(true);
+            }
+        }
+        else if(requestFor == RIDE_CREATE)
+        {
+            FragmentNavigator.navigateToFragment(this, RideCreateFragment.getInstance(), false, container.getId());
+            if(getSupportActionBar() != null)
+            {
+                getSupportActionBar().hide();
+            }
+        }
+        else if(requestFor == RIDE_SELECT)
+        {
+            FragmentNavigator.navigateToFragment(this, RideSelectFragment.newInstance(), false, container.getId());
+            if(getSupportActionBar() != null)
+            {
+                getSupportActionBar().hide();
+            }
+        }
+        else if(requestFor == ALERT_CREATE)
+        {
+            FragmentNavigator.navigateToFragment(this, CreateAlertFragment.getInstance(), false, container.getId());
+            if(getSupportActionBar() != null)
+            {
+                getSupportActionBar().setTitle("Create Alert");
                 getSupportActionBar().setHomeButtonEnabled(true);
             }
         }

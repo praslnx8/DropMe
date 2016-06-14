@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.prasilabs.dropme.R;
-import com.prasilabs.dropme.activities.CreateAlertActivity;
+import com.prasilabs.dropme.activities.GenericActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideAlertIo;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MyRecyclerView;
@@ -113,7 +113,7 @@ public class MyAlertsFragment extends CoreFragment<MyAlertsPresenter> implements
     @OnClick(R.id.create_alert_btn)
     protected void createAlert()
     {
-        CreateAlertActivity.openCreateAlertActivity(getContext());
+        GenericActivity.openAlertCreate(getContext());
     }
 
     @Override

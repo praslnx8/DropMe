@@ -10,7 +10,6 @@ import android.widget.RadioButton;
 
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
-import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.rideSelect.presenters.RideFilter;
 import com.prasilabs.enums.Gender;
@@ -23,10 +22,10 @@ public class DialogUtils
 {
     private static final String TAG = DialogUtils.class.getSimpleName();
 
-    public static void showSelectRideMenu(final CoreActivity coreActivity, final RideDetail rideDetail)
+    public static void showSelectRideMenu(final Context context, final RideDetail rideDetail)
     {
         ConsoleLog.i(TAG, "showing menu called");
-        AlertDialog.Builder builder = new AlertDialog.Builder(coreActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         CharSequence[] menuOption = new CharSequence[]{"Call" /*"View Profile",*/ /*"Show In Map"*/};
         builder.setItems(menuOption, new DialogInterface.OnClickListener() {
             @Override
@@ -39,11 +38,11 @@ public class DialogUtils
                     Intent in = new Intent(Intent.ACTION_CALL, Uri.parse(phoneUrl));
                     try
                     {
-                        coreActivity.startActivity(in);
+                        context.startActivity(in);
                     }
                     catch (android.content.ActivityNotFoundException ex)
                     {
-                        ViewUtil.t(coreActivity, "You cannot make phone calls in this phone");
+                        ViewUtil.t(context, "You cannot make phone calls in this phone");
                     }
                 }
                 /*else if(which == 1)
@@ -52,7 +51,7 @@ public class DialogUtils
                 }*/
                 else if(which == 1)
                 {
-                    ViewUtil.t(coreActivity, "TODO. Map page");
+                    ViewUtil.t(context, "TODO. Map page");
                 }
                 else
                 {

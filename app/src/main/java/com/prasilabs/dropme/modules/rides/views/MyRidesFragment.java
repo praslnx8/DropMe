@@ -1,6 +1,5 @@
 package com.prasilabs.dropme.modules.rides.views;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,7 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.prasilabs.dropme.R;
-import com.prasilabs.dropme.activities.RideCreateActivity;
+import com.prasilabs.dropme.activities.GenericActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfo;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MyRecyclerView;
@@ -97,8 +96,7 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
     @OnClick(R.id.create_ride_btn)
     protected void onCreateClicked()
     {
-        Intent intent = new Intent(getContext(), RideCreateActivity.class);
-        startActivity(intent);
+        GenericActivity.openRideCreate(getContext());
         getCoreActivity().finish();
     }
 

@@ -12,8 +12,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
-import com.prasilabs.dropme.activities.RideCreateActivity;
-import com.prasilabs.dropme.activities.RideSelectActivity;
+import com.prasilabs.dropme.activities.GenericActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MapLoader;
@@ -111,7 +110,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     protected void offerRide()
     {
         ConsoleLog.i(TAG, "offer ride clicked");
-        RideCreateActivity.startRideCreateActivity(getContext());
+        GenericActivity.openRideCreate(getContext());
     }
 
     @OnClick(R.id.cancel_btn)
@@ -127,7 +126,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     protected void bookRide()
     {
         ConsoleLog.i(TAG, "book ride clicked");
-        RideSelectActivity.startRideSelectActivity(getContext());
+        GenericActivity.openRideSelect(getContext());
     }
 
     @Override

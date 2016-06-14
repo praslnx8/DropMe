@@ -1,7 +1,7 @@
 package com.prasilabs.dropme.modules.rideSelect.views;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
-import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CoreAdapter;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.DateUtil;
@@ -28,28 +27,26 @@ import butterknife.ButterKnife;
 public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter.RideSelectViewHolder>
 {
     public static RideSelectAdapter instance;
-    public CoreActivity coreActivity;
+    public Context context;
 
-    public static RideSelectAdapter getInstance(CoreActivity coreActivity)
+    public static RideSelectAdapter getInstance(Context context)
     {
-        if(instance == null || instance.coreActivity == null)
+        if(instance == null || instance.context == null)
         {
-            instance = new RideSelectAdapter(coreActivity);
+            instance = new RideSelectAdapter(context);
         }
         return instance;
     }
 
-    private RideSelectAdapter(CoreActivity coreActivity)
+    private RideSelectAdapter(Context context)
     {
-        this.coreActivity = coreActivity;
+        this.context = context;
     }
 
     @Override
     public RideSelectViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        LayoutInflater inflater = coreActivity.getLayoutInflater();
-
-        View view = inflater.inflate(R.layout.item_ride_select, parent, false);
+        View view = View.inflate(context, R.layout.item_ride_select, null);
 
         return new RideSelectViewHolder(view);
     }
@@ -58,7 +55,7 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
     public void onBindViewHolder(RideSelectViewHolder holder, int position)
     {
         RideDetail rideDetail = list.get(position);
-        holder.render(coreActivity, rideDetail);
+        holder.render(context, rideDetail);
     }
 
     @Override
@@ -94,10 +91,10 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
             ButterKnife.bind(this, itemView);
         }
 
-        public void render(final CoreActivity coreActivity, final RideDetail rideDetail)
+        public void render(final Context context, final RideDetail rideDetail)
         {
             ViewUtil.renderImage(userImage, rideDetail.getOwnerPicture(), true);
-            LatLng currentLatLng = DropMeLocatioListener.getLatLng(coreActivity);
+            LatLng currentLatLng = DropMeLocatioListener.getLatLng(context);
             String distancestr = LocationUtils.formatDistanceBetween(currentLatLng, LocationUtils.convertToLatLng(rideDetail.getCurrentLatLng()));
             if(distancestr != null)
             {
@@ -124,7 +121,7 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    DialogUtils.showSelectRideMenu(coreActivity, rideDetail);
+                    DialogUtils.showSelectRideMenu(context, rideDetail);
                 }
             });
         }
