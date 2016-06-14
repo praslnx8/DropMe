@@ -6,4 +6,5 @@ package com.prasilabs.constants;
 public class PushMessageJobType
 {
     public static final String RIDE_FOUND_ALERT_STR = "ride_found_alert";
+    public static final String LOCATION_SHARE_STR = "location_share";
 }

@@ -3,12 +3,6 @@ package com.prasilabs.dropme.backend.utils;
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
-import com.prasilabs.dropme.backend.debug.ConsoleLog;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.lang.StrictMath.cos;
 
 /**
  * Created by prasi on 6/4/16.
@@ -43,7 +37,7 @@ public class GeoFilter
             throw new IllegalArgumentException("passing null values");
         }
 
-        double extendedLat  = geoPt.getLatitude()  + (radiusInMetre / EARTH_RADIUS_METRE) * (180 / pi);
+        /*double extendedLat  = geoPt.getLatitude()  + (radiusInMetre / EARTH_RADIUS_METRE) * (180 / pi);
         double extendedLon = geoPt.getLongitude() + (radiusInMetre / EARTH_RADIUS_METRE) * (180 / pi) / cos(geoPt.getLatitude() * pi/180);
 
         ConsoleLog.i(TAG, "new lat is : " + extendedLat);
@@ -57,6 +51,10 @@ public class GeoFilter
         filterList.add(lonFilter);
 
         Filter filter = new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filterList);
+
+        return filter;*/
+
+        Filter filter = new Query.StContainsFilter(key, new Query.GeoRegion.Circle(geoPt, radiusInMetre));
 
         return filter;
     }

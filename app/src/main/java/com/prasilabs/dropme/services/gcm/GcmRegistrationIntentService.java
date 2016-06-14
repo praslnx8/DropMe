@@ -8,7 +8,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.GcmRecordIO;
-import com.prasilabs.dropme.constants.GcmConstant;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;

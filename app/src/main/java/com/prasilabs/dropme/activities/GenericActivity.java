@@ -25,6 +25,7 @@ public class GenericActivity extends CoreActivity
     private static final String REQUEST_FOR = "requestFor";
     private static final int MY_RIDE = 1;
     private static final int MY_ALERT = 2;
+    private static final int MY_NOTIFS = 3;
     private static final String TAG = GenericActivity.class.getSimpleName();
 
     public static void openMyRide(Context context)
@@ -38,6 +39,13 @@ public class GenericActivity extends CoreActivity
     {
         Intent intent = new Intent(context, GenericActivity.class);
         intent.putExtra(REQUEST_FOR, MY_ALERT);
+        context.startActivity(intent);
+    }
+
+    public static void openNotification(Context context)
+    {
+        Intent intent = new Intent(context, GenericActivity.class);
+        intent.putExtra(REQUEST_FOR, MY_NOTIFS);
         context.startActivity(intent);
     }
 

@@ -142,7 +142,7 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_notification)
         {
-            //TODO notification
+            GenericActivity.openNotification(this);
 
             return true;
         }

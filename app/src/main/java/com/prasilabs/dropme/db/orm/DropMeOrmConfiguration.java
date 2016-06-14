@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.db.orm;
 
 import com.prasilabs.dropme.core.CoreApp;
+import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ public class DropMeOrmConfiguration implements CPOrmConfiguration
     public List<Class<?>> getDataModelObjects()
     {
         List<Class<?>> domainObjects = new ArrayList<Class<?>>();
+
+        domainObjects.add(DropMeNotifs.class);
 
         return domainObjects;
     }
