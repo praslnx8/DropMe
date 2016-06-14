@@ -183,6 +183,10 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         {
             //TODO go to playstore
         }
+        else if (id == R.id.nav_about)
+        {
+            GenericActivity.openAbout(this);
+        }
         else if (id == R.id.nav_logout)
         {
             LocalPreference.clearLoginSharedPreferences(this);

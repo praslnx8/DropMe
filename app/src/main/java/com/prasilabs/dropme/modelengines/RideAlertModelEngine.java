@@ -5,6 +5,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideAlertIo;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideAlertIoCollection;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
@@ -88,7 +89,11 @@ public class RideAlertModelEngine extends CoreModelEngine
                 {
                     try
                     {
-                        return CloudConnect.callDropMeApi(false).getAlertListOfUser().execute().getItems();
+                        RideAlertIoCollection rideAlertIoCollection = CloudConnect.callDropMeApi(false).getAlertListOfUser().execute();
+                        if(rideAlertIoCollection != null)
+                        {
+                            return rideAlertIoCollection.getItems();
+                        }
                     }
                     catch (Exception e)
                     {

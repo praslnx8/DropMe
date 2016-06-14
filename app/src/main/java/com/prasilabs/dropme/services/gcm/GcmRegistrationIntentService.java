@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.prasilabs.constants.GcmConstants;
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.GcmRecordIO;
 import com.prasilabs.dropme.core.CoreApp;
@@ -40,7 +41,7 @@ public class GcmRegistrationIntentService extends IntentService
         {
             String token = instanceID.getToken("805210209614", GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
-            String existingToken = LocalPreference.getLoginDataFromShared(this, GcmConstant.GCM_TOKEN_STR, null);
+            String existingToken = LocalPreference.getLoginDataFromShared(this, GcmConstants.GCM_TOKEN_STR, null);
 
             if(existingToken == null || !existingToken.equals(token))
             {
@@ -53,7 +54,7 @@ public class GcmRegistrationIntentService extends IntentService
 
                 if (apiResponse.getStatus())
                 {
-                    LocalPreference.saveLoginDataInShared(this, GcmConstant.GCM_TOKEN_STR, token);
+                    LocalPreference.saveLoginDataInShared(this, GcmConstants.GCM_TOKEN_STR, token);
                 }
             }
             else

@@ -12,6 +12,7 @@ import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.customs.FragmentNavigator;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.modules.about.AboutFragment;
 import com.prasilabs.dropme.modules.rideAlerts.view.MyAlertsFragment;
 import com.prasilabs.dropme.modules.rides.views.MyRidesFragment;
 
@@ -26,6 +27,8 @@ public class GenericActivity extends CoreActivity
     private static final int MY_RIDE = 1;
     private static final int MY_ALERT = 2;
     private static final int MY_NOTIFS = 3;
+    private static final int ABOUT = 4;
+
     private static final String TAG = GenericActivity.class.getSimpleName();
 
     public static void openMyRide(Context context)
@@ -46,6 +49,13 @@ public class GenericActivity extends CoreActivity
     {
         Intent intent = new Intent(context, GenericActivity.class);
         intent.putExtra(REQUEST_FOR, MY_NOTIFS);
+        context.startActivity(intent);
+    }
+
+    public static void openAbout(Context context)
+    {
+        Intent intent = new Intent(context, GenericActivity.class);
+        intent.putExtra(REQUEST_FOR, ABOUT);
         context.startActivity(intent);
     }
 
@@ -81,6 +91,15 @@ public class GenericActivity extends CoreActivity
             if(getSupportActionBar() != null)
             {
                 getSupportActionBar().setTitle("My Alerts");
+                getSupportActionBar().setHomeButtonEnabled(true);
+            }
+        }
+        else if(requestFor == ABOUT)
+        {
+            FragmentNavigator.navigateToFragment(this, AboutFragment.getInstance(), false, container.getId());
+            if(getSupportActionBar() != null)
+            {
+                getSupportActionBar().setTitle("About Us");
                 getSupportActionBar().setHomeButtonEnabled(true);
             }
         }

@@ -44,10 +44,14 @@ public class NotifFragment extends CoreFragment<NotifPresenter> implements Notif
 
     boolean isShowLoader = false;
 
+    private NotifAdapter notifAdapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        notifAdapter = NotifAdapter.getInstance(getContext());
     }
 
     @Nullable
@@ -59,9 +63,16 @@ public class NotifFragment extends CoreFragment<NotifPresenter> implements Notif
             setFragmentView(inflater.inflate(R.layout.fragment_my_notifs, container, false));
         }
 
-        getPresenter().getNotifications();
+        makeApiCall();
 
         return getFragmentView();
+    }
+
+    private void makeApiCall()
+    {
+        isShowLoader = true;
+        ViewUtil.showProgressView(getContext(), topLayout, true);
+        getPresenter().getNotifications();
     }
 
     @Override
@@ -79,6 +90,7 @@ public class NotifFragment extends CoreFragment<NotifPresenter> implements Notif
             ViewUtil.hideProgressView(getContext(), topLayout);
         }
 
+        notifAdapter.clearAndAddItem(dropMeNotifsList);
         emptyLayout.setVisibility(View.GONE);
         notificationListView.setVisibility(View.VISIBLE);
     }
