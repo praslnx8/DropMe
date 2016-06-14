@@ -37,6 +37,8 @@ public class GenericActivity extends CoreActivity
     private static final int ALERT_CREATE = 7;
 
     private static final String TAG = GenericActivity.class.getSimpleName();
+    @BindView(R.id.container)
+    LinearLayout container;
 
     public static void openMyRide(Context context)
     {
@@ -87,9 +89,6 @@ public class GenericActivity extends CoreActivity
         context.startActivity(intent);
     }
 
-    @BindView(R.id.container)
-    LinearLayout container;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -111,6 +110,7 @@ public class GenericActivity extends CoreActivity
             {
                 getSupportActionBar().setTitle("My Rides");
                 getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
         else if(requestFor == MY_ALERT)
@@ -120,6 +120,8 @@ public class GenericActivity extends CoreActivity
             {
                 getSupportActionBar().setTitle("My Alerts");
                 getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
             }
         }
         else if(requestFor == MY_NOTIFS)
@@ -129,6 +131,7 @@ public class GenericActivity extends CoreActivity
             {
                 getSupportActionBar().setTitle("My Notification");
                 getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
         else if(requestFor == ABOUT)
@@ -138,6 +141,7 @@ public class GenericActivity extends CoreActivity
             {
                 getSupportActionBar().setTitle("About Us");
                 getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
         else if(requestFor == RIDE_CREATE)
@@ -163,12 +167,19 @@ public class GenericActivity extends CoreActivity
             {
                 getSupportActionBar().setTitle("Create Alert");
                 getSupportActionBar().setHomeButtonEnabled(true);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
         else
         {
             ConsoleLog.s(TAG, "inappropriate call");
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override

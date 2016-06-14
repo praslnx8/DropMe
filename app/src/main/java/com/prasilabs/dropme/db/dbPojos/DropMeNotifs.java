@@ -1,34 +1,24 @@
 package com.prasilabs.dropme.db.dbPojos;
 
-import za.co.cporm.model.CPDefaultRecord;
-import za.co.cporm.model.annotation.Column.Column;
-import za.co.cporm.model.annotation.Column.PrimaryKey;
-import za.co.cporm.model.annotation.Table;
+import com.orm.SugarRecord;
 
 /**
  * Created by prasi on 13/6/16.
  */
-@Table
-public class DropMeNotifs extends CPDefaultRecord<DropMeNotifs>
+public class DropMeNotifs extends SugarRecord
 {
-    public DropMeNotifs(long id, String jobType, String message)
-    {
+    private long id;
+    private String jobType;
+    private String message;
+    private boolean isRead;
+    private long createdTime;
+
+    public DropMeNotifs(long id, String jobType, String message) {
         this.id = id;
         this.jobType = jobType;
         this.message = message;
         this.createdTime = System.currentTimeMillis();
     }
-
-    @PrimaryKey
-    private long id;
-    @Column(required = true)
-    private String jobType;
-    @Column
-    private String message;
-    @Column
-    private boolean isRead;
-    @Column
-    private long createdTime;
 
     public void setId(long id) {
         this.id = id;

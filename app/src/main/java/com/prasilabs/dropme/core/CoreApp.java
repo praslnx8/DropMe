@@ -5,6 +5,7 @@ import android.content.Context;
 import android.provider.Settings;
 import android.support.multidex.MultiDex;
 
+import com.orm.SugarContext;
 import com.prasilabs.dropme.BuildConfig;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 
@@ -14,16 +15,8 @@ import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 public class CoreApp extends Application
 {
     public static final String TAG = CoreApp.class.getSimpleName();
-
-    private static CoreApp mInstance;
     public static boolean appDebug = BuildConfig.DEBUG;
-
-    @Override
-    public void onCreate()
-    {
-        super.onCreate();
-        mInstance = this;
-    }
+    private static CoreApp mInstance;
 
     public static Context getAppContext()
     {
@@ -32,6 +25,19 @@ public class CoreApp extends Application
 
     public static synchronized CoreApp getInstance() {
         return mInstance;
+    }
+
+    public static String getDeviceId()
+    {
+        String android_id = Settings.Secure.getString(CoreApp.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        return android_id;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mInstance = this;
+        SugarContext.init(this);
     }
 
     @Override
@@ -45,11 +51,5 @@ public class CoreApp extends Application
     {
         HomeGeoModelEngine.getInstance().removeAllPoints();
         super.onTerminate();
-    }
-
-    public static String getDeviceId()
-    {
-        String android_id = Settings.Secure.getString(CoreApp.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        return android_id;
     }
 }

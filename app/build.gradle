@@ -60,8 +60,8 @@ dependencies {
     //Facebook
     compile 'com.facebook.android:facebook-android-sdk:4.1.0'
     //Play Services
-    compile 'com.google.android.gms:play-services:8.4.0'
-    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.google.android.gms:play-services:9.0.2'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
     //maputil
     compile 'com.google.maps.android:android-maps-utils:0.3+'
     //Butterknife
@@ -89,7 +89,10 @@ dependencies {
     //MAterial design helper
     compile 'com.dmitrymalkovich.android:material-design-dimens:1.2'
     //DB
-    compile 'za.co.cporm:CPOrm:3.0'
+    compile('com.github.satyan:sugar:1.4')
+            {
+                exclude group: 'com.google.guava'
+            }
 
     compile project(path: ':backend', configuration: 'android-endpoints')
     compile project(path: ':common')

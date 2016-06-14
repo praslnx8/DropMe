@@ -1,7 +1,6 @@
 package com.prasilabs.dropme.modelengines;
 
 import com.prasilabs.constants.PushMessageJobType;
-import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -9,9 +8,6 @@ import com.prasilabs.dropme.debug.ConsoleLog;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-
-import za.co.cporm.model.CPOrm;
-import za.co.cporm.model.query.Select;
 
 /**
  * Created by prasi on 14/6/16.
@@ -43,7 +39,7 @@ public class DropMeNotifModelEngine extends CoreModelEngine
             {
                 try
                 {
-                    long id = CPOrm.insert(CoreApp.getAppContext(), dropMeNotifs);
+                    long id = dropMeNotifs.save();
                     ConsoleLog.i(TAG, "db inserted id is : " + id);
                     return true;
                 }
@@ -79,9 +75,10 @@ public class DropMeNotifModelEngine extends CoreModelEngine
             @Override
             public List<DropMeNotifs> async()
             {
+                ConsoleLog.i(TAG, "start time is : " + System.currentTimeMillis());
                 try
                 {
-                    List<DropMeNotifs> dropMeNotifsList = Select.from(DropMeNotifs.class).queryAsList(CoreApp.getAppContext());
+                    List<DropMeNotifs> dropMeNotifsList = DropMeNotifs.listAll(DropMeNotifs.class);
 
                     Iterator<DropMeNotifs> dropMeNotifsIterator = dropMeNotifsList.iterator();
                     while (dropMeNotifsIterator.hasNext())
@@ -96,15 +93,17 @@ public class DropMeNotifModelEngine extends CoreModelEngine
 
                         if(dropMeNotifs.getCreatedTime() < yesCal.getTime().getTime())
                         {
-                            dropMeNotifs.delete(CoreApp.getAppContext());
+                            DropMeNotifs.delete(dropMeNotifs);
                             dropMeNotifsIterator.remove();
                         }
                         else if(dropMeNotifs.getJobType().equals(PushMessageJobType.LOCATION_SHARE_STR) && dropMeNotifs.getCreatedTime() < minCal.getTime().getTime())
                         {
-                            dropMeNotifs.delete(CoreApp.getAppContext());
+                            DropMeNotifs.delete(dropMeNotifs);
                             dropMeNotifsIterator.remove();
                         }
                     }
+
+                    ConsoleLog.i(TAG, "end time is " + System.currentTimeMillis());
 
                     return dropMeNotifsList;
                 }

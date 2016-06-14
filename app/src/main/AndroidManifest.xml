@@ -15,8 +15,10 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <permission android:name="com.prasilabs.dropme.permission.C2D_MESSAGE"
+    <permission
+        android:name="com.prasilabs.dropme.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.prasilabs.dropme.permission.C2D_MESSAGE" />
 
     <application
@@ -40,6 +42,7 @@
             android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -66,46 +69,57 @@
             android:name="io.fabric.ApiKey"
             android:value="04341200e2be6a3deeda2e642f8b7d29ae4624e2" />
 
+        <meta-data
+            android:name="DATABASE"
+            android:value="dropme.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.prasilabs.dropme" />
+
         <service
             android:name=".services.location.DropMeGLocationService"
             android:enabled="true"
             android:exported="false" />
-
-        <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService"/>
+        <service android:name="com.mapbox.mapboxsdk.telemetry.TelemetryService" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
             android:enabled="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="com.prasilabs.dropme" />
             </intent-filter>
         </receiver>
 
         <service
             android:name=".services.gcm.DropMeGcmMessageService"
-            android:exported="false"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
         <service
-            android:name="com.prasilabs.dropme.services.gcm.DropMeInstanceIdListenerService"
+            android:name=".services.gcm.DropMeInstanceIdListenerService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
-        <service android:name=".services.gcm.GcmRegistrationIntentService"
-            android:enabled="true"/>
-
+        <service
+            android:name=".services.gcm.GcmRegistrationIntentService"
+            android:enabled="true" />
 
     </application>
 
