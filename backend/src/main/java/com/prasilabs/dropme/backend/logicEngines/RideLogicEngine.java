@@ -37,6 +37,9 @@ public class RideLogicEngine extends CoreLogicEngine
     private static final String TAG = RideLogicEngine.class.getSimpleName();
     private static RideLogicEngine instance;
 
+    public RideLogicEngine() {
+    }
+
     public static RideLogicEngine getInstance()
     {
         if(instance == null)
@@ -46,7 +49,88 @@ public class RideLogicEngine extends CoreLogicEngine
         return instance;
     }
 
-    public RideLogicEngine(){}
+    private static RideInput convertToRideInout(Ride ride) {
+        RideInput rideInput = null;
+
+        if (ride != null) {
+            rideInput = new RideInput();
+
+            rideInput.setId(ride.getId());
+            rideInput.setSourceLoc(ride.getSourceLoc());
+            rideInput.setDestLoc(ride.getDestLoc());
+            rideInput.setCurrentLoc(ride.getCurrentLoc());
+            rideInput.setDeviceId(ride.getDeviceId());
+            rideInput.setUserId(ride.getUserId());
+            rideInput.setFarePerKm(ride.getFarePerKm());
+            rideInput.setVehicleId(ride.getVehicleId());
+            rideInput.setExpiryDate(ride.getExpiryDate());
+            rideInput.setDestLocName(ride.getDestLocName());
+            rideInput.setClosed(ride.isClosed());
+            rideInput.setClosedDate(ride.getClosedDate());
+            rideInput.setStartDate(ride.getStartDate());
+            rideInput.setPhoneNo(ride.getPhoneNo());
+        }
+
+        return rideInput;
+    }
+
+    private static Ride convertToRide(RideInput rideInput) {
+        Ride ride = new Ride();
+
+        if (rideInput.getId() != 0) {
+            ride.setId(rideInput.getId());
+        }
+        ride.setSourceLoc(rideInput.getSourceLoc());
+        ride.setDestLoc(rideInput.getDestLoc());
+        ride.setCurrentLoc(rideInput.getCurrentLoc());
+        ride.setDeviceId(rideInput.getDeviceId());
+        ride.setUserId(rideInput.getUserId());
+        ride.setClosedDate(rideInput.getClosedDate());
+        ride.setFarePerKm(rideInput.getFarePerKm());
+        ride.setVehicleId(rideInput.getVehicleId());
+        ride.setDestLoc(rideInput.getDestLoc());
+        ride.setDestLocName(rideInput.getDestLocName());
+        ride.setPhoneNo(rideInput.getPhoneNo());
+        ride.setSourceLocName(PlaceUtil.getLocalityName(rideInput.getSourceLoc()));
+
+        return ride;
+    }
+
+    private static boolean validateRide(Ride ride) {
+        boolean isValid = false;
+
+        if (ride != null) {
+            isValid = true;
+
+            if (ride.getCurrentLoc() == null) {
+                isValid = false;
+                ConsoleLog.w(TAG, "current loc is null");
+            } else if (ride.getSourceLoc() == null) {
+                isValid = false;
+                ConsoleLog.w(TAG, "source loc is null");
+            } else if (ride.getDestLoc() == null) {
+                isValid = false;
+                ConsoleLog.w(TAG, "dest loc is null");
+            } else if (DataUtil.isEmpty(ride.getDeviceId())) {
+                isValid = false;
+                ConsoleLog.w(TAG, "device id is null");
+            } else if (ride.getUserId() == 0L) {
+                isValid = false;
+                ConsoleLog.w(TAG, "user id null");
+            } else if (DataUtil.isEmpty(ride.getDestLocName())) {
+                isValid = false;
+                ConsoleLog.w(TAG, "dest loc name is null");
+            } else if (ride.getExpiryDate() == null || ride.getExpiryDate().before(new Date(System.currentTimeMillis()))) {
+                isValid = false;
+                ConsoleLog.w(TAG, "expiry date is not valid");
+            } else if (DataUtil.isEmpty(ride.getPhoneNo())) {
+                isValid = false;
+                ConsoleLog.w(TAG, "phone number is empty");
+            }
+        }
+
+        return isValid;
+    }
 
     public ApiResponse updateRide(User user, RideInput rideInput)
     {
@@ -263,6 +347,7 @@ public class RideLogicEngine extends CoreLogicEngine
                 rideDetail.setDestLatLng(ride.getDestLoc());
                 rideDetail.setDestLoc(ride.getDestLocName());
                 rideDetail.setCurrentLatLng(ride.getCurrentLoc());
+                rideDetail.setOwnerId(ride.getUserId());
                 Vehicle vehicle = OfyService.ofy().load().type(Vehicle.class).id(ride.getVehicleId()).now();
                 if (vehicle != null) {
                     rideDetail.setVehicleNumber(vehicle.getvNumber());
@@ -362,108 +447,5 @@ public class RideLogicEngine extends CoreLogicEngine
         Query.Filter dateFilter = new Query.FilterPredicate(Ride.EXPIRY_DATE_STR, Query.FilterOperator.GREATER_THAN, new Date(System.currentTimeMillis()));
         Ride ride = OfyService.ofy().load().type(Ride.class).filter(dateFilter).filter(Ride.USER_ID_STR, userId).filter(Ride.DEVICE_ID_STR, deviceId).filter(Ride.IS_CLOSED_STR, false).first().now();
         return ride;
-    }
-
-    private static RideInput convertToRideInout(Ride ride) {
-        RideInput rideInput = null;
-
-        if (ride != null)
-        {
-            rideInput = new RideInput();
-
-            rideInput.setId(ride.getId());
-            rideInput.setSourceLoc(ride.getSourceLoc());
-            rideInput.setDestLoc(ride.getDestLoc());
-            rideInput.setCurrentLoc(ride.getCurrentLoc());
-            rideInput.setDeviceId(ride.getDeviceId());
-            rideInput.setUserId(ride.getUserId());
-            rideInput.setFarePerKm(ride.getFarePerKm());
-            rideInput.setVehicleId(ride.getVehicleId());
-            rideInput.setExpiryDate(ride.getExpiryDate());
-            rideInput.setDestLocName(ride.getDestLocName());
-            rideInput.setClosed(ride.isClosed());
-            rideInput.setClosedDate(ride.getClosedDate());
-            rideInput.setStartDate(ride.getStartDate());
-            rideInput.setPhoneNo(ride.getPhoneNo());
-        }
-
-        return rideInput;
-    }
-
-    private static Ride convertToRide(RideInput rideInput)
-    {
-        Ride ride = new Ride();
-
-        if(rideInput.getId() != 0)
-        {
-            ride.setId(rideInput.getId());
-        }
-        ride.setSourceLoc(rideInput.getSourceLoc());
-        ride.setDestLoc(rideInput.getDestLoc());
-        ride.setCurrentLoc(rideInput.getCurrentLoc());
-        ride.setDeviceId(rideInput.getDeviceId());
-        ride.setUserId(rideInput.getUserId());
-        ride.setClosedDate(rideInput.getClosedDate());
-        ride.setFarePerKm(rideInput.getFarePerKm());
-        ride.setVehicleId(rideInput.getVehicleId());
-        ride.setDestLoc(rideInput.getDestLoc());
-        ride.setDestLocName(rideInput.getDestLocName());
-        ride.setPhoneNo(rideInput.getPhoneNo());
-        ride.setSourceLocName(PlaceUtil.getLocalityName(rideInput.getSourceLoc()));
-
-        return ride;
-    }
-
-    private static boolean validateRide(Ride ride)
-    {
-        boolean isValid = false;
-
-        if(ride != null)
-        {
-            isValid = true;
-
-            if(ride.getCurrentLoc() == null)
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "current loc is null");
-            }
-            else if(ride.getSourceLoc() == null)
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "source loc is null");
-            }
-            else if(ride.getDestLoc() == null)
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "dest loc is null");
-            }
-            else if(DataUtil.isEmpty(ride.getDeviceId()))
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "device id is null");
-            }
-            else if(ride.getUserId() == 0L)
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "user id null");
-            }
-            else if(DataUtil.isEmpty(ride.getDestLocName()))
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "dest loc name is null");
-            }
-            else if(ride.getExpiryDate() == null || ride.getExpiryDate().before(new Date(System.currentTimeMillis())))
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "expiry date is not valid");
-            }
-            else if(DataUtil.isEmpty(ride.getPhoneNo()))
-            {
-                isValid = false;
-                ConsoleLog.w(TAG, "phone number is empty");
-            }
-        }
-
-        return isValid;
     }
 }

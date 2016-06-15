@@ -22,11 +22,11 @@ public class DialogUtils
 {
     private static final String TAG = DialogUtils.class.getSimpleName();
 
-    public static void showSelectRideMenu(final Context context, final RideDetail rideDetail)
+    public static void showSelectRideMenu(final Context context, final RideDetail rideDetail, final ShareLocCallBack shareLocCallBack)
     {
         ConsoleLog.i(TAG, "showing menu called");
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        CharSequence[] menuOption = new CharSequence[]{"Call" /*"View Profile",*/ /*"Show In Map"*/};
+        CharSequence[] menuOption = new CharSequence[]{"Call", "Share Location"};
         builder.setItems(menuOption, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which)
@@ -45,17 +45,12 @@ public class DialogUtils
                         ViewUtil.t(context, "You cannot make phone calls in this phone");
                     }
                 }
-                /*else if(which == 1)
-                {
-                    ViewUtil.t(context, "TODO. Profile page");
-                }*/
                 else if(which == 1)
                 {
-                    ViewUtil.t(context, "TODO. Map page");
-                }
-                else
-                {
-                    ConsoleLog.w(TAG, "inappropriate selection");
+                    if (shareLocCallBack != null) {
+                        shareLocCallBack.shareTo(rideDetail.getOwnerId());
+                        ViewUtil.t(context, "Your location is shared to the user and will be auto expired in 30 mins");
+                    }
                 }
             }
         });
@@ -146,5 +141,9 @@ public class DialogUtils
     public interface FilterDialogCallBack
     {
         void filterApplied();
+    }
+
+    public interface ShareLocCallBack {
+        void shareTo(long recieverId);
     }
 }

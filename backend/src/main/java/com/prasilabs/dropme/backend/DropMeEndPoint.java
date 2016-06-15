@@ -326,6 +326,19 @@ public class DropMeEndPoint
         return null;
     }
 
+    @ApiMethod(name = "shareLocation")
+    public ApiResponse shareLocation(User user, @Named("userId") long recieverId, @Named("deviceID") String deviceID) throws OAuthRequestException {
+        AdminUtil.checkAndThrow(user);
+
+        try {
+            UserLocationLogicEngine.getInstance().shareLocation(user, recieverId, deviceID);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+    }
+
     @ApiMethod(name = "test")
     public void test(@Named("password") String password) throws OAuthRequestException
     {

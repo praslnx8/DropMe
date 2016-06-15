@@ -14,6 +14,7 @@ public class RideDetail
     private GeoPt currentLatLng;
     private GeoPt destLatLng;
     private String destLoc;
+    private long ownerId;
     private String ownerName;
     private String ownerPicture;
     private String ownerPhone;
@@ -108,5 +109,13 @@ public class RideDetail
 
     public void setCurrentLatLng(GeoPt currentLatLng) {
         this.currentLatLng = currentLatLng;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(long ownerId) {
+        this.ownerId = ownerId;
     }
 }

@@ -8,6 +8,7 @@ import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modelengines.RideModelEngine;
+import com.prasilabs.dropme.modelengines.UserLocationModelEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +134,17 @@ public class RideSelectPresenter extends CorePresenter
         }
     }
 
+    public void shareLocation(long userId, final ShareLocationCallBack shareLocationCallBack) {
+        UserLocationModelEngine.getInstance().shareLocation(userId, new UserLocationModelEngine.ShareLocationCallBack() {
+            @Override
+            public void locationShared() {
+                if (shareLocationCallBack != null) {
+                    shareLocationCallBack.locationShared();
+                }
+            }
+        });
+    }
+
     @Override
     protected void onCreateCalled()
     {
@@ -152,5 +164,9 @@ public class RideSelectPresenter extends CorePresenter
     public interface RenderViewCallBack
     {
         void renderFilterData();
+    }
+
+    public interface ShareLocationCallBack {
+        void locationShared();
     }
 }

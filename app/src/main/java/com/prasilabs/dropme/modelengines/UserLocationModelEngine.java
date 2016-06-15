@@ -2,6 +2,7 @@ package com.prasilabs.dropme.modelengines;
 
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
+import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.CloudConnect;
@@ -62,8 +63,36 @@ public class UserLocationModelEngine extends CoreModelEngine
         });
     }
 
+
+    public void shareLocation(final long recieverId, final ShareLocationCallBack shareLocationCallBack) {
+        callAsync(new AsyncCallBack() {
+            @Override
+            public ApiResponse async() {
+                try {
+                    return CloudConnect.callDropMeApi(false).shareLocation(recieverId, CoreApp.getDeviceId()).execute();
+                } catch (Exception e) {
+                    ConsoleLog.e(e);
+                }
+                return null;
+            }
+
+            @Override
+            public <T> void result(T t) {
+                ApiResponse apiResponse = (ApiResponse) t;
+
+                if (shareLocationCallBack != null) {
+                    shareLocationCallBack.locationShared();
+                }
+            }
+        });
+    }
+
     public interface UpdateUserLocCallBack
     {
         void locationUpdated(boolean success);
+    }
+
+    public interface ShareLocationCallBack {
+        void locationShared();
     }
 }

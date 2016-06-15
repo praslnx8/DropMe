@@ -49,7 +49,7 @@ public class FragmentNavigator
                 fragmentTransaction.addToBackStack(null);
             }
         }
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
         fragmentManager.executePendingTransactions();
     }
 

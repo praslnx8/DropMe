@@ -30,6 +30,7 @@ import com.prasilabs.dropme.modules.home.views.HomeFragment;
 import com.prasilabs.dropme.modules.rides.presenter.RidePresenter;
 import com.prasilabs.dropme.modules.rides.views.RideFragment;
 import com.prasilabs.dropme.services.gcm.GcmRegistrationIntentService;
+import com.prasilabs.dropme.utils.OtherUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 import butterknife.BindView;
@@ -43,7 +44,6 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
 
     private boolean isLoading = false;
     private RideInput rideInput;
-    private boolean isGetCurrentRideLoaded = false;
 
     public static void callHomeActivity(Context context)
     {
@@ -191,11 +191,11 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
         }
         else if (id == R.id.nav_share)
         {
-            //TODO share
+            OtherUtils.openShare(this);
         }
         else if (id == R.id.nav_rate)
         {
-            //TODO go to playstore
+            OtherUtils.openPlayStore(this);
         }
         else if (id == R.id.nav_about)
         {
@@ -225,26 +225,16 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
 
         this.rideInput = rideInput;
 
-        isGetCurrentRideLoaded = true;
-
-        checkAndGoFragment();
+        if (rideInput != null) {
+            FragmentNavigator.navigateToFragment(this, RideFragment.newInstance(rideInput, this), false, containerLayout.getId());
+        } else {
+            FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        checkAndGoFragment();
-    }
-
-    private void checkAndGoFragment() {
-        if (isVisible() && isGetCurrentRideLoaded) {
-            if (rideInput != null) {
-                FragmentNavigator.navigateToFragment(this, RideFragment.newInstance(rideInput, this), false, containerLayout.getId());
-            } else {
-                FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
-            }
-        }
     }
 
     @Override

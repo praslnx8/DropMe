@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.core.CoreAdapter;
+import com.prasilabs.dropme.modules.rideSelect.presenters.RideSelectPresenter;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.DateUtil;
 import com.prasilabs.dropme.utils.DialogUtils;
@@ -28,19 +29,20 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
 {
     public static RideSelectAdapter instance;
     public Context context;
+    private RideSelectPresenter rideSelectPresenter;
 
-    public static RideSelectAdapter getInstance(Context context)
+    private RideSelectAdapter(Context context) {
+        this.context = context;
+    }
+
+    public static RideSelectAdapter getInstance(RideSelectPresenter rideSelectPresenter, Context context)
     {
         if(instance == null || instance.context == null)
         {
             instance = new RideSelectAdapter(context);
         }
+        instance.rideSelectPresenter = rideSelectPresenter;
         return instance;
-    }
-
-    private RideSelectAdapter(Context context)
-    {
-        this.context = context;
     }
 
     @Override
@@ -121,7 +123,19 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    DialogUtils.showSelectRideMenu(context, rideDetail);
+                    DialogUtils.showSelectRideMenu(context, rideDetail, new DialogUtils.ShareLocCallBack() {
+                        @Override
+                        public void shareTo(long recieverId) {
+                            if (rideSelectPresenter != null) {
+                                rideSelectPresenter.shareLocation(recieverId, new RideSelectPresenter.ShareLocationCallBack() {
+                                    @Override
+                                    public void locationShared() {
+                                        ViewUtil.t(context, "Your location is shared");
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }
             });
         }
