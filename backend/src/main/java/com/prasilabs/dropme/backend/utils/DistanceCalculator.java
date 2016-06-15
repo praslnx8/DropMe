@@ -1,7 +1,6 @@
 package com.prasilabs.dropme.backend.utils;
 
 import com.google.appengine.api.datastore.GeoPt;
-import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
 /**
  * Created by kiran on 12/9/2015.
@@ -18,15 +17,11 @@ public class DistanceCalculator
 	{
 		if(geoPt1 != null && geoPt2 != null)
 		{
-			ConsoleLog.i(TAG, geoPt1.toString());
-			ConsoleLog.i(TAG, geoPt2.toString());
-
 			Float lat1 = geoPt1.getLatitude();
 			Float lon1 = geoPt1.getLongitude();
 			Float lat2 = geoPt2.getLatitude();
 			Float lon2 = geoPt2.getLongitude();
 			double distance  = DistanceCalculator.distance(lat1.doubleValue(), lon1.doubleValue(), lat2.doubleValue(), lon2.doubleValue(), "K");
-			ConsoleLog.i(TAG, "distane is : " + distance);
 			if(distance < distanceInKM)
 			{
 				return true;

@@ -2,15 +2,24 @@
 <datastore-indexes
     autoGenerate="true">
     <!--Check duplicate Ride-->
-    <datastore-index kind="Ride" ancestor="false" source="manual">
+    <datastore-index ancestor="false" kind="Ride" source="manual">
         <property name="deviceId" direction="asc"/>
         <property name="isClosed" direction="asc"/>
         <property name="userId" direction="asc"/>
         <property name="expiryDate" direction="asc"/>
     </datastore-index>
     <!--For removing old ride geo rides-->
-    <datastore-index kind="Ride" ancestor="false" source="manual">
+    <datastore-index ancestor="false" kind="Ride" source="manual">
         <property name="isGeoRemoved" direction="asc"/>
         <property name="expiryDate" direction="asc"/>
+    </datastore-index>
+    <!--For getting ride alert--> <!-- Currently disable d due to alpha and GAE not allowing-->
+    <!--<datastore-index kind="RideAlert"  source="manual">
+        <property name="sourcePt" mode="geospatial"/>
+    </datastore-index>-->
+    <!--For getting user ride list based on pagination-->
+    <datastore-index ancestor="false" kind="Ride" source="manual">
+        <property name="userId" direction="asc" />
+        <property name="created" direction="desc" />
     </datastore-index>
 </datastore-indexes>

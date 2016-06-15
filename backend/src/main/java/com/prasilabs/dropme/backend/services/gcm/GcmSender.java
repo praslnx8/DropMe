@@ -76,37 +76,33 @@ public class GcmSender
     public static boolean sendGcmMessage(long id, String msg, String jobType, List<String> gcmIDs)
     {
         boolean isSuccess = false;
-        if(sender == null)
+
+        if (gcmIDs != null && gcmIDs.size() > 0)
         {
-            sender = new Sender(API_KEY);
-        }
-
-        Message message = new Message.Builder().addData(GcmConstants.ID_KEY, String.valueOf(id)).addData(GcmConstants.JOB_TYPE_KEY, jobType).addData(GcmConstants.MESSAGE_KEY, msg).build();
-
-        try
-        {
-            MulticastResult multicastResult = sender.send(message, gcmIDs, 2);
-
-
-            ConsoleLog.i(TAG, "total gcm sent is : " + multicastResult.getTotal());
-            ConsoleLog.i(TAG, "total gcm success is : " + multicastResult.getSuccess());
-            if(multicastResult.getFailure() > 0)
-            {
-                ConsoleLog.w(TAG, "total gcm failure is : " + multicastResult.getFailure());
-            }
-            if(multicastResult.getCanonicalIds() > 0)
-            {
-                ConsoleLog.w(TAG, "total gcm canonicals is : " + multicastResult.getCanonicalIds());
+            if (sender == null) {
+                sender = new Sender(API_KEY);
             }
 
-            if(multicastResult.getSuccess() > 0)
-            {
-                isSuccess = true;
+            Message message = new Message.Builder().addData(GcmConstants.ID_KEY, String.valueOf(id)).addData(GcmConstants.JOB_TYPE_KEY, jobType).addData(GcmConstants.MESSAGE_KEY, msg).build();
+
+            try {
+                MulticastResult multicastResult = sender.send(message, gcmIDs, 2);
+
+                ConsoleLog.i(TAG, "total gcm sent is : " + multicastResult.getTotal());
+                ConsoleLog.i(TAG, "total gcm success is : " + multicastResult.getSuccess());
+                if (multicastResult.getFailure() > 0) {
+                    ConsoleLog.w(TAG, "total gcm failure is : " + multicastResult.getFailure());
+                }
+                if (multicastResult.getCanonicalIds() > 0) {
+                    ConsoleLog.w(TAG, "total gcm canonicals is : " + multicastResult.getCanonicalIds());
+                }
+
+                if (multicastResult.getSuccess() > 0) {
+                    isSuccess = true;
+                }
+            } catch (IOException e) {
+                ConsoleLog.e(e);
             }
-        }
-        catch (IOException e)
-        {
-            ConsoleLog.e(e);
         }
 
         return isSuccess;

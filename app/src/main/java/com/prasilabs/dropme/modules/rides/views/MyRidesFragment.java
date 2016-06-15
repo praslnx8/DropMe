@@ -26,9 +26,18 @@ import butterknife.OnClick;
  */
 public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements MyRidesPresenter.MyRideListCallBack
 {
-    private boolean isShowLoading;
-
     private static MyRidesFragment instance;
+    @BindView(R.id.top_layout)
+    LinearLayout topLayout;
+    @BindView(R.id.create_ride_btn)
+    Button createRideBtn;
+    @BindView(R.id.my_ride_list_view)
+    MyRecyclerView myRideListView;
+    @BindView(R.id.empty_layout)
+    LinearLayout emptyLayout;
+    private boolean isShowLoading;
+    private boolean isAlreadyLoaded = false;
+    private MyRideAdapter myRideAdapter;
 
     public static MyRidesFragment getInstance()
     {
@@ -39,17 +48,6 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
 
         return instance;
     }
-
-    @BindView(R.id.top_layout)
-    LinearLayout topLayout;
-    @BindView(R.id.create_ride_btn)
-    Button createRideBtn;
-    @BindView(R.id.my_ride_list_view)
-    MyRecyclerView myRideListView;
-    @BindView(R.id.empty_layout)
-    LinearLayout emptyLayout;
-
-    private MyRideAdapter myRideAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -90,7 +88,7 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
             ViewUtil.showProgressView(getContext(), topLayout, true);
             isShowLoading = true;
         }
-        getPresenter().getMyRides(false, skip);
+        getPresenter().getMyRides(!isAlreadyLoaded, skip);
     }
 
     @OnClick(R.id.create_ride_btn)
@@ -109,6 +107,7 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
     @Override
     public void getMyRideList(int skip, List<MyRideInfo> myRideInfoList)
     {
+        isAlreadyLoaded = true;
         if(skip == 0)
         {
             myRideAdapter.clearAndAddItem(myRideInfoList);

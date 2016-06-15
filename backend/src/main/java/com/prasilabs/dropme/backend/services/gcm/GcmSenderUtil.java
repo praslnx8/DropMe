@@ -23,20 +23,24 @@ public class GcmSenderUtil
         {
             RideDetail rideDetail = RideLogicEngine.getInstance().getRideDetail(ride.getId());
 
-            RideInfoPush rideInfoPush = new RideInfoPush();
-            rideInfoPush.setRideID(rideDetail.getRideId());
-            rideInfoPush.setDestLocation(rideDetail.getDestLoc());
-            rideInfoPush.setOwnerName(rideDetail.getOwnerName());
-            rideInfoPush.setOwnerPicture(rideDetail.getOwnerPicture());
-            rideInfoPush.setVehicleType(rideDetail.getVehicleType());
-            rideInfoPush.setOwnerPhone(rideDetail.getOwnerPhone());
+            if (rideDetail != null) {
+                RideInfoPush rideInfoPush = new RideInfoPush();
+                rideInfoPush.setRideID(rideDetail.getRideId());
+                rideInfoPush.setDestLocation(rideDetail.getDestLoc());
+                rideInfoPush.setOwnerName(rideDetail.getOwnerName());
+                rideInfoPush.setOwnerPicture(rideDetail.getOwnerPicture());
+                rideInfoPush.setVehicleType(rideDetail.getVehicleType());
+                rideInfoPush.setOwnerPhone(rideDetail.getOwnerPhone());
 
-            String message = new Gson().toJson(rideInfoPush);
-            long id = ride.getId();
+                String message = new Gson().toJson(rideInfoPush);
+                long id = ride.getId();
 
-            boolean isSuccess = GcmSender.sendGcmMessage(id, PushMessageJobType.RIDE_FOUND_ALERT_STR, message, gcmIDs);
+                boolean isSuccess = GcmSender.sendGcmMessage(id, PushMessageJobType.RIDE_FOUND_ALERT_STR, message, gcmIDs);
 
-            ConsoleLog.i(TAG, "ride alert gcm status is : " + isSuccess);
+                ConsoleLog.i(TAG, "ride alert gcm status is : " + isSuccess);
+            } else {
+                ConsoleLog.w(TAG, " ride detail is null for id " + ride.getId());
+            }
 
         }
         catch (Exception e)

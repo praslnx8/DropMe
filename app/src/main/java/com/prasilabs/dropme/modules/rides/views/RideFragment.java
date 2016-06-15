@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.core.CoreFragment;
@@ -15,6 +16,7 @@ import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.rides.presenter.RidePresenter;
 import com.prasilabs.dropme.pojo.MarkerInfo;
+import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.MarkerUtil;
 import com.prasilabs.dropme.utils.ViewUtil;
@@ -28,7 +30,7 @@ import butterknife.OnLongClick;
 /**
  * Created by prasi on 14/6/16.
  */
-public class RideFragment extends CoreFragment<RidePresenter> implements RidePresenter.GetGeoCallBack, RidePresenter.CancelRideCallBack {
+public class RideFragment extends CoreFragment<RidePresenter> implements RidePresenter.GetGeoCallBack, RidePresenter.CancelRideCallBack, RidePresenter.PosChangeCallBack {
     private static final String TAG = RideFragment.class.getSimpleName();
     @BindView(R.id.map_view)
     MapView mapView;
@@ -64,8 +66,9 @@ public class RideFragment extends CoreFragment<RidePresenter> implements RidePre
             @Override
             public void mapLoaded() {
                 mapLoader.showDirection(LocationUtils.convertToLatLng(rideInput.getSourceLoc()), LocationUtils.convertToLatLng(rideInput.getDestLoc()), true);
-
                 getPresenter().getGeoList(RideFragment.this);
+                LatLng latLng = DropMeLocatioListener.getLatLng(getContext());
+                mapLoader.moveToLoc(latLng);
             }
         });
 
@@ -136,6 +139,15 @@ public class RideFragment extends CoreFragment<RidePresenter> implements RidePre
     @Override
     public void rideCancelFailed() {
         ViewUtil.t(getContext(), "unable to end ride");
+    }
+
+    @Override
+    public void positionChanged() {
+        LatLng latLng = DropMeLocatioListener.getLatLng(getContext());
+
+        if (mapLoader.isMapLoaded()) {
+            mapLoader.moveToLoc(latLng);
+        }
     }
 
     public interface RideCancelCallBack {

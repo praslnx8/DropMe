@@ -1,6 +1,5 @@
 package com.prasilabs.dropme.backend.logicEngines;
 
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.User;
 import com.google.apphosting.api.DatastorePb.Query.Order.Direction;
 import com.googlecode.objectify.Key;
@@ -16,7 +15,6 @@ import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.RideAlertIo;
 import com.prasilabs.dropme.backend.services.gcm.GcmSenderUtil;
 import com.prasilabs.dropme.backend.utils.DistanceCalculator;
-import com.prasilabs.dropme.backend.utils.GeoFilter;
 import com.prasilabs.dropme.backend.utils.SortWrapper;
 import com.prasilabs.util.DataUtil;
 
@@ -45,6 +43,38 @@ public class RideAlertLogicEngine extends CoreLogicEngine
         }
 
         return instance;
+    }
+
+    private static void filterForTiming(Ride ride, List<RideAlert> rideAlerts) {
+        if (rideAlerts != null) {
+            Iterator<RideAlert> rideAlertIterator = rideAlerts.iterator();
+
+            while (rideAlertIterator.hasNext()) {
+                RideAlert rideAlert = rideAlertIterator.next();
+
+                if (ride.getStartDate() != null) {
+                    Calendar rideCalendar = Calendar.getInstance();
+                    rideCalendar.setTime(ride.getStartDate());
+
+                    if (rideAlert.getStartTime() != null && rideAlert.getEndTime() != null) {
+                        Calendar alertStartCalendar = Calendar.getInstance();
+                        alertStartCalendar.setTime(rideAlert.getStartTime());
+
+                        Calendar alertEndCalendar = Calendar.getInstance();
+                        alertEndCalendar.setTime(rideAlert.getEndTime());
+
+                        int startHour = alertStartCalendar.get(Calendar.HOUR_OF_DAY);
+                        int endHour = alertEndCalendar.get(Calendar.HOUR_OF_DAY);
+
+                        int rideHour = rideCalendar.get(Calendar.HOUR_OF_DAY);
+
+                        if (rideHour < startHour || rideHour > endHour) {
+                            rideAlertIterator.remove();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public ApiResponse createRideAlert(User user, RideAlertIo rideAlertIo)
@@ -125,9 +155,9 @@ public class RideAlertLogicEngine extends CoreLogicEngine
     {
         List<RideAlert> rideAlertList = new ArrayList<>();
 
-        Query.Filter sourceFilter = new GeoFilter(RideAlert.SOURCE_PT).getFilter(ride.getCurrentLoc(),1000);
+        //Query.Filter sourceFilter = new GeoFilter(RideAlert.SOURCE_PT).getFilter(ride.getCurrentLoc(),1000);
 
-        List<RideAlert> dataList = OfyService.ofy().load().type(RideAlert.class).filter(sourceFilter).list();
+        List<RideAlert> dataList = OfyService.ofy().load().type(RideAlert.class).list(); //filter(sourceFilter).list();
 
         Iterator<RideAlert> locRideAlertIterator = dataList.iterator();
 
@@ -139,7 +169,9 @@ public class RideAlertLogicEngine extends CoreLogicEngine
             {
                 locRideAlertIterator.remove();
             }
-            else if(!DistanceCalculator.isFit(rideAlert.getDestPt(), ride.getDestLoc(), 1))
+            else if(!DistanceCalculator.isFit(rideAlert.getDestPt(), ride.getDestLoc(), 1)) {
+                locRideAlertIterator.remove();
+            } else if (!DistanceCalculator.isFit(rideAlert.getSourcePt(), ride.getCurrentLoc(), 1))
             {
                 locRideAlertIterator.remove();
             }
@@ -193,7 +225,6 @@ public class RideAlertLogicEngine extends CoreLogicEngine
         return null;
     }
 
-
     public RideAlert convertRideAlert(RideAlertIo rideAlertIo)
     {
         RideAlert rideAlert = null;
@@ -246,43 +277,5 @@ public class RideAlertLogicEngine extends CoreLogicEngine
         }
 
         return rideAlertIo;
-    }
-
-    private static void filterForTiming(Ride ride, List<RideAlert> rideAlerts)
-    {
-        if(rideAlerts != null)
-        {
-            Iterator<RideAlert> rideAlertIterator = rideAlerts.iterator();
-
-            while (rideAlertIterator.hasNext())
-            {
-                RideAlert rideAlert = rideAlertIterator.next();
-
-                if(ride.getStartDate() != null)
-                {
-                    Calendar rideCalendar = Calendar.getInstance();
-                    rideCalendar.setTime(ride.getStartDate());
-
-                    if(rideAlert.getStartTime() != null && rideAlert.getEndTime() != null)
-                    {
-                        Calendar alertStartCalendar = Calendar.getInstance();
-                        alertStartCalendar.setTime(rideAlert.getStartTime());
-
-                        Calendar alertEndCalendar = Calendar.getInstance();
-                        alertEndCalendar.setTime(rideAlert.getEndTime());
-
-                        int startHour = alertStartCalendar.get(Calendar.HOUR_OF_DAY);
-                        int endHour = alertEndCalendar.get(Calendar.HOUR_OF_DAY);
-
-                        int rideHour = rideCalendar.get(Calendar.HOUR_OF_DAY);
-
-                        if(rideHour < startHour || rideHour > endHour)
-                        {
-                            rideAlertIterator.remove();
-                        }
-                    }
-                }
-            }
-        }
     }
 }

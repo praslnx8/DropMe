@@ -49,7 +49,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
 {
 
     private static final String TAG = RideCreateFragment.class.getSimpleName();
-    private static RideCreateFragment instance;
     @BindView(R.id.select_vehicle)
     Spinner selectVehicleSpinner;
     @BindView(R.id.select_fare_rate)
@@ -66,12 +65,7 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
 
     public static RideCreateFragment getInstance()
     {
-        if(instance == null)
-        {
-            instance = new RideCreateFragment();
-        }
-
-        return instance;
+        return new RideCreateFragment();
     }
 
     @Override

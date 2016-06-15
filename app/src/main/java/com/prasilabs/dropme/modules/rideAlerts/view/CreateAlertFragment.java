@@ -40,28 +40,6 @@ import butterknife.OnClick;
 public class CreateAlertFragment extends CoreFragment<AlertCreatePresenter> implements AlertCreatePresenter.CreateAlertCallBack
 {
     private static final String TAG = CreateAlertFragment.class.getSimpleName();
-    private static CreateAlertFragment instance;
-
-    public static CreateAlertFragment getInstance()
-    {
-        if(instance == null)
-        {
-            instance = new CreateAlertFragment();
-        }
-
-        return instance;
-    }
-
-
-    private GeoPt sourceLatLng;
-    private String sourceLocName;
-
-    private GeoPt destLatLng;
-    private String destLocName;
-
-    private DateTime startTime;
-    private DateTime endTime;
-
     @BindView(R.id.male_btn)
     CheckBox maleBtn;
     @BindView(R.id.female_btn)
@@ -70,18 +48,24 @@ public class CreateAlertFragment extends CoreFragment<AlertCreatePresenter> impl
     CheckBox carBtn;
     @BindView(R.id.bike_btn)
     CheckBox bikeBtn;
-
     @BindView(R.id.timing_btn)
     CheckBox timingBtn;
-
     @BindView(R.id.start_btn)
     Button startBtn;
     @BindView(R.id.end_btn)
     Button endBtn;
-
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
+    private GeoPt sourceLatLng;
+    private String sourceLocName;
+    private GeoPt destLatLng;
+    private String destLocName;
+    private DateTime startTime;
+    private DateTime endTime;
 
+    public static CreateAlertFragment getInstance() {
+        return new CreateAlertFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

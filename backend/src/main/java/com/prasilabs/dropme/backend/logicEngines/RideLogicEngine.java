@@ -3,6 +3,7 @@ package com.prasilabs.dropme.backend.logicEngines;
 import com.google.appengine.api.datastore.GeoPt;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.User;
+import com.google.apphosting.api.DatastorePb;
 import com.googlecode.objectify.Key;
 import com.prasilabs.dropme.backend.annotions.Cron;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
@@ -21,6 +22,7 @@ import com.prasilabs.dropme.backend.services.places.PlaceUtil;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
 import com.prasilabs.dropme.backend.utils.DistanceCalculator;
 import com.prasilabs.dropme.backend.utils.RideUtil;
+import com.prasilabs.dropme.backend.utils.SortWrapper;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.GeoFireKeyGenerator;
 
@@ -183,6 +185,7 @@ public class RideLogicEngine extends CoreLogicEngine
 
                 if (currentRide == null)
                 {
+                    ride.setCurrentLoc(rideInput.getSourceLoc());
                     ride.setCreated(new Date(System.currentTimeMillis()));
                     ride.setModified(new Date(System.currentTimeMillis()));
                     Key<Ride> rideKey = OfyService.ofy().save().entity(ride).now();
@@ -403,7 +406,8 @@ public class RideLogicEngine extends CoreLogicEngine
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
 
-        List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(Ride.USER_ID_STR, dropMeUser.getId()).limit(resultSize).offset(resultSize*skip).list();
+        SortWrapper sortWrapper = new SortWrapper(Ride.CREATED_STR, DatastorePb.Query.Order.Direction.DESCENDING);
+        List<Ride> rideList = OfyService.ofy().load().type(Ride.class).filter(Ride.USER_ID_STR, dropMeUser.getId()).order(sortWrapper.getSorting()).limit(resultSize).offset(resultSize * skip).list();
 
         List<MyRideInfo> myRideInfoList = new ArrayList<>();
         for(Ride ride : rideList)

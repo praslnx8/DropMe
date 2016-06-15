@@ -22,12 +22,14 @@ import java.util.Map;
 public class RidePresenter extends CorePresenter {
     private GetGeoCallBack getGeoCallBack;
     private GetRideCallBack getRideCallBack;
+    private PosChangeCallBack posChangeCallBack;
 
     @Override
     protected void onCreateCalled() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BroadCastConstant.GEO_REFRESH_INTENT);
         intentFilter.addAction(BroadCastConstant.RIDE_REFRESH_INTENT);
+        intentFilter.addAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
         registerReciever(intentFilter);
     }
 
@@ -41,6 +43,10 @@ public class RidePresenter extends CorePresenter {
                 }
             }
         });
+    }
+
+    public void listenToPosChange(PosChangeCallBack posChangeCallBack) {
+        this.posChangeCallBack = posChangeCallBack;
     }
 
     public void getGeoList(GetGeoCallBack getGeoCallBack) {
@@ -71,6 +77,10 @@ public class RidePresenter extends CorePresenter {
             if (getRideCallBack != null) {
                 getRideCallBack.getRide(rideInput);
             }
+        } else if (intent.getAction().equals(BroadCastConstant.LOCATION_REFRESH_CONSTANT)) {
+            if (posChangeCallBack != null) {
+                posChangeCallBack.positionChanged();
+            }
         }
     }
 
@@ -95,6 +105,10 @@ public class RidePresenter extends CorePresenter {
 
     public interface GetGeoCallBack {
         void getGeoList(List<MarkerInfo> markerInfoList);
+    }
+
+    public interface PosChangeCallBack {
+        void positionChanged();
     }
 
     public interface CancelRideCallBack {

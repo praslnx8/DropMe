@@ -19,6 +19,7 @@ public class Ride
     public static final String IS_CLOSED_STR = "isClosed";
     public static final String IS_GEO_REMOVED_STR = "isGeoRemoved";
     public static final String DEST_LOC_STR = "destLoc";
+    public static final String CREATED_STR = "created";
 
     @Id
     private Long id;

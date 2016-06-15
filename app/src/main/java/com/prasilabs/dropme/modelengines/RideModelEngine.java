@@ -200,8 +200,6 @@ public class RideModelEngine extends CoreModelEngine
 
     public void getCurrentRide(final GetCurrentRideCallBack getCurrentRideCallBack)
     {
-
-
         callAsync(new AsyncCallBack() {
             @Override
             public RideInput async()

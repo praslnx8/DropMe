@@ -23,6 +23,9 @@ public class GcmLogicEngine extends CoreLogicEngine
 
     private static GcmLogicEngine instance;
 
+    private GcmLogicEngine() {
+    }
+
     public static GcmLogicEngine getInstance()
     {
         if(instance == null)
@@ -33,7 +36,18 @@ public class GcmLogicEngine extends CoreLogicEngine
         return instance;
     }
 
-    private GcmLogicEngine(){}
+    private static GcmRecord convertGcmRecortIO(GcmRecordIO gcmRecordIO) {
+        GcmRecord gcmRecord = null;
+
+        if (gcmRecordIO != null && !DataUtil.isEmpty(gcmRecordIO.getGcmId()) && !DataUtil.isEmpty(gcmRecordIO.getDeviceId()) && !DataUtil.isEmpty(gcmRecordIO.getUserId())) {
+            gcmRecord = new GcmRecord();
+            gcmRecord.setUserId(gcmRecordIO.getUserId());
+            gcmRecord.setDeviceId(gcmRecordIO.getDeviceId());
+            gcmRecord.setGcmId(gcmRecordIO.getGcmId());
+        }
+
+        return gcmRecord;
+    }
 
     public ApiResponse addGcmRecord(GcmRecordIO gcmRecordIo)
     {
@@ -75,12 +89,14 @@ public class GcmLogicEngine extends CoreLogicEngine
     {
         List<String> gcmIdList = new ArrayList<>();
 
-        Query.Filter filter = new Query.FilterPredicate(GcmRecord.USER_ID_STR, Query.FilterOperator.IN, userIds);
-        List<GcmRecord> gcmRecordList = OfyService.ofy().load().type(GcmRecord.class).filter(filter).filter(GcmRecord.IS_DELETED_STR, false).list();
-
-        for(GcmRecord gcmRecord : gcmRecordList)
+        if (userIds != null && userIds.size() > 0)
         {
-            gcmIdList.add(gcmRecord.getGcmId());
+            Query.Filter filter = new Query.FilterPredicate(GcmRecord.USER_ID_STR, Query.FilterOperator.IN, userIds);
+            List<GcmRecord> gcmRecordList = OfyService.ofy().load().type(GcmRecord.class).filter(filter).filter(GcmRecord.IS_DELETED_STR, false).list();
+
+            for (GcmRecord gcmRecord : gcmRecordList) {
+                gcmIdList.add(gcmRecord.getGcmId());
+            }
         }
 
         return gcmIdList;
@@ -121,21 +137,6 @@ public class GcmLogicEngine extends CoreLogicEngine
     public GcmRecord getGcmRecordByFcmId(String gcmID)
     {
         GcmRecord gcmRecord = OfyService.ofy().load().type(GcmRecord.class).filter(GcmRecord.GCM_ID_STR, gcmID).first().now();
-
-        return gcmRecord;
-    }
-
-    private static GcmRecord convertGcmRecortIO(GcmRecordIO gcmRecordIO)
-    {
-        GcmRecord gcmRecord = null;
-
-        if(gcmRecordIO != null && !DataUtil.isEmpty(gcmRecordIO.getGcmId()) && !DataUtil.isEmpty(gcmRecordIO.getDeviceId()) && !DataUtil.isEmpty(gcmRecordIO.getUserId()))
-        {
-            gcmRecord = new GcmRecord();
-            gcmRecord.setUserId(gcmRecordIO.getUserId());
-            gcmRecord.setDeviceId(gcmRecordIO.getDeviceId());
-            gcmRecord.setGcmId(gcmRecordIO.getGcmId());
-        }
 
         return gcmRecord;
     }

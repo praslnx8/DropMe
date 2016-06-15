@@ -38,6 +38,7 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
     private MapMarkerClick mapMarkerClick;
     private boolean disableMapchangeListener;
     private Map<String, Marker> markerMap = new ArrayMap<>();
+    private boolean isMapLoaded = false;
 
     public MapLoader(MapView mapView, Bundle savedInstanceState) {
         this.mapView = mapView;
@@ -51,6 +52,7 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
             @Override
             public void onMapReady(GoogleMap googleMap)
             {
+                isMapLoaded = true;
                 gMap = googleMap;
                 //gMap.setMyLocationEnabled(true);
                 mapLoaderCallBack.mapLoaded();
@@ -217,6 +219,10 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
         {
             mapMarkerClick.markerClicked(id);
         }
+    }
+
+    public boolean isMapLoaded() {
+        return isMapLoaded;
     }
 
     public interface MapLoaderCallBack
