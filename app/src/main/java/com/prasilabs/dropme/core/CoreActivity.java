@@ -16,6 +16,8 @@ public abstract class CoreActivity<T extends CorePresenter> extends AppCompatAct
     private static final String TAG = CoreActivity.class.getSimpleName();
     private T corePresenter;
 
+    private boolean isVisible;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -44,6 +46,24 @@ public abstract class CoreActivity<T extends CorePresenter> extends AppCompatAct
         {
             corePresenter.onDestroy();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        isVisible = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        isVisible = true;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
     }
 
     protected T getPresenter()

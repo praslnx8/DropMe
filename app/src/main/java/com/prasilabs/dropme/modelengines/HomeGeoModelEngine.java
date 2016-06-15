@@ -1,5 +1,8 @@
 package com.prasilabs.dropme.modelengines;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
+
 import com.firebase.client.FirebaseError;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -9,6 +12,7 @@ import com.google.api.client.util.ArrayMap;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
+import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.enums.MarkerType;
@@ -44,6 +48,9 @@ public class HomeGeoModelEngine
     private Map<String,MarkerInfo> geoMarkerMap = new ArrayMap<>();
     private GeoQuery homeQuery;
 
+    private HomeGeoModelEngine() {
+    }
+
     public static HomeGeoModelEngine getInstance()
     {
         if(homeGeoModelEngine == null)
@@ -54,7 +61,37 @@ public class HomeGeoModelEngine
         return homeGeoModelEngine;
     }
 
-    private HomeGeoModelEngine(){}
+    public static String createGeoPtKey(VDropMeUser vDropMeUser) {
+        if (vDropMeUser != null && vDropMeUser.getId() != null) {
+            return GeoUserStr + splitter + CoreApp.getDeviceId() + splitter + vDropMeUser.getId();
+        }
+        return null;
+    }
+
+    public static String createGeoPtKey(RideInput rideLite) {
+        if (rideLite != null && rideLite.getId() != null) {
+            return GeoFireKeyGenerator.generateRideKey(rideLite.getId());
+        }
+        return null;
+    }
+
+    private static long getIdFromGeoKey(String key) {
+        String sid = null;
+        String[] splittedKey = key.split(splitter);
+        if (splittedKey.length > 0) {
+            String parentKey = splittedKey[0];
+
+            if (parentKey.equals(GeoUserStr) && splittedKey.length > 2) {
+                sid = splittedKey[2];
+            } else if (parentKey.equals(GeoRideStr) && splittedKey.length > 1) {
+                sid = splittedKey[1];
+            }
+        }
+
+        long id = DataUtil.stringToLong(sid);
+
+        return id;
+    }
 
     public void addMyGeoPt(LatLng latLng)
     {
@@ -262,6 +299,11 @@ public class HomeGeoModelEngine
                                 ConsoleLog.w(TAG, "key has invalid id : " + key);
                             }
                         }
+
+
+                        Intent intent = new Intent();
+                        intent.setAction(BroadCastConstant.GEO_REFRESH_INTENT);
+                        LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
                     }
 
                     @Override
@@ -282,6 +324,10 @@ public class HomeGeoModelEngine
                         {
                             ConsoleLog.w(TAG, "marker info is null for key : " + key);
                         }
+
+                        Intent intent = new Intent();
+                        intent.setAction(BroadCastConstant.GEO_REFRESH_INTENT);
+                        LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
                     }
 
                     @Override
@@ -300,6 +346,10 @@ public class HomeGeoModelEngine
                         {
                             ConsoleLog.w(TAG, "marker info is null for key : " + key);
                         }
+
+                        Intent intent = new Intent();
+                        intent.setAction(BroadCastConstant.GEO_REFRESH_INTENT);
+                        LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
                     }
 
                     @Override
@@ -325,44 +375,9 @@ public class HomeGeoModelEngine
         }
     }
 
-    public static String createGeoPtKey(VDropMeUser vDropMeUser)
+    public Map<String, MarkerInfo> getGeoMarkerMap()
     {
-        if(vDropMeUser != null && vDropMeUser.getId() != null) {
-            return GeoUserStr + splitter + CoreApp.getDeviceId() + splitter + vDropMeUser.getId();
-        }
-        return null;
-    }
-
-    public static String createGeoPtKey(RideInput rideLite)
-    {
-        if(rideLite != null && rideLite.getId() != null)
-        {
-            return GeoFireKeyGenerator.generateRideKey(rideLite.getId());
-        }
-        return null;
-    }
-
-    private static long getIdFromGeoKey(String key)
-    {
-        String sid = null;
-        String[] splittedKey = key.split(splitter);
-        if(splittedKey.length > 0)
-        {
-            String parentKey = splittedKey[0];
-
-            if(parentKey.equals(GeoUserStr) && splittedKey.length > 2)
-            {
-                sid = splittedKey[2];
-            }
-            else if(parentKey.equals(GeoRideStr) && splittedKey.length > 1)
-            {
-                sid = splittedKey[1];
-            }
-        }
-
-        long id = DataUtil.stringToLong(sid);
-
-        return id;
+        return geoMarkerMap;
     }
 
     public void clearUserData()

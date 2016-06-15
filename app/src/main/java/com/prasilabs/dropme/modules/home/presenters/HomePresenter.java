@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.debug.ConsoleLog;
-import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
-import com.prasilabs.dropme.modelengines.RideModelEngine;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 
@@ -23,8 +20,8 @@ import java.util.List;
  */
 public class HomePresenter extends CorePresenter
 {
-    private MapChange mapChange;
     private static final String TAG = HomePresenter.class.getSimpleName();
+    private MapChange mapChange;
     private List<MarkerInfo> markerInfoList = new ArrayList<>();
 
     public HomePresenter(MapChange mapChange)
@@ -81,38 +78,11 @@ public class HomePresenter extends CorePresenter
         return false;
     }
 
-    public void getCurrentRide()
-    {
-        RideModelEngine.getInstance().getCurrentRide();
-    }
-
-    public void cancelRide(final CancelRideCallBack cancelRideCallBack)
-    {
-        RideModelEngine.getInstance().cancelRide(new RideModelEngine.CancleRideCallBack() {
-            @Override
-            public void cancel(boolean isSuccess)
-            {
-                if(cancelRideCallBack != null)
-                {
-                    if (isSuccess)
-                    {
-                        cancelRideCallBack.rideCanceled();
-                    }
-                    else
-                    {
-                        cancelRideCallBack.rideCancelFailed("Unable to cancel the current rides");
-                    }
-                }
-            }
-        });
-    }
-
     @Override
     protected void onCreateCalled()
     {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
-        intentFilter.addAction(BroadCastConstant.RIDE_REFRESH_INTENT);
         registerReciever(intentFilter);
     }
 
@@ -126,30 +96,11 @@ public class HomePresenter extends CorePresenter
             if(latLng != null)
             {
                 listenToMap(latLng);
-            }
-            RideInput rideInput = RideManager.getRideLite(context);
-
-            if(mapChange != null)
-            {
-                mapChange.addSourceAndDestination(rideInput);
+                if (mapChange != null) {
+                    mapChange.moveMap(latLng);
+                }
             }
         }
-        else if(intent.getAction().equals(BroadCastConstant.RIDE_REFRESH_INTENT))
-        {
-            RideInput rideInput = RideManager.getRideLite(context);
-
-            if(mapChange != null)
-            {
-                mapChange.addSourceAndDestination(rideInput);
-            }
-        }
-    }
-
-    public interface CancelRideCallBack
-    {
-        void rideCanceled();
-
-        void rideCancelFailed(String message);
     }
 
     public interface MapChange
@@ -160,6 +111,6 @@ public class HomePresenter extends CorePresenter
 
         void removeMarker(MarkerInfo markerInfo);
 
-        void addSourceAndDestination(RideInput rideInput);
+        void moveMap(LatLng latLng);
     }
 }

@@ -17,25 +17,33 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreActivity;
-import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.customs.FragmentNavigator;
 import com.prasilabs.dropme.customs.LocalPreference;
+import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.modelengines.RideModelEngine;
 import com.prasilabs.dropme.modules.home.views.HomeFragment;
+import com.prasilabs.dropme.modules.rides.presenter.RidePresenter;
+import com.prasilabs.dropme.modules.rides.views.RideFragment;
 import com.prasilabs.dropme.services.gcm.GcmRegistrationIntentService;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 import butterknife.BindView;
 
-public class HomeActivity extends CoreActivity implements NavigationView.OnNavigationItemSelectedListener
+public class HomeActivity extends CoreActivity<RidePresenter> implements NavigationView.OnNavigationItemSelectedListener, RidePresenter.GetRideCallBack, RideFragment.RideCancelCallBack
 {
+    private static final String TAG = HomeActivity.class.getSimpleName();
     @BindView(R.id.container)
     LinearLayout containerLayout;
     private long prevBackPresTime;
+
+    private boolean isLoading = false;
+    private RideInput rideInput;
+    private boolean isGetCurrentRideLoaded = false;
 
     public static void callHomeActivity(Context context)
     {
@@ -60,16 +68,22 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentNavigator.navigateToFragment(this, HomeFragment.getHomeFragment(), false, containerLayout.getId());
-
         setNavigationHeaderData(navigationView);
 
         GcmRegistrationIntentService.startIntentService(this);
+
+        makeApiCall();
+    }
+
+    private void makeApiCall() {
+        isLoading = true;
+        ViewUtil.showProgressView(this, containerLayout, true);
+        getPresenter().getCurrentRide(this);
     }
 
     @Override
-    protected CorePresenter setCorePresenter() {
-        return null;
+    protected RidePresenter setCorePresenter() {
+        return new RidePresenter();
     }
 
     private void setNavigationHeaderData(NavigationView navigationView)
@@ -161,7 +175,7 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
 
         if (id == R.id.nav_home)
         {
-            FragmentNavigator.navigateToFragment(this, HomeFragment.getHomeFragment(), false, containerLayout.getId());
+            FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
         }
         else if (id == R.id.nav_my_rides)
         {
@@ -203,4 +217,40 @@ public class HomeActivity extends CoreActivity implements NavigationView.OnNavig
     }
 
 
+    @Override
+    public void getRide(RideInput rideInput) {
+        if (isLoading) {
+            ViewUtil.hideProgressView(this, containerLayout);
+        }
+
+        this.rideInput = rideInput;
+
+        isGetCurrentRideLoaded = true;
+
+        checkAndGoFragment();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        checkAndGoFragment();
+    }
+
+    private void checkAndGoFragment() {
+        if (isVisible() && isGetCurrentRideLoaded) {
+            if (rideInput != null) {
+                FragmentNavigator.navigateToFragment(this, RideFragment.newInstance(rideInput, this), false, containerLayout.getId());
+            } else {
+                FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
+            }
+        }
+    }
+
+    @Override
+    public void rideCanceled() {
+        rideInput = null;
+        ConsoleLog.i(TAG, " ride canceled. Going to render other");
+        FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
+    }
 }

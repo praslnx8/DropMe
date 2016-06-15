@@ -22,9 +22,11 @@ public class FragmentNavigator
         navigateToFragment(coreActivity, coreFragment, addToBackStack, 0);
     }
 
+    public static void navigateToFragment(CoreActivity coreActivity, CoreFragment coreFragment, boolean addToBackStack, int viewId) {
+        navigateToFragment(coreActivity, coreFragment, addToBackStack, viewId, false);
+    }
 
-
-    public static void navigateToFragment(CoreActivity coreActivity, CoreFragment coreFragment, boolean addToBackStack, int viewId)
+    public static void navigateToFragment(CoreActivity coreActivity, CoreFragment coreFragment, boolean addToBackStack, int viewId, boolean isAdd)
     {
         FragmentManager fragmentManager = coreActivity.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -37,7 +39,11 @@ public class FragmentNavigator
 
         if (!coreFragment.isAdded())
         {
-            fragmentTransaction.add(viewId, coreFragment, coreFragment.getClass().getSimpleName());
+            if (isAdd) {
+                fragmentTransaction.add(viewId, coreFragment, coreFragment.getClass().getSimpleName());
+            } else {
+                fragmentTransaction.replace(viewId, coreFragment, coreFragment.getClass().getSimpleName());
+            }
             if (addToBackStack)
             {
                 fragmentTransaction.addToBackStack(null);

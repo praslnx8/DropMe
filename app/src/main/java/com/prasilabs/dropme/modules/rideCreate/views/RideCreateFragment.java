@@ -49,13 +49,7 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
 {
 
     private static final String TAG = RideCreateFragment.class.getSimpleName();
-
-    private long vehicleID = 0;
-    private GeoPt destLoc;
-    private Date startTime;
-    private String destLocationName;
-    private int farePerKm = 0;
-
+    private static RideCreateFragment instance;
     @BindView(R.id.select_vehicle)
     Spinner selectVehicleSpinner;
     @BindView(R.id.select_fare_rate)
@@ -64,8 +58,11 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
     LinearLayout topLayout;
     @BindView(R.id.phone_text)
     EditText phoneText;
-
-    private static RideCreateFragment instance;
+    private long vehicleID = 0;
+    private GeoPt destLoc;
+    private Date startTime;
+    private String destLocationName;
+    private int farePerKm = 0;
 
     public static RideCreateFragment getInstance()
     {
@@ -292,7 +289,7 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
 
 
     @Override
-    public void rideCreated()
+    public void rideCreated(RideInput rideInput)
     {
         ViewUtil.hideProgressView(getContext(), topLayout);
         ViewUtil.t(getContext(), "Your ride is created...");
@@ -306,4 +303,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
         ViewUtil.t(getContext(), "unabel to create Ride");
         ConsoleLog.i(TAG, "unabel to create Ride");
     }
+
+
 }

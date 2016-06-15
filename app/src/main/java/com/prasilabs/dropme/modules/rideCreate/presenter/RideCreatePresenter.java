@@ -25,13 +25,13 @@ public class RideCreatePresenter extends CorePresenter
 
     }
 
-    public void createRide(RideInput rideInput)
+    public void createRide(final RideInput rideInput)
     {
         RideModelEngine.getInstance().createRide(rideInput, new RideModelEngine.RideCreateCallBack() {
             @Override
             public void rideCreated()
             {
-                rideCreatePresenterCallBack.rideCreated();
+                rideCreatePresenterCallBack.rideCreated(rideInput);
             }
 
             @Override
@@ -51,7 +51,7 @@ public class RideCreatePresenter extends CorePresenter
 
     public interface RideCreatePresenterCallBack
     {
-        void rideCreated();
+        void rideCreated(RideInput rideInput);
 
         void rideCreateFailed();
     }

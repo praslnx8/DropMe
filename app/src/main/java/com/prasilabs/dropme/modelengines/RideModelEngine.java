@@ -146,8 +146,6 @@ public class RideModelEngine extends CoreModelEngine
             @Override
             public MyRideInfo async()
             {
-
-
                 final MyRideInfo myRideInfo = new MyRideInfo();
 
                 myRideInfo.setId(rideInput.getId());
@@ -200,8 +198,10 @@ public class RideModelEngine extends CoreModelEngine
 
     }
 
-    public void getCurrentRide()
+    public void getCurrentRide(final GetCurrentRideCallBack getCurrentRideCallBack)
     {
+
+
         callAsync(new AsyncCallBack() {
             @Override
             public RideInput async()
@@ -210,8 +210,7 @@ public class RideModelEngine extends CoreModelEngine
                 {
                     RideInput rideInput = CloudConnect.callDropMeApi(false).getCurrentRide(CoreApp.getDeviceId()).execute();
                     return rideInput;
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     ConsoleLog.e(e);
                 }
@@ -219,15 +218,14 @@ public class RideModelEngine extends CoreModelEngine
             }
 
             @Override
-            public <T> void result(T t)
-            {
+            public <T> void result(T t) {
                 RideInput rideInput = (RideInput) t;
 
                 RideManager.saveRideLite(CoreApp.getAppContext(), rideInput);
 
-                Intent intent = new Intent();
-                intent.setAction(BroadCastConstant.RIDE_REFRESH_INTENT);
-                LocalBroadcastManager.getInstance(CoreApp.getAppContext()).sendBroadcast(intent);
+                if (getCurrentRideCallBack != null) {
+                    getCurrentRideCallBack.getCurrentRide(rideInput);
+                }
             }
         });
     }
@@ -417,5 +415,9 @@ public class RideModelEngine extends CoreModelEngine
     public interface GetRideInfoListCallBack
     {
         void myRideInfoList(List<MyRideInfo> myRideInfoList, int skip);
+    }
+
+    public interface GetCurrentRideCallBack {
+        void getCurrentRide(RideInput rideInput);
     }
 }

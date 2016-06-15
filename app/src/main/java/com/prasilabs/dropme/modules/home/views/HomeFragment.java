@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.GenericActivity;
-import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -21,9 +19,7 @@ import com.prasilabs.dropme.modules.home.presenters.HomePresenter;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.location.DropMeGLocationService;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
-import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.MarkerUtil;
-import com.prasilabs.dropme.utils.ViewUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,31 +27,23 @@ import butterknife.OnClick;
 /**
  * Created by prasi on 27/5/16.
  */
-public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.MapChange, HomePresenter.CancelRideCallBack
+public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.MapChange
 {
     private static final String TAG = HomeFragment.class.getSimpleName();
-    private static HomeFragment homeFragment;
-    private MapLoader mapLoader;
-    private boolean isProgress;
-
-    public static HomeFragment getHomeFragment()
-    {
-        if(homeFragment == null)
-        {
-            homeFragment = new HomeFragment();
-        }
-
-        return homeFragment;
-    }
-
+    private static HomeFragment instance;
     @BindView(R.id.map_view)
     MapView mapView;
     @BindView(R.id.top_layout)
     FrameLayout topLayout;
-    @BindView(R.id.home_button_layout)
-    LinearLayout homeButtonLayout;
-    @BindView(R.id.cancel_button_layout)
-    LinearLayout cancelButtonLayout;
+    private MapLoader mapLoader;
+
+    public static HomeFragment getInstance() {
+        if (instance == null) {
+            instance = new HomeFragment();
+        }
+
+        return instance;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -75,18 +63,14 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
 
             mapLoader = new MapLoader(mapView,savedInstanceState);
 
-            homeButtonLayout.setVisibility(View.GONE);
             mapLoader.loadMap(new MapLoader.MapLoaderCallBack() {
                 @Override
                 public void mapLoaded()
                 {
                     ConsoleLog.i(TAG, "map loaded");
-
+                    LatLng latLng = DropMeLocatioListener.getLatLng(getContext());
+                    mapLoader.moveToLoc(latLng);
                     DropMeGLocationService.start(getContext());
-
-                    isProgress = true;
-                    ViewUtil.showProgressView(getContext(), topLayout, true);
-                    getPresenter().getCurrentRide();
                 }
             });
         }
@@ -111,15 +95,6 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     {
         ConsoleLog.i(TAG, "offer ride clicked");
         GenericActivity.openRideCreate(getContext());
-    }
-
-    @OnClick(R.id.cancel_btn)
-    protected void cancelClicked()
-    {
-        isProgress = true;
-        ViewUtil.showProgressView(getContext(), topLayout, true);
-        ConsoleLog.i(TAG, "cancel clicked");
-        getPresenter().cancelRide(this);
     }
 
     @OnClick(R.id.book_ride_btn)
@@ -164,7 +139,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @Override
     public void onDestroy() {
         super.onDestroy();
-        homeFragment = null;
+        instance = null;
     }
 
     @Override
@@ -186,75 +161,8 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     }
 
     @Override
-    public void addSourceAndDestination(RideInput rideInput)
+    public void moveMap(LatLng latLng)
     {
-        ConsoleLog.i(TAG, "add source and destination called");
-        if(isProgress)
-        {
-            ViewUtil.hideProgressView(getContext(), topLayout);
-            isProgress = false;
-        }
-        if(mapLoader != null)
-        {
-            if(rideInput != null)
-            {
-                LatLng currentLatlng = DropMeLocatioListener.getLatLng(getContext());
-                LatLng destLatLng = LocationUtils.convertToLatLng(rideInput.getDestLoc());
-
-                mapLoader.showDirection(currentLatlng, destLatLng, true);
-
-                homeButtonLayout.setVisibility(View.GONE);
-                cancelButtonLayout.setVisibility(View.VISIBLE);
-
-                mapLoader.moveToLoc(currentLatlng);
-            }
-            else
-            {
-                mapLoader.removeMarker(MarkerUtil.SOURCE_MARKER_KEY);
-                mapLoader.removeMarker(MarkerUtil.DEST_MARKER_KEY);
-                mapLoader.clearPolyLine();
-
-                homeButtonLayout.setVisibility(View.VISIBLE);
-                cancelButtonLayout.setVisibility(View.GONE);
-
-                LatLng currentLatlng = DropMeLocatioListener.getLatLng(getContext());
-                mapLoader.moveToLoc(currentLatlng);
-
-            }
-
-        }
-    }
-
-    @Override
-    public void rideCanceled()
-    {
-        if(isProgress)
-        {
-            ViewUtil.hideProgressView(getContext(), topLayout);
-            isProgress = false;
-        }
-        if(mapLoader != null)
-        {
-            mapLoader.removeMarker(MarkerUtil.SOURCE_MARKER_KEY);
-            mapLoader.removeMarker(MarkerUtil.DEST_MARKER_KEY);
-            mapLoader.clearPolyLine();
-
-            homeButtonLayout.setVisibility(View.VISIBLE);
-            cancelButtonLayout.setVisibility(View.GONE);
-
-            LatLng currentLatlng = DropMeLocatioListener.getLatLng(getContext());
-            mapLoader.moveToLoc(currentLatlng);
-        }
-    }
-
-    @Override
-    public void rideCancelFailed(String message)
-    {
-        if(isProgress)
-        {
-            ViewUtil.hideProgressView(getContext(), topLayout);
-            isProgress = false;
-        }
-        ViewUtil.t(getContext(), "Unable to cancel the ride");
+        mapLoader.moveToLoc(latLng);
     }
 }
