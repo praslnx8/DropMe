@@ -205,4 +205,5 @@ public class GenericActivity extends CoreActivity
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

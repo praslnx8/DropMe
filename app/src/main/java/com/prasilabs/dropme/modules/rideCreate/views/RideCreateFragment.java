@@ -1,6 +1,8 @@
 package com.prasilabs.dropme.modules.rideCreate.views;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,12 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.api.client.util.DateTime;
 import com.prasilabs.constants.TempConstant;
@@ -25,6 +28,7 @@ import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreFragment;
+import com.prasilabs.dropme.customs.NoDefaultSpinner;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.rideCreate.presenter.RideCreatePresenter;
@@ -49,14 +53,23 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
 {
 
     private static final String TAG = RideCreateFragment.class.getSimpleName();
+    private static final int PLACE_PICKER_REQUEST = 1;
     @BindView(R.id.select_vehicle)
-    Spinner selectVehicleSpinner;
+    NoDefaultSpinner selectVehicleSpinner;
     @BindView(R.id.select_fare_rate)
-    Spinner fareRateSpinner;
+    NoDefaultSpinner fareRateSpinner;
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
     @BindView(R.id.phone_text)
     EditText phoneText;
+    @BindView(R.id.vehicle_text)
+    TextView vehicleTypeText;
+    @BindView(R.id.fare_rate_text)
+    TextView fareRateText;
+
+    /*@BindView(R.id.place_picker_btn)
+    Button placePickerBtn;*/
+
     private long vehicleID = 0;
     private GeoPt destLoc;
     private Date startTime;
@@ -106,10 +119,11 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
             });
 
             final List<Integer> rateList = new ArrayList<>();
-            List<String> stringList = new ArrayList<>();
+            final List<String> stringList = new ArrayList<>();
             final ArrayAdapter<Integer> rateAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, rateList);
             stringList.add("CAR");
             stringList.add("BIKE");
+
             selectVehicleSpinner.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, stringList));
 
             selectVehicleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -144,6 +158,8 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
                         rateAdapter.notifyDataSetChanged();
                     }
                     ConsoleLog.i(TAG, "selcted is :" + position);
+
+                    vehicleTypeText.setText(stringList.get(position));
                 }
 
                 @Override
@@ -169,12 +185,29 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
                 {
 
                     ConsoleLog.i(TAG, "selcted is :" + position);
+                    fareRateText.setText(rateList.get(position) + " Rs");
+
+                    farePerKm = position;
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent)
                 {
 
+                }
+            });
+
+            fareRateText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fareRateSpinner.performClick();
+                }
+            });
+
+            vehicleTypeText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectVehicleSpinner.performClick();
                 }
             });
 
@@ -296,6 +329,39 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
         ViewUtil.hideProgressView(getContext(), topLayout);
         ViewUtil.t(getContext(), "unabel to create Ride");
         ConsoleLog.i(TAG, "unabel to create Ride");
+    }
+
+    /*@OnClick(R.id.place_picker_btn)
+    protected void onPlaceButtonClicked()
+    {
+        try
+        {
+            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+            Intent intent = intentBuilder.build(getCoreActivity());
+            startActivityForResult(intent, PLACE_PICKER_REQUEST);
+
+        }
+        catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+           ConsoleLog.e(e);
+        }
+    }*/
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ConsoleLog.i(TAG, "fragment on activity result came");
+        if (requestCode == PLACE_PICKER_REQUEST && resultCode == Activity.RESULT_OK) {
+            Place place = PlacePicker.getPlace(getContext(), data);
+            onPlaceResult(place);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void onPlaceResult(Place place) {
+        destLoc = LocationUtils.convertToGeoPt(place.getLatLng());
+        destLocationName = String.valueOf(place.getName());
+
+        //placePickerBtn.setText(destLocationName);
     }
 
 

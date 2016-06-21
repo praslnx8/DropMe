@@ -17,9 +17,8 @@ public class MyRecyclerView extends RecyclerView
 {
     public static final int VERTICAL_MODE = 0;
     public static final int HORIZONTAL_MODE = 1;
-
-    private int skip = 0;
     public int pageSize = 10; //default page size
+    private int skip = 0;
     private int prevItemCount = 0;
 
     private Context context;
@@ -57,6 +56,7 @@ public class MyRecyclerView extends RecyclerView
 
         //default manager
         linearLayoutManager = new PreCachingLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         setLayoutManager(linearLayoutManager);
         setHasFixedSize(true);
         setItemAnimator(new DefaultItemAnimator());
@@ -66,13 +66,11 @@ public class MyRecyclerView extends RecyclerView
     {
         if(mode == VERTICAL_MODE)
         {
-            setLayoutManager(linearLayoutManager);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         }
         else
         {
-            linearLayoutManager = new PreCachingLayoutManager(context);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            setLayoutManager(linearLayoutManager);
         }
     }
 
@@ -162,13 +160,13 @@ public class MyRecyclerView extends RecyclerView
         this.skip = skip;
     }
 
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
     public interface HandlePaginationScroll
     {
         void onScroll(int pageSize, int skip);
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
     }
 
 }

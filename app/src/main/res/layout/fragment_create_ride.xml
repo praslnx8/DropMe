@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lgray3"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -23,23 +24,60 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/select_vehicle"
-            style="@style/button.primary.transparent"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="@dimen/paddingS"
-            android:text="Select Vehicle Type"
-            android:textSize="30dp" />
+            android:layout_height="wrap_content">
 
-        <Spinner
-            android:id="@+id/select_fare_rate"
-            style="@style/button.primary.transparent"
+            <com.prasilabs.dropme.customs.NoDefaultSpinner
+                android:id="@+id/select_vehicle"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/paddingS"
+                android:background="@color/material_light_white"
+                android:gravity="left|center"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/vehicle_text"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/paddingS"
+                android:background="@color/material_light_white"
+                android:gravity="left|center"
+                android:hint="Select Vehicle Type"
+                android:paddingLeft="@dimen/paddingS"
+                android:textSize="20dp" />
+
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="@dimen/paddingS"
-            android:text="Select Fare Rate"
-            android:textSize="30dp" />
+            android:layout_height="wrap_content">
+
+            <com.prasilabs.dropme.customs.NoDefaultSpinner
+                android:id="@+id/select_fare_rate"
+                style="@style/button.primary.transparent"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/paddingS"
+                android:background="@color/material_light_white"
+                android:gravity="left|center"
+                android:text="Select Fare Rate"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/fare_rate_text"
+                style="@style/button.primary.transparent"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/paddingS"
+                android:background="@color/material_light_white"
+                android:gravity="left|center"
+                android:hint="Select Fare Rate"
+                android:paddingLeft="@dimen/paddingS"
+                android:textSize="20dp" />
+
+        </FrameLayout>
 
         <EditText
             android:id="@+id/phone_text"
@@ -47,9 +85,11 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="@dimen/paddingS"
-            android:gravity="left"
+            android:background="@color/material_light_white"
+            android:gravity="left|center"
             android:hint="Enter Your Phone Number"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:paddingLeft="@dimen/paddingS" />
 
         <View
             android:layout_width="0dp"

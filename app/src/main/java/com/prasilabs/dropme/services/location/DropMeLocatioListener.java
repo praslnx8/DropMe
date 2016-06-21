@@ -66,7 +66,7 @@ public class DropMeLocatioListener implements LocationListener
         {
             if (checkLocationPermission(context))
             {
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 50, this);
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 100, this);
                 location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
         }
@@ -219,14 +219,11 @@ public class DropMeLocatioListener implements LocationListener
 
     private boolean checkLocationPermission(Context context)
     {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean checkLocationPermission(Context context) {
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public static LatLng getLatLng(Context context)

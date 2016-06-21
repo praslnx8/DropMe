@@ -43,7 +43,6 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
     private long prevBackPresTime;
 
     private boolean isLoading = false;
-    private RideInput rideInput;
 
     public static void callHomeActivity(Context context)
     {
@@ -223,8 +222,6 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
             ViewUtil.hideProgressView(this, containerLayout);
         }
 
-        this.rideInput = rideInput;
-
         if (rideInput != null) {
             FragmentNavigator.navigateToFragment(this, RideFragment.newInstance(rideInput, this), false, containerLayout.getId());
         } else {
@@ -233,13 +230,7 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void rideCanceled() {
-        rideInput = null;
         ConsoleLog.i(TAG, " ride canceled. Going to render other");
         FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
     }
