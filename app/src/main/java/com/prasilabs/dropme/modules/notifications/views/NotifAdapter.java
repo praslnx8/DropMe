@@ -20,9 +20,11 @@ public class NotifAdapter extends CoreAdapter<DropMeNotifs, RecyclerView.ViewHol
 {
     private static final int VIEW_TYPE_ALERT = 1;
     private static final int VIEW_TYPE_LOC_SHARE = 2;
-
-    private Context context;
     private static NotifAdapter instance;
+    private Context context;
+
+    private NotifAdapter() {
+    }
 
     public static NotifAdapter getInstance(Context context)
     {
@@ -35,15 +37,12 @@ public class NotifAdapter extends CoreAdapter<DropMeNotifs, RecyclerView.ViewHol
         return instance;
     }
 
-    private NotifAdapter(){}
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         if(viewType == VIEW_TYPE_ALERT)
         {
-            View view = View.inflate(context, R.layout.item_notif_alert, null);
-
+            View view = getInlfatedView(context, parent, R.layout.item_notif_alert);
             return new AlertViewHolder(view);
         }
         else if(viewType == VIEW_TYPE_LOC_SHARE)

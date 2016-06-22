@@ -1,23 +1,35 @@
 package com.prasilabs.dropme.db.dbPojos;
 
-import com.orm.SugarRecord;
+import com.prasilabs.dropme.annotions.DB;
 
 /**
  * Created by prasi on 13/6/16.
  */
-public class DropMeNotifs extends SugarRecord
+public class DropMeNotifs
 {
+    @DB
     private long id;
+    @DB
     private String jobType;
+    @DB
     private String message;
+    @DB
     private boolean isRead;
+    @DB
     private long createdTime;
+
+    public DropMeNotifs() {
+    }
 
     public DropMeNotifs(long id, String jobType, String message) {
         this.id = id;
         this.jobType = jobType;
         this.message = message;
         this.createdTime = System.currentTimeMillis();
+    }
+
+    public long getId() {
+        return id;
     }
 
     public void setId(long id) {

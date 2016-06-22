@@ -1,10 +1,13 @@
 package com.prasilabs.dropme.modelengines;
 
 import com.prasilabs.constants.PushMessageJobType;
+import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
+import com.prasilabs.dropme.db.dbmanage.DatabaseHelper;
 import com.prasilabs.dropme.debug.ConsoleLog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -32,57 +35,30 @@ public class DropMeNotifModelEngine extends CoreModelEngine
 
     public void addDropMeNotif(final DropMeNotifs dropMeNotifs, final AddNotifCallBack addNotifCallBack)
     {
-        callAsync(new AsyncCallBack()
-        {
+        new DatabaseHelper(CoreApp.getAppContext()).insertNotificationAsync(dropMeNotifs, new DatabaseHelper.DatabaseHandler<Long>() {
             @Override
-            public Boolean async()
+            public void onComplete(boolean success, Long result)
             {
-                try
-                {
-                    long id = dropMeNotifs.save();
-                    ConsoleLog.i(TAG, "db inserted id is : " + id);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-
-                return false;
-            }
-
-            @Override
-            public <T> void result(T t)
-            {
-                Boolean status = (Boolean) t;
-
                 if(addNotifCallBack != null)
                 {
-                    if(status != null)
-                    {
-                        addNotifCallBack.status(true);
-                    }
-                    addNotifCallBack.status(false);
+                    addNotifCallBack.status(success);
                 }
-
             }
         });
     }
 
     public void getNotification(final GetNotifCallBack getNotifCallBack)
     {
-        callAsync(new AsyncCallBack() {
-            @Override
-            public List<DropMeNotifs> async()
-            {
-                ConsoleLog.i(TAG, "start time is : " + System.currentTimeMillis());
-                try
-                {
-                    List<DropMeNotifs> dropMeNotifsList = DropMeNotifs.listAll(DropMeNotifs.class);
 
+        new DatabaseHelper(CoreApp.getAppContext()).getNotifListAsync(new DatabaseHelper.DatabaseHandler<List<DropMeNotifs>>() {
+            @Override
+            public void onComplete(boolean success, List<DropMeNotifs> dropMeNotifsList)
+            {
+                ConsoleLog.i(TAG, "notification list is  " + dropMeNotifsList);
+                if (dropMeNotifsList != null)
+                {
                     Iterator<DropMeNotifs> dropMeNotifsIterator = dropMeNotifsList.iterator();
-                    while (dropMeNotifsIterator.hasNext())
-                    {
+                    while (dropMeNotifsIterator.hasNext()) {
                         DropMeNotifs dropMeNotifs = dropMeNotifsIterator.next();
 
                         Calendar yesCal = Calendar.getInstance();
@@ -91,38 +67,33 @@ public class DropMeNotifModelEngine extends CoreModelEngine
                         Calendar minCal = Calendar.getInstance();
                         minCal.add(Calendar.MINUTE, -30);
 
-                        if(dropMeNotifs.getCreatedTime() < yesCal.getTime().getTime())
-                        {
-                            DropMeNotifs.delete(dropMeNotifs);
+                        if (dropMeNotifs.getCreatedTime() < yesCal.getTime().getTime()) {
+                            new DatabaseHelper(CoreApp.getAppContext()).deleteNotifsAsync(dropMeNotifs.getId(), new DatabaseHelper.DatabaseHandler<Void>() {
+                                @Override
+                                public void onComplete(boolean success, Void result) {
+
+                                }
+                            });
+                            dropMeNotifsIterator.remove();
+                        } else if (dropMeNotifs.getJobType().equals(PushMessageJobType.LOCATION_SHARE_STR) && dropMeNotifs.getCreatedTime() < minCal.getTime().getTime()) {
+                            new DatabaseHelper(CoreApp.getAppContext()).deleteNotifsAsync(dropMeNotifs.getId(), new DatabaseHelper.DatabaseHandler<Void>() {
+                                @Override
+                                public void onComplete(boolean success, Void result) {
+
+                                }
+                            });
                             dropMeNotifsIterator.remove();
                         }
-                        else if(dropMeNotifs.getJobType().equals(PushMessageJobType.LOCATION_SHARE_STR) && dropMeNotifs.getCreatedTime() < minCal.getTime().getTime())
-                        {
-                            DropMeNotifs.delete(dropMeNotifs);
-                            dropMeNotifsIterator.remove();
+
+                        if (getNotifCallBack != null) {
+                            getNotifCallBack.getNotifs(dropMeNotifsList);
                         }
                     }
-
-                    ConsoleLog.i(TAG, "end time is " + System.currentTimeMillis());
-
-                    return dropMeNotifsList;
-                }
-                catch (Exception e)
+                } else
                 {
-                    ConsoleLog.e(e);
-                }
-
-                return null;
-            }
-
-            @Override
-            public <T> void result(T t)
-            {
-                List<DropMeNotifs> dropMeNotifsList = (List<DropMeNotifs>) t;
-
-                if(getNotifCallBack != null)
-                {
-                    getNotifCallBack.getNotifs(dropMeNotifsList);
+                    if (getNotifCallBack != null) {
+                        getNotifCallBack.getNotifs(new ArrayList<DropMeNotifs>());
+                    }
                 }
             }
         });

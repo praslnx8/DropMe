@@ -24,27 +24,22 @@ import butterknife.BindView;
 public class NotifFragment extends CoreFragment<NotifPresenter> implements NotifPresenter.GetNotificationCallBack
 {
     private static NotifFragment instance;
-
-    public static NotifFragment getInstance()
-    {
-        if(instance == null)
-        {
-            instance = new NotifFragment();
-        }
-
-        return instance;
-    }
-
     @BindView(R.id.notification_list_view)
     MyRecyclerView notificationListView;
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
     @BindView(R.id.empty_layout)
     LinearLayout emptyLayout;
-
     boolean isShowLoader = false;
-
     private NotifAdapter notifAdapter;
+
+    public static NotifFragment getInstance() {
+        if (instance == null) {
+            instance = new NotifFragment();
+        }
+
+        return instance;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -61,6 +56,8 @@ public class NotifFragment extends CoreFragment<NotifPresenter> implements Notif
         if(getFragmentView() == null)
         {
             setFragmentView(inflater.inflate(R.layout.fragment_my_notifs, container, false));
+
+            notificationListView.setAdapter(notifAdapter);
         }
 
         makeApiCall();

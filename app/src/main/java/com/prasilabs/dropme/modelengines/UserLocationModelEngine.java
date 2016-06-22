@@ -60,7 +60,7 @@ public class UserLocationModelEngine extends CoreModelEngine
                     }
                 }
             }
-        });
+        }, true);
     }
 
 
