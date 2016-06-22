@@ -1,11 +1,13 @@
 package com.prasilabs.dropme.services.gcm;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
 import com.prasilabs.constants.GcmConstants;
 import com.prasilabs.constants.PushMessageJobType;
+import com.prasilabs.dropme.activities.GenericActivity;
 import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modelengines.DropMeNotifModelEngine;
@@ -47,19 +49,19 @@ public class DropMeGcmMessageService extends GcmListenerService
                 ConsoleLog.i(TAG, "message type ride found alert");
                 RideInfoPush rideInfoPush = new Gson().fromJson(content, RideInfoPush.class);
 
-                DropMeNotifCreator dropMeNotifCreator = new DropMeNotifCreator(id, "New Ride", "New ride found for the location " + rideInfoPush.getDestLocation());
+                Intent intent = GenericActivity.getNotificationIntent(this);
+                DropMeNotifCreator dropMeNotifCreator = new DropMeNotifCreator(id, "New Ride", "New ride found for the location " + rideInfoPush.getDestLocation(), intent);
                 dropMeNotifCreator.buildNotification(this);
             }
             else if(type.equals(PushMessageJobType.LOCATION_SHARE_STR))
             {
                 LocationSharePush locationSharePush = new Gson().fromJson(content, LocationSharePush.class);
 
-                DropMeNotifCreator dropMeNotifCreator = new DropMeNotifCreator(id, "Location Share", locationSharePush.getLoceeName() + " shared location with you");
+                Intent intent = GenericActivity.getNotificationIntent(this);
+                DropMeNotifCreator dropMeNotifCreator = new DropMeNotifCreator(id, "Location Share", locationSharePush.getLoceeName() + " shared location with you", intent);
                 dropMeNotifCreator.buildNotification(this);
             }
         }
-
-
     }
 
 }

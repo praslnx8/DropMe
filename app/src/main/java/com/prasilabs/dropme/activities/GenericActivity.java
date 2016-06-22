@@ -40,6 +40,13 @@ public class GenericActivity extends CoreActivity
     @BindView(R.id.container)
     LinearLayout container;
 
+    public static Intent getNotificationIntent(Context context) {
+        Intent intent = new Intent(context, GenericActivity.class);
+        intent.putExtra(REQUEST_FOR, MY_NOTIFS);
+
+        return intent;
+    }
+
     public static void openMyRide(Context context)
     {
         Intent intent = new Intent(context, GenericActivity.class);

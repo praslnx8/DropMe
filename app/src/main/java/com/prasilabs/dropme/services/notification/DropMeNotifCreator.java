@@ -8,7 +8,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.prasilabs.dropme.R;
-import com.prasilabs.dropme.activities.GenericActivity;
 import com.prasilabs.dropme.activities.HomeActivity;
 import com.prasilabs.dropme.debug.ConsoleLog;
 
@@ -21,12 +20,14 @@ public class DropMeNotifCreator
     private long id;
     private String title;
     private String message;
+    private Intent intent;
 
-    public DropMeNotifCreator(long id, String title, String message)
+    public DropMeNotifCreator(long id, String title, String message, Intent intent)
     {
         this.id = id;
         this.title = title;
         this.message = message;
+        this.intent = intent;
     }
 
     public void buildNotification(Context context)
@@ -37,11 +38,9 @@ public class DropMeNotifCreator
         builder.setContentTitle(title);
         builder.setContentText(message);
 
-        Intent resultIntent = new Intent(context, GenericActivity.class);
-
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         taskStackBuilder.addParentStack(HomeActivity.class);
-        taskStackBuilder.addNextIntent(resultIntent);
+        taskStackBuilder.addNextIntent(intent);
 
         PendingIntent resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
