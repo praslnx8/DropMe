@@ -10,12 +10,14 @@ import android.support.v4.app.TaskStackBuilder;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.GenericActivity;
 import com.prasilabs.dropme.activities.HomeActivity;
+import com.prasilabs.dropme.debug.ConsoleLog;
 
 /**
  * Created by prasi on 13/6/16.
  */
 public class DropMeNotifCreator
 {
+    private static final String TAG = DropMeNotifCreator.class.getSimpleName();
     private long id;
     private String title;
     private String message;
@@ -47,5 +49,6 @@ public class DropMeNotifCreator
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify((int) id, builder.build());
+        ConsoleLog.i(TAG, "ntification notify done");
     }
 }

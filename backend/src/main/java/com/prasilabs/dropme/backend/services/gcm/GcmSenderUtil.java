@@ -35,7 +35,7 @@ public class GcmSenderUtil
                 String message = new Gson().toJson(rideInfoPush);
                 long id = ride.getId();
 
-                boolean isSuccess = GcmSender.sendGcmMessage(id, PushMessageJobType.RIDE_FOUND_ALERT_STR, message, gcmIDs);
+                boolean isSuccess = GcmSender.sendGcmMessage(id, message, PushMessageJobType.RIDE_FOUND_ALERT_STR, gcmIDs);
 
                 ConsoleLog.i(TAG, "ride alert gcm status is : " + isSuccess);
             } else {

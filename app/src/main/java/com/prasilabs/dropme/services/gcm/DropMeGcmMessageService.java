@@ -12,6 +12,7 @@ import com.prasilabs.dropme.modelengines.DropMeNotifModelEngine;
 import com.prasilabs.dropme.services.notification.DropMeNotifCreator;
 import com.prasilabs.gcmData.LocationSharePush;
 import com.prasilabs.gcmData.RideInfoPush;
+import com.prasilabs.util.DataUtil;
 
 /**
  * Created by prasi on 8/6/16.
@@ -31,7 +32,7 @@ public class DropMeGcmMessageService extends GcmListenerService
 
         ConsoleLog.i(TAG, "message recieved is : " + data.getString("message"));
 
-        long id = data.getLong(GcmConstants.ID_KEY);
+        long id = DataUtil.stringToLong(data.getString(GcmConstants.ID_KEY));
         String type = data.getString(GcmConstants.JOB_TYPE_KEY);
         String content = data.getString(GcmConstants.MESSAGE_KEY);
 
@@ -40,8 +41,10 @@ public class DropMeGcmMessageService extends GcmListenerService
 
         if(type != null)
         {
+            ConsoleLog.i(TAG, "msg type is " + type);
             if (type.equals(PushMessageJobType.RIDE_FOUND_ALERT_STR))
             {
+                ConsoleLog.i(TAG, "message type ride found alert");
                 RideInfoPush rideInfoPush = new Gson().fromJson(content, RideInfoPush.class);
 
                 DropMeNotifCreator dropMeNotifCreator = new DropMeNotifCreator(id, "New Ride", "New ride found for the location " + rideInfoPush.getDestLocation());

@@ -29,17 +29,30 @@ public class DropMeLocatioListener implements LocationListener
     private static final String TAG = DropMeLocatioListener.class.getSimpleName();
 
     private static DropMeLocatioListener instance = new DropMeLocatioListener();
+    private LocationManager lm;
+    private Location location;
+    private Context context;
+
+    private DropMeLocatioListener() {
+    }
 
     public static DropMeLocatioListener getInstance()
     {
         return instance;
     }
 
-    private LocationManager lm;
-    private Location location;
-    private Context context;
+    public static void informLocation(Context context, boolean isCallServer) {
+        HomeGeoModelEngine.getInstance().locationChanged(isCallServer);
+        Intent locationIntent = new Intent();
+        locationIntent.setAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(locationIntent);
+    }
 
-    private DropMeLocatioListener() {}
+    public static LatLng getLatLng(Context context) {
+        LatLng latLng = LocalPreference.getLocationFromPrefs(context, LocationConstant.CURRENT_LOC_STR);
+
+        return latLng;
+    }
 
     public boolean isLocationEnabled(Context context)
     {
@@ -162,7 +175,7 @@ public class DropMeLocatioListener implements LocationListener
     @Override
     public void onProviderEnabled(String provider)
     {
-        if(lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        if (lm.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))
         {
             Intent intent = new Intent();
             intent.setAction(BroadCastConstant.LOCATION_ENABLED_CONSTANT);
@@ -170,8 +183,8 @@ public class DropMeLocatioListener implements LocationListener
 
             if(checkLocationPermission(CoreApp.getAppContext()))
             {
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 50, this);
-                location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 2000, 50, this);
+                location = lm.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             }
 
             final Criteria criteria = new Criteria();
@@ -199,7 +212,6 @@ public class DropMeLocatioListener implements LocationListener
         }
     }
 
-
     @Override
     public void onProviderDisabled(String provider)
     {
@@ -209,27 +221,8 @@ public class DropMeLocatioListener implements LocationListener
         }
     }
 
-    public static void informLocation(Context context, boolean isCallServer)
-    {
-        HomeGeoModelEngine.getInstance().locationChanged(isCallServer);
-        Intent locationIntent = new Intent();
-        locationIntent.setAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(locationIntent);
-    }
-
     private boolean checkLocationPermission(Context context)
     {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private boolean checkLocationPermission(Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static LatLng getLatLng(Context context)
-    {
-        LatLng latLng = LocalPreference.getLocationFromPrefs(context, LocationConstant.CURRENT_LOC_STR);
-
-        return latLng;
     }
 }

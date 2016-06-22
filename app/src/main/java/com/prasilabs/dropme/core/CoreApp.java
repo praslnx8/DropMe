@@ -51,5 +51,6 @@ public class CoreApp extends Application
     {
         HomeGeoModelEngine.getInstance().removeAllPoints();
         super.onTerminate();
+        SugarContext.terminate();
     }
 }

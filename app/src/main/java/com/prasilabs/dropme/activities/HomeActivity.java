@@ -174,7 +174,7 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
 
         if (id == R.id.nav_home)
         {
-            FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
+            //do nothing
         }
         else if (id == R.id.nav_my_rides)
         {

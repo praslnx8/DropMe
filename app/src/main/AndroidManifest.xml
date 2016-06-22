@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <permission
         android:name="com.prasilabs.dropme.permission.C2D_MESSAGE"
@@ -74,7 +75,7 @@
             android:value="dropme.db" />
         <meta-data
             android:name="VERSION"
-            android:value="1" />
+            android:value="2" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />

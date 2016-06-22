@@ -22,4 +22,9 @@
         <property name="userId" direction="asc" />
         <property name="created" direction="desc" />
     </datastore-index>
+    <!--Get ride alerts for user-->
+    <datastore-index ancestor="false" kind="RideAlert" source="manual">
+        <property name="userId" direction="asc" />
+        <property name="created" direction="desc" />
+    </datastore-index>
 </datastore-indexes>

@@ -134,13 +134,17 @@ public class RideAlertLogicEngine extends CoreLogicEngine
             if (ride != null) {
                 List<RideAlert> rideAlertList = getRidesBasedOnRide(ride);
 
+                ConsoleLog.i(TAG, "ridealertlist size is " + rideAlertList.size());
                 List<Long> userIds = new ArrayList<>();
 
                 for (RideAlert rideAlert : rideAlertList) {
-                    userIds.add(rideAlert.getId());
+                    userIds.add(rideAlert.getUserId());
                 }
 
                 List<String> gcmIDs = GcmLogicEngine.getInstance().getGcmIdOfUsers(userIds);
+
+                ConsoleLog.i(TAG, "user id list size is : " + userIds.size());
+                ConsoleLog.i(TAG, " gcm id list size is : " + gcmIDs.size());
 
                 GcmSenderUtil.sendRideInfoPushForAlert(ride, gcmIDs);
             }
@@ -153,11 +157,11 @@ public class RideAlertLogicEngine extends CoreLogicEngine
 
     public List<RideAlert> getRidesBasedOnRide(Ride ride)
     {
-        List<RideAlert> rideAlertList = new ArrayList<>();
-
         //Query.Filter sourceFilter = new GeoFilter(RideAlert.SOURCE_PT).getFilter(ride.getCurrentLoc(),1000);
 
         List<RideAlert> dataList = OfyService.ofy().load().type(RideAlert.class).list(); //filter(sourceFilter).list();
+
+        ConsoleLog.i(TAG, "fresh list size is " + dataList.size());
 
         Iterator<RideAlert> locRideAlertIterator = dataList.iterator();
 
@@ -177,7 +181,11 @@ public class RideAlertLogicEngine extends CoreLogicEngine
             }
         }
 
+        ConsoleLog.i(TAG, "after loc fresh list size is " + dataList.size());
+
         filterForTiming(ride, dataList);
+
+        ConsoleLog.i(TAG, "after timing fresh list size is " + dataList.size());
 
         Iterator<RideAlert> rideAlertIterator = dataList.iterator();
 
@@ -188,18 +196,19 @@ public class RideAlertLogicEngine extends CoreLogicEngine
             Vehicle vehicle = VehicleLogicEngine.getInstance().getVehicleById(ride.getVehicleId());
             DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUserById(ride.getUserId());
 
-            if(!(rideAlert.getVehicleType() != null && rideAlert.getVehicleType().equals(vehicle.getType())))
+            if (rideAlert.getVehicleType() != null && !rideAlert.getVehicleType().equals(vehicle.getType()))
             {
                 rideAlertIterator.remove();
-            }
-            else if(!(rideAlert.getGender() != null && dropMeUser.getGender().equals(rideAlert.getGender())))
+            } else if (rideAlert.getGender() != null && !dropMeUser.getGender().equals(rideAlert.getGender()))
             {
                 rideAlertIterator.remove();
             }
         }
 
+        ConsoleLog.i(TAG, "after vehicle type fresh list size is " + dataList.size());
 
-        return rideAlertList;
+
+        return dataList;
     }
 
     public List<RideAlertIo> getRideAlerts(User user)
