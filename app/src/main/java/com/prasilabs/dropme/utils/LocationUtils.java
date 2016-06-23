@@ -8,7 +8,10 @@ import android.os.AsyncTask;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
+import com.prasilabs.dropme.constants.LocationConstant;
+import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -22,6 +25,7 @@ public class LocationUtils
 {
     private static final String DISTANCE_KM_POSTFIX = "KM";
     private static final String DISTANCE_M_POSTFIX = "M";
+    private static final String TAG = LocationUtils.class.getSimpleName();
 
     public static GeoPt convertToGeoPt(LatLng latLng)
     {
@@ -114,6 +118,34 @@ public class LocationUtils
                 }
             }
         }.execute(latLng);
+    }
+
+    public static void checkAndSendLoc(Context context, LatLng latLngLocation, String locName) {
+        LatLng oldLatLng = LocalPreference.getLocationFromPrefs(context, LocationConstant.CURRENT_LOC_STR);
+        LatLng aggrOldLatLng = LocalPreference.getLocationFromPrefs(context, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
+
+        double distance = 0.0;
+        double aggrDistance = 0.0;
+        if (oldLatLng != null) {
+            distance = Math.round(SphericalUtil.computeDistanceBetween(oldLatLng, latLngLocation));
+        }
+        if (aggrOldLatLng != null) {
+            aggrDistance = Math.round(SphericalUtil.computeDistanceBetween(aggrOldLatLng, latLngLocation));
+        }
+
+        if (locName != null) {
+            LocalPreference.saveAppDataInShared(context, LocationConstant.LOC_NAME_STR, locName);
+        }
+        if (aggrOldLatLng == null || aggrDistance > 400) {
+            ConsoleLog.i(TAG, "sending loc to server");
+            LocalPreference.storeLocation(context, latLngLocation, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
+            LocalPreference.storeLocation(context, latLngLocation, LocationConstant.CURRENT_LOC_STR);
+            DropMeLocatioListener.informLocation(context, true);
+        } else if (oldLatLng == null || distance > 100) {
+            ConsoleLog.i(TAG, "sending loc only for geo fire");
+            LocalPreference.storeLocation(context, latLngLocation, LocationConstant.CURRENT_LOC_STR);
+            DropMeLocatioListener.informLocation(context, false);
+        }
     }
 
     public interface GetLocationNameCallBack

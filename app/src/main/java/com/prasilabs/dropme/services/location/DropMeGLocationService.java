@@ -15,9 +15,6 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.SphericalUtil;
-import com.prasilabs.dropme.constants.LocationConstant;
-import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.utils.LocationUtils;
 
@@ -137,31 +134,7 @@ public class DropMeGLocationService extends IntentService
                 @Override
                 public void getLocationName(String location)
                 {
-                    LatLng oldLatLng = LocalPreference.getLocationFromPrefs(DropMeGLocationService.this, LocationConstant.CURRENT_LOC_STR);
-                    LatLng aggrOldLatLng = LocalPreference.getLocationFromPrefs(DropMeGLocationService.this, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
-
-                    double distance = 0.0;
-                    double aggrDistance = 0.0;
-                    if(oldLatLng != null)
-                    {
-                        distance = Math.round(SphericalUtil.computeDistanceBetween(oldLatLng, latLngLocation));
-                    }
-                    if(aggrOldLatLng != null)
-                    {
-                        aggrDistance = Math.round(SphericalUtil.computeDistanceBetween(aggrOldLatLng, latLngLocation));
-                    }
-
-                    if(aggrOldLatLng == null || aggrDistance > 400)
-                    {
-                        LocalPreference.storeLocation(DropMeGLocationService.this, latLngLocation, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
-                        LocalPreference.storeLocation(DropMeGLocationService.this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
-                        DropMeLocatioListener.informLocation(DropMeGLocationService.this, true);
-                    }
-                    else if(oldLatLng == null || distance > 100)
-                    {
-                        LocalPreference.storeLocation(DropMeGLocationService.this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
-                        DropMeLocatioListener.informLocation(DropMeGLocationService.this, false);
-                    }
+                    LocationUtils.checkAndSendLoc(DropMeGLocationService.this, latLngLocation, location);
                 }
             });
         }
@@ -173,11 +146,7 @@ public class DropMeGLocationService extends IntentService
 
     private boolean checkLocationPermission()
     {
-        if (ActivityCompat.checkSelfPermission(DropMeGLocationService.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        } else {
-            return true;
-        }
+        return ActivityCompat.checkSelfPermission(DropMeGLocationService.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

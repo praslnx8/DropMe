@@ -19,6 +19,7 @@ import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
+import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 /**
@@ -103,20 +104,8 @@ public class DropMeLocatioListener implements LocationListener
 
         if(location != null)
         {
-            Double lat = location.getLatitude();
-            Double lon = location.getLongitude();
-
-            ConsoleLog.i(TAG, "lat is" + lat);
-
-            LatLng latLng = new LatLng(lat, lon);
-
-            LatLng oldLoc = LocalPreference.getLocationFromPrefs(context, LocationConstant.CURRENT_LOC_STR);
-            long oldTime = LocalPreference.getLoginDataFromShared(context, LocationConstant.CURRENT_LOC_TIME_STR, 0l);
-            LocalPreference.storeLocation(context, oldLoc, LocationConstant.PREV_LOC_STR);
-            LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
-            LocalPreference.saveLoginDataInShared(context,LocationConstant.PREV_LOC_TIME_STR, oldTime);
-            LocalPreference.saveLoginDataInShared(context,LocationConstant.CURRENT_LOC_TIME_STR, System.currentTimeMillis());
-            informLocation(context, true);
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            LocationUtils.checkAndSendLoc(context, latLng, null);
 
             stopLocationUpdates(context);
         }
@@ -135,15 +124,7 @@ public class DropMeLocatioListener implements LocationListener
         if(location != null && context != null)
         {
             this.location = location;
-            Double lat = location.getLatitude();
-            Double lon = location.getLongitude();
-
-            ConsoleLog.i(TAG, "lat is" + lat);
-
-            LatLng latLng = new LatLng(lat, lon);
-
-            //LatLng oldLoc = LocalPreference.getLocationFromPrefs(context, MyConstant.CURRENT_LATLNG_TEXT);
-
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
             informLocation(context, true);
 
