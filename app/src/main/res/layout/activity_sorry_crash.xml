@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.prasilabs.dropme.customs.FontAweSomeTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fa_exclamation_triangle"
+        android:textSize="100dp" />
+
+    <TextView
+        style="@android:style/TextAppearance.DeviceDefault.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/paddingS"
+        android:text="Oops! Something went wrong. :(" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/paddingS">
+
+        <Button
+            android:id="@+id/try_again_btn"
+            style="@style/button.primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Try Again" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp" />
+
+        <Button
+            android:id="@+id/close_btn"
+            style="@style/button.secondary.transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Close" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

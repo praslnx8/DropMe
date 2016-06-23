@@ -41,10 +41,18 @@ public class GcmRegistrationIntentService extends IntentService
         {
             String token = instanceID.getToken("805210209614", GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 
-            String existingToken = LocalPreference.getLoginDataFromShared(this, GcmConstants.GCM_TOKEN_STR, null);
+            ConsoleLog.i(TAG, "gcm token is " + token);
 
-            if(existingToken == null || !existingToken.equals(token))
+            String existingToken = LocalPreference.getLoginDataFromShared(this, GcmConstants.GCM_TOKEN_STR, null);
+            long lastUpdateTime = LocalPreference.getLoginDataFromShared(this, GcmConstants.GCM_KEY_UPDATE_TIME_STR, 0L);
+
+            boolean isExpired = false;
+            if (System.currentTimeMillis() - lastUpdateTime > 86400000)
             {
+                isExpired = true;
+            }
+
+            if (existingToken == null || !existingToken.equals(token) || isExpired) {
                 GcmRecordIO gcmRecordIO = new GcmRecordIO();
                 gcmRecordIO.setGcmId(token);
                 gcmRecordIO.setDeviceId(CoreApp.getDeviceId());
@@ -55,6 +63,7 @@ public class GcmRegistrationIntentService extends IntentService
                 if (apiResponse.getStatus())
                 {
                     LocalPreference.saveLoginDataInShared(this, GcmConstants.GCM_TOKEN_STR, token);
+                    LocalPreference.saveLoginDataInShared(this, GcmConstants.GCM_KEY_UPDATE_TIME_STR, System.currentTimeMillis());
                 }
             }
             else

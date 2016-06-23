@@ -67,6 +67,12 @@ public class UserManager
         return hash;
     }
 
+    public static String getUserEmail(Context context) {
+        String hash = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.EMAIL_STR, null);
+
+        return hash;
+    }
+
     public static boolean savePhoneNo(Context context, String phone)
     {
         boolean isSuccess = false;
@@ -125,5 +131,10 @@ public class UserManager
         }
 
         return vDropMeUser;
+    }
+
+    public static boolean isUserLoggedIn(Context context) {
+        return !TextUtils.isEmpty(UserManager.getUserHash(context));
+
     }
 }

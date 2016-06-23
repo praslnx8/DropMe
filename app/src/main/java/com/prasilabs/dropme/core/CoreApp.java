@@ -8,6 +8,7 @@ import android.support.multidex.MultiDex;
 import com.orm.SugarContext;
 import com.prasilabs.dropme.BuildConfig;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
+import com.prasilabs.dropme.services.crashReport.NoCrashHandler;
 
 /**
  * CoreApp. The starting point of android app
@@ -37,7 +38,8 @@ public class CoreApp extends Application
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        SugarContext.init(this);
+
+        NoCrashHandler.install(this);
     }
 
     @Override

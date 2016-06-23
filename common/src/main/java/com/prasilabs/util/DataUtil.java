@@ -53,6 +53,15 @@ public class DataUtil
         return 0.0;
     }
 
+    public static int longToInt(long l) {
+        try {
+            return (int) l;
+        } catch (Exception e) {
+        }
+
+        return 0;
+    }
+
     public static long stringToLong(String s)
     {
         try

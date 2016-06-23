@@ -18,6 +18,7 @@ import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.debug.Experiments;
 import com.prasilabs.dropme.backend.io.ApiResponse;
+import com.prasilabs.dropme.backend.io.CrashReportIO;
 import com.prasilabs.dropme.backend.io.GcmRecordIO;
 import com.prasilabs.dropme.backend.io.MyRideInfo;
 import com.prasilabs.dropme.backend.io.RideAlertIo;
@@ -25,6 +26,7 @@ import com.prasilabs.dropme.backend.io.RideDetail;
 import com.prasilabs.dropme.backend.io.RideInput;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.io.VVehicle;
+import com.prasilabs.dropme.backend.logicEngines.CrashReportLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.GcmLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideAlertLogicEngine;
@@ -332,6 +334,22 @@ public class DropMeEndPoint
 
         try {
             UserLocationLogicEngine.getInstance().shareLocation(user, recieverId, deviceID);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+    }
+
+    @ApiMethod(name = "sendCrashReport")
+    public ApiResponse sendCrashReport(CrashReportIO crashReportIO) {
+
+        try {
+            ApiResponse apiResponse = new ApiResponse();
+
+            apiResponse = CrashReportLogicEngine.getInstance().addCrashReport(crashReportIO);
+
+            return apiResponse;
         } catch (Exception e) {
             ConsoleLog.e(e);
         }

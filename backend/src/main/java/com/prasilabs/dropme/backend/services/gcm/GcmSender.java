@@ -88,6 +88,10 @@ public class GcmSender
             try {
                 MulticastResult multicastResult = sender.send(message, gcmIDs, 2);
 
+                for (String string : gcmIDs) {
+                    ConsoleLog.i(TAG, "gcm id is : " + string);
+                }
+
                 ConsoleLog.i(TAG, "total gcm sent is : " + multicastResult.getTotal());
                 ConsoleLog.i(TAG, "total gcm success is : " + multicastResult.getSuccess());
                 if (multicastResult.getFailure() > 0) {

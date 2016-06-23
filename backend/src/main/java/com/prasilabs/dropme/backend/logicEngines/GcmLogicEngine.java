@@ -44,6 +44,8 @@ public class GcmLogicEngine extends CoreLogicEngine
             gcmRecord.setUserId(gcmRecordIO.getUserId());
             gcmRecord.setDeviceId(gcmRecordIO.getDeviceId());
             gcmRecord.setGcmId(gcmRecordIO.getGcmId());
+        } else {
+            ConsoleLog.w(TAG, "gcmio is not good");
         }
 
         return gcmRecord;
@@ -65,6 +67,7 @@ public class GcmLogicEngine extends CoreLogicEngine
                 existing.setModified(new Date(System.currentTimeMillis()));
 
                 Key<GcmRecord> gcmRecordKey = OfyService.ofy().save().entity(existing).now();
+                ConsoleLog.i(TAG, existing.toString());
                 apiResponse.setStatus(true);
                 apiResponse.setId(gcmRecordKey.getId());
             }

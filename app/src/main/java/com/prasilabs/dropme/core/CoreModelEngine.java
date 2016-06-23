@@ -31,6 +31,10 @@ public abstract class CoreModelEngine
             call(asyncCallBack);
         } else if (!isBackgroundCall) {
             ViewUtil.t(CoreApp.getAppContext(), "Please check the network and try again");
+
+            if (asyncCallBack != null) {
+                asyncCallBack.result(null);
+            }
         }
     }
 

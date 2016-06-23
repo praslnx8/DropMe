@@ -11,7 +11,9 @@ import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MyRecyclerView;
 import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
+import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.notifications.presenters.NotifPresenter;
+import com.prasilabs.dropme.services.notification.DropMeNotifCreator;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 import java.util.List;
@@ -23,6 +25,7 @@ import butterknife.BindView;
  */
 public class NotifFragment extends CoreFragment<NotifPresenter> implements NotifPresenter.GetNotificationCallBack
 {
+    private static final String NOT_ID_STR = "not_id";
     private static NotifFragment instance;
     @BindView(R.id.notification_list_view)
     MyRecyclerView notificationListView;
@@ -34,9 +37,17 @@ public class NotifFragment extends CoreFragment<NotifPresenter> implements Notif
     private NotifAdapter notifAdapter;
 
     public static NotifFragment getInstance() {
+        return getInstance(0);
+    }
+
+    public static NotifFragment getInstance(int notId) {
         if (instance == null) {
             instance = new NotifFragment();
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(NOT_ID_STR, notId);
+        instance.setArguments(bundle);
 
         return instance;
     }
@@ -47,6 +58,18 @@ public class NotifFragment extends CoreFragment<NotifPresenter> implements Notif
         super.onCreate(savedInstanceState);
 
         notifAdapter = NotifAdapter.getInstance(getContext());
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            int id = bundle.getInt(NOT_ID_STR, 0);
+            if (id != 0) {
+                DropMeNotifCreator.cancelNotif(getContext(), id);
+            }
+        }
+
+        if (!UserManager.isUserLoggedIn(getContext())) {
+            getCoreActivity().finish();
+        }
     }
 
     @Nullable
