@@ -1,6 +1,5 @@
 package com.prasilabs.dropme.modules.rideSelect.views;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
+import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.core.CoreAdapter;
 import com.prasilabs.dropme.modules.rideSelect.presenters.RideSelectPresenter;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
@@ -29,18 +29,18 @@ import butterknife.ButterKnife;
 public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter.RideSelectViewHolder>
 {
     public static RideSelectAdapter instance;
-    public Context context;
+    public CoreActivity coreActivity;
     private RideSelectPresenter rideSelectPresenter;
 
-    private RideSelectAdapter(Context context) {
-        this.context = context;
+    private RideSelectAdapter(CoreActivity coreActivity) {
+        this.coreActivity = coreActivity;
     }
 
-    public static RideSelectAdapter getInstance(RideSelectPresenter rideSelectPresenter, Context context)
+    public static RideSelectAdapter getInstance(RideSelectPresenter rideSelectPresenter, CoreActivity coreActivity)
     {
-        if(instance == null || instance.context == null)
+        if (instance == null || instance.coreActivity == null)
         {
-            instance = new RideSelectAdapter(context);
+            instance = new RideSelectAdapter(coreActivity);
         }
         instance.rideSelectPresenter = rideSelectPresenter;
         return instance;
@@ -49,7 +49,7 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
     @Override
     public RideSelectViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_ride_select, parent, false);
+        View view = LayoutInflater.from(coreActivity).inflate(R.layout.item_ride_select, parent, false);
 
         return new RideSelectViewHolder(view);
     }
@@ -58,7 +58,7 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
     public void onBindViewHolder(RideSelectViewHolder holder, int position)
     {
         RideDetail rideDetail = list.get(position);
-        holder.render(context, rideDetail);
+        holder.render(coreActivity, rideDetail);
     }
 
     @Override
@@ -94,10 +94,10 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
             ButterKnife.bind(this, itemView);
         }
 
-        public void render(final Context context, final RideDetail rideDetail)
+        public void render(final CoreActivity coreActivity, final RideDetail rideDetail)
         {
             ViewUtil.renderImage(userImage, rideDetail.getOwnerPicture(), true);
-            LatLng currentLatLng = DropMeLocatioListener.getLatLng(context);
+            LatLng currentLatLng = DropMeLocatioListener.getLatLng(coreActivity);
             String distancestr = LocationUtils.formatDistanceBetween(currentLatLng, LocationUtils.convertToLatLng(rideDetail.getCurrentLatLng()));
             if(distancestr != null)
             {
@@ -124,14 +124,14 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    DialogUtils.showSelectRideMenu(context, rideDetail, new DialogUtils.ShareLocCallBack() {
+                    DialogUtils.showSelectRideMenu(coreActivity, rideDetail, new DialogUtils.ShareLocCallBack() {
                         @Override
                         public void shareTo(long recieverId) {
                             if (rideSelectPresenter != null) {
                                 rideSelectPresenter.shareLocation(recieverId, new RideSelectPresenter.ShareLocationCallBack() {
                                     @Override
                                     public void locationShared() {
-                                        ViewUtil.t(context, "Your location is shared");
+                                        ViewUtil.t(coreActivity, "Your location is shared");
                                     }
                                 });
                             }

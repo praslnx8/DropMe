@@ -84,10 +84,10 @@ public class DropMeNotifModelEngine extends CoreModelEngine
                             });
                             dropMeNotifsIterator.remove();
                         }
+                    }
 
-                        if (getNotifCallBack != null) {
-                            getNotifCallBack.getNotifs(dropMeNotifsList);
-                        }
+                    if (getNotifCallBack != null) {
+                        getNotifCallBack.getNotifs(dropMeNotifsList);
                     }
                 } else
                 {

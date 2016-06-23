@@ -83,6 +83,9 @@ public class NoCrashHandler {
                         public void uncaughtException(Thread thread, final Throwable throwable) {
 
                             Log.i(TAG, "crashed");
+                            if (CoreApp.appDebug) {
+                                throwable.printStackTrace();
+                            }
                             //call crash reporter;
                             sendExceptionReport(throwable);
 

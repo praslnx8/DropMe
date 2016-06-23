@@ -105,7 +105,8 @@ public class DropMeLocatioListener implements LocationListener
         if(location != null)
         {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            LocationUtils.checkAndSendLoc(context, latLng, null);
+            LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
+            informLocation(context, true);
 
             stopLocationUpdates(context);
         }
@@ -125,8 +126,7 @@ public class DropMeLocatioListener implements LocationListener
         {
             this.location = location;
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            LocalPreference.storeLocation(context, latLng, LocationConstant.CURRENT_LOC_STR);
-            informLocation(context, true);
+            LocationUtils.checkAndSendLoc(context, latLng, null);
 
             stopLocationUpdates(context);
         }

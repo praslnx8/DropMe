@@ -1,15 +1,23 @@
 package com.prasilabs.dropme.utils;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.RadioButton;
 
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
+import com.prasilabs.dropme.constants.PermisionConstant;
+import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.rideSelect.presenters.RideFilter;
 import com.prasilabs.enums.Gender;
@@ -22,41 +30,42 @@ public class DialogUtils
 {
     private static final String TAG = DialogUtils.class.getSimpleName();
 
-    public static void showSelectRideMenu(final Context context, final RideDetail rideDetail, final ShareLocCallBack shareLocCallBack)
+    public static void showSelectRideMenu(final CoreActivity coreActivity, final RideDetail rideDetail, final ShareLocCallBack shareLocCallBack)
     {
-        ConsoleLog.i(TAG, "showing menu called");
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        CharSequence[] menuOption = new CharSequence[]{"Call", "Share Location"};
-        builder.setItems(menuOption, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                if(which == 0)
-                {
-                    String phoneUrl = "tel:" + rideDetail.getOwnerPhone();
-                    ConsoleLog.i(TAG, "phone url is : " + phoneUrl);
-                    Intent in = new Intent(Intent.ACTION_CALL, Uri.parse(phoneUrl));
-                    try
-                    {
-                        context.startActivity(in);
-                    }
-                    catch (android.content.ActivityNotFoundException ex)
-                    {
-                        ViewUtil.t(context, "You cannot make phone calls in this phone");
+        if (coreActivity != null) {
+            ConsoleLog.i(TAG, "showing menu called");
+            AlertDialog.Builder builder = new AlertDialog.Builder(coreActivity);
+            CharSequence[] menuOption = new CharSequence[]{"Call", "Share Location"};
+            builder.setItems(menuOption, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == 0) {
+                        String phoneUrl = "tel:" + rideDetail.getOwnerPhone();
+                        ConsoleLog.i(TAG, "phone url is : " + phoneUrl);
+                        if (ActivityCompat.checkSelfPermission(coreActivity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            getCallPErmission(coreActivity);
+                        } else {
+                            Intent in = new Intent(Intent.ACTION_CALL, Uri.parse(phoneUrl));
+                            try {
+                                coreActivity.startActivity(in);
+                            } catch (android.content.ActivityNotFoundException ex) {
+                                ViewUtil.t(coreActivity, "You cannot make phone calls in this phone");
+                            }
+                        }
+                    } else if (which == 1) {
+                        if (shareLocCallBack != null) {
+                            shareLocCallBack.shareTo(rideDetail.getOwnerId());
+                            ViewUtil.t(coreActivity, "Your location is shared to the user and will be auto expired in 30 mins");
+                        }
                     }
                 }
-                else if(which == 1)
-                {
-                    if (shareLocCallBack != null) {
-                        shareLocCallBack.shareTo(rideDetail.getOwnerId());
-                        ViewUtil.t(context, "Your location is shared to the user and will be auto expired in 30 mins");
-                    }
-                }
-            }
-        });
+            });
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        } else {
+            ConsoleLog.w(TAG, "coreActivity is null");
+        }
     }
 
     public static void showRideSelectFilter(final Context context, final FilterDialogCallBack filterDialogCallBack)
@@ -136,6 +145,27 @@ public class DialogUtils
 
         builder.create().show();
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private static void getCallPErmission(final CoreActivity coreActivity) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(coreActivity, Manifest.permission.CALL_PHONE)) {
+            Snackbar.make(coreActivity.getCurrentFocus(), "Require access to Gmail to authenticate your account.",
+                    Snackbar.LENGTH_LONG)
+                    .setAction("OK", new View.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onClick(View view) {
+                            coreActivity.requestPermissions(
+                                    new String[]{Manifest.permission.CALL_PHONE},
+                                    PermisionConstant.REQUEST_CALL_NO);
+                        }
+                    })
+                    .show();
+        } else {
+            coreActivity.requestPermissions(new String[]{Manifest.permission.CALL_PHONE},
+                    PermisionConstant.REQUEST_CALL_NO);
+        }
     }
 
     public interface FilterDialogCallBack

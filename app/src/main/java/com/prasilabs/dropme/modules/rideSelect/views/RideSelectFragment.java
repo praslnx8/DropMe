@@ -63,7 +63,7 @@ public class RideSelectFragment extends CoreFragment<RideSelectPresenter> implem
     {
         super.onCreate(savedInstanceState);
 
-        rideSelectAdapter = RideSelectAdapter.getInstance(getPresenter(), getContext());
+        rideSelectAdapter = RideSelectAdapter.getInstance(getPresenter(), getCoreActivity());
     }
 
     @Nullable

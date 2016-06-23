@@ -81,6 +81,7 @@ public class NotifFragment extends CoreFragment<NotifPresenter> implements Notif
             setFragmentView(inflater.inflate(R.layout.fragment_my_notifs, container, false));
 
             notificationListView.setAdapter(notifAdapter);
+
         }
 
         makeApiCall();

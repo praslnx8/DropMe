@@ -13,7 +13,6 @@ import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -98,8 +97,7 @@ public class LocationUtils
 
                         locationName = address.getLocality();
                     }
-                }
-                catch (IOException e)
+                } catch (Exception e)
                 {
                     ConsoleLog.e(e);
                 }
