@@ -23,6 +23,10 @@ public class SorryCrashActivity extends CoreActivity {
         setContentView(R.layout.activity_sorry_crash);
 
         CrashReportModelEngine.getInstance().reportCrashIfExist();
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Error occured");
+        }
     }
 
     @OnClick(R.id.try_again_btn)

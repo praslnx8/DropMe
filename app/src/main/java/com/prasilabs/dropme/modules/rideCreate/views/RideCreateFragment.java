@@ -251,8 +251,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
                 }
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
         }
-
-        throw new RuntimeException("hello");
     }
 
     private void createAndMakeApiCall(DateTime startDate)

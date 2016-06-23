@@ -46,7 +46,6 @@ public class CrashReportLogicEngine extends CoreLogicEngine {
                 crashReport.setCrashMessage(crashReportIO.getCrashMessage());
                 crashReport.setModelName(crashReportIO.getModelName());
                 crashReport.setDeviceName(crashReportIO.getDeviceName());
-                crashReport.setCreated(crashReportIO.getCreated());
 
                 return crashReport;
             }
@@ -61,6 +60,7 @@ public class CrashReportLogicEngine extends CoreLogicEngine {
         CrashReport crashReport = convertToCrashReport(crashReportIO);
 
         if (crashReport != null) {
+            crashReport.setCreated(new Date(System.currentTimeMillis()));
             crashReport.setModified(new Date(System.currentTimeMillis()));
 
             Key<CrashReport> crashReportKey = OfyService.ofy().save().entity(crashReport).now();

@@ -27,7 +27,7 @@ public class CrashReport {
     private String crashType;
     private String crashMessage;
     @Index
-    private String isClosed;
+    private boolean isClosed;
     @Index
     private Date created;
     private Date modified;
@@ -96,12 +96,12 @@ public class CrashReport {
         this.crashMessage = crashMessage;
     }
 
-    public String getIsClosed() {
+    public boolean isClosed() {
         return isClosed;
     }
 
-    public void setIsClosed(String isClosed) {
-        this.isClosed = isClosed;
+    public void setClosed(boolean closed) {
+        isClosed = closed;
     }
 
     public Date getCreated() {
