@@ -9,7 +9,6 @@ import com.prasilabs.dropme.backend.dropMeApi.model.RideAlertIoCollection;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
-import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.CloudConnect;
 import com.prasilabs.util.CommonUtil;
 
@@ -41,19 +40,9 @@ public class RideAlertModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse async()
+            public ApiResponse asyncc() throws Exception
             {
-                try
-                {
-                    ApiResponse apiResponse = CloudConnect.callDropMeApi(false).createAlert(rideAlertIo).execute();
-                    return apiResponse;
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-
-                return null;
+                return CloudConnect.callDropMeApi(false).createAlert(rideAlertIo).execute();
             }
 
             @Override
@@ -85,20 +74,15 @@ public class RideAlertModelEngine extends CoreModelEngine
         {
             callAsync(new AsyncCallBack() {
                 @Override
-                public List<RideAlertIo> async()
+                public List<RideAlertIo> asyncc() throws Exception
                 {
-                    try
+
+                    RideAlertIoCollection rideAlertIoCollection = CloudConnect.callDropMeApi(false).getAlertListOfUser().execute();
+                    if (rideAlertIoCollection != null)
                     {
-                        RideAlertIoCollection rideAlertIoCollection = CloudConnect.callDropMeApi(false).getAlertListOfUser().execute();
-                        if(rideAlertIoCollection != null)
-                        {
-                            return rideAlertIoCollection.getItems();
-                        }
+                        return rideAlertIoCollection.getItems();
                     }
-                    catch (Exception e)
-                    {
-                        ConsoleLog.e(e);
-                    }
+
                     return null;
                 }
 

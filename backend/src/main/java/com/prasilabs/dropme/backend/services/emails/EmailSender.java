@@ -1,10 +1,7 @@
 package com.prasilabs.dropme.backend.services.emails;
 
-import com.prasilabs.dropme.backend.core.CoreController;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.services.emails.pojo.EmailWithName;
-import com.sendgrid.SendGrid;
-import com.sendgrid.SendGridException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -20,7 +17,10 @@ public class EmailSender
 
     private static final String API_KEY = ""; //"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";
 
-
+    private static final String AUTHORISED_SENDER_SYSTEM = "system@prasilabs-dropme.appspotmail.com";
+    public static final EmailWithName systemEmail = new EmailWithName(AUTHORISED_SENDER_SYSTEM, "System");
+    private static final String AUTHORISED_SENDER_PRASANNA = "praslnx8@gmail.com";
+    public static final EmailWithName prasannaEmail = new EmailWithName(AUTHORISED_SENDER_PRASANNA, "Prasanna");
 
     public static boolean sendPriorityEmail(EmailWithName from, EmailWithName to, EmailWithName cc, String subject, String message, String attachmentName, InputStream attachment)
     {
@@ -47,7 +47,16 @@ public class EmailSender
 
     private static boolean sendEmail(EmailWithName from, List<EmailWithName> emailAddressList, EmailWithName cc, String subject, String message, String attachmentNAme, InputStream attachement)
     {
+
         try {
+            return JavaMailSender.sendEmail(from, emailAddressList, cc, subject, message);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        //Disbaled as sendgrid account is suspended
+        /*try
+        {
             SendGrid sendgrid = new SendGrid(API_KEY);
 
             SendGrid.Email email = new SendGrid.Email();
@@ -103,7 +112,7 @@ public class EmailSender
         }catch (Exception e)
         {
             ConsoleLog.e(e);
-        }
+        }*/
 
         return false;
     }

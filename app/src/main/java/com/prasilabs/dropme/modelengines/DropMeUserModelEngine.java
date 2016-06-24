@@ -2,10 +2,7 @@ package com.prasilabs.dropme.modelengines;
 
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreModelEngine;
-import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.CloudConnect;
-
-import java.io.IOException;
 
 /**
  * Created by prasi on 26/5/16.
@@ -29,18 +26,9 @@ public class DropMeUserModelEngine extends CoreModelEngine
 
         callAsync(new AsyncCallBack() {
             @Override
-            public VDropMeUser async()
+            public VDropMeUser asyncc() throws Exception
             {
-                try
-                {
-                    return CloudConnect.callDropMeApi(true).loginsignup(vDropMeUser).execute();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-
-                return null;
+                return CloudConnect.callDropMeApi(true).loginsignup(vDropMeUser).execute();
             }
 
             @Override
@@ -65,17 +53,9 @@ public class DropMeUserModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public VDropMeUser async()
+            public VDropMeUser asyncc() throws Exception
             {
-                try
-                {
-                    return CloudConnect.callDropMeApi(false).getUserDetail(id).execute();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-                return null;
+                return CloudConnect.callDropMeApi(false).getUserDetail(id).execute();
             }
 
             @Override

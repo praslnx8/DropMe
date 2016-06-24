@@ -4,7 +4,6 @@ import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
-import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.CloudConnect;
 
 /**
@@ -30,17 +29,9 @@ public class UserLocationModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse async()
+            public ApiResponse asyncc() throws Exception
             {
-                try
-                {
-                    return CloudConnect.callDropMeApi(false).updateUserLocation(deviceId, geoPt).execute();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-                return null;
+                return CloudConnect.callDropMeApi(false).updateUserLocation(deviceId, geoPt).execute();
             }
 
             @Override
@@ -67,13 +58,8 @@ public class UserLocationModelEngine extends CoreModelEngine
     public void shareLocation(final long recieverId, final ShareLocationCallBack shareLocationCallBack) {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse async() {
-                try {
-                    return CloudConnect.callDropMeApi(false).shareLocation(recieverId, CoreApp.getDeviceId()).execute();
-                } catch (Exception e) {
-                    ConsoleLog.e(e);
-                }
-                return null;
+            public ApiResponse asyncc() throws Exception {
+                return CloudConnect.callDropMeApi(false).shareLocation(recieverId, CoreApp.getDeviceId()).execute();
             }
 
             @Override

@@ -10,6 +10,7 @@ import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfo;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
+import com.prasilabs.dropme.backend.dropMeApi.model.RideDetailCollection;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.backend.dropMeApi.model.VVehicle;
 import com.prasilabs.dropme.constants.BroadCastConstant;
@@ -51,18 +52,9 @@ public class RideModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse async()
+            public ApiResponse asyncc() throws Exception
             {
-                try
-                {
-                    return CloudConnect.callDropMeApi(false).updateRide(rideInput).execute();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-
-                return null;
+                return CloudConnect.callDropMeApi(false).updateRide(rideInput).execute();
             }
 
             @Override
@@ -88,18 +80,9 @@ public class RideModelEngine extends CoreModelEngine
         callAsync(new AsyncCallBack()
         {
             @Override
-            public RideInput async()
+            public RideInput asyncc() throws Exception
             {
-                try
-                {
-                    RideInput output = CloudConnect.callDropMeApi(false).createRide(input).execute();
-                    return output;
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-                return null;
+                return CloudConnect.callDropMeApi(false).createRide(input).execute();
             }
 
             @Override
@@ -144,7 +127,7 @@ public class RideModelEngine extends CoreModelEngine
         callAsync(new AsyncCallBack()
         {
             @Override
-            public MyRideInfo async()
+            public MyRideInfo asyncc() throws Exception
             {
                 final MyRideInfo myRideInfo = new MyRideInfo();
 
@@ -154,16 +137,9 @@ public class RideModelEngine extends CoreModelEngine
                 myRideInfo.setDestLocName(rideInput.getDestLocName());
                 myRideInfo.setFarePerKm(rideInput.getFarePerKm());
 
-                try
-                {
-                    VVehicle vVehicle = CloudConnect.callDropMeApi(false).getVehicleDetail(rideInput.getVehicleId()).execute();
+                VVehicle vVehicle = CloudConnect.callDropMeApi(false).getVehicleDetail(rideInput.getVehicleId()).execute();
 
-                    myRideInfo.setVehicle(vVehicle);
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
+                myRideInfo.setVehicle(vVehicle);
 
                 LatLng latLng = DropMeLocatioListener.getLatLng(CoreApp.getAppContext());
                 try {
@@ -202,17 +178,10 @@ public class RideModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public RideInput async()
+            public RideInput asyncc() throws Exception
             {
-                try
-                {
-                    RideInput rideInput = CloudConnect.callDropMeApi(false).getCurrentRide(CoreApp.getDeviceId()).execute();
-                    return rideInput;
-                } catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-                return null;
+
+                return CloudConnect.callDropMeApi(false).getCurrentRide(CoreApp.getDeviceId()).execute();
             }
 
             @Override
@@ -233,16 +202,9 @@ public class RideModelEngine extends CoreModelEngine
         ConsoleLog.i(TAG, "id is : " + rideId);
         callAsync(new AsyncCallBack() {
             @Override
-            public RideDetail async()
+            public RideDetail asyncc() throws Exception
             {
-                try
-                {
-                    ConsoleLog.i(TAG, "id is : " + rideId);
-                    return CloudConnect.callDropMeApi(false).getRideDetail(rideId).execute();
-                } catch (Exception e) {
-                    ConsoleLog.e(e);
-                }
-                return null;
+                return CloudConnect.callDropMeApi(false).getRideDetail(rideId).execute();
             }
 
             @Override
@@ -263,17 +225,9 @@ public class RideModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse async()
+            public ApiResponse asyncc() throws Exception
             {
-                try
-                {
-                    return CloudConnect.callDropMeApi(false).cancelRide(CoreApp.getDeviceId()).execute();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-                return null;
+                return CloudConnect.callDropMeApi(false).cancelRide(CoreApp.getDeviceId()).execute();
             }
 
             @Override
@@ -298,20 +252,10 @@ public class RideModelEngine extends CoreModelEngine
         {
             callAsync(new AsyncCallBack() {
                 @Override
-                public List<RideDetail> async() {
-                    try {
-                        List<RideDetail> rideDetailList = CloudConnect.callDropMeApi(false).getRideDetailList(idsList, geoPt).execute().getItems();
-                        if(rideDetailList != null)
-                        {
-                            ConsoleLog.i(TAG, "list size is : " + rideDetailList.size());
-                        }
-                        else
-                        {
-                            ConsoleLog.i(TAG, "list is null");
-                        }
-                        return rideDetailList;
-                    } catch (Exception e) {
-                        ConsoleLog.e(e);
+                public List<RideDetail> asyncc() throws Exception {
+                    RideDetailCollection rideDetailCollection = CloudConnect.callDropMeApi(false).getRideDetailList(idsList, geoPt).execute();
+                    if (rideDetailCollection != null) {
+                        return rideDetailCollection.getItems();
                     }
 
                     return null;
@@ -344,17 +288,9 @@ public class RideModelEngine extends CoreModelEngine
         {
             callAsync(new AsyncCallBack() {
                 @Override
-                public List<MyRideInfo> async()
+                public List<MyRideInfo> asyncc() throws Exception
                 {
-                    try
-                    {
-                        return CloudConnect.callDropMeApi(false).getRideListOfUser(skip,pageSize).execute().getItems();
-                    }
-                    catch (Exception e)
-                    {
-                        ConsoleLog.e(e);
-                    }
-                    return null;
+                    return CloudConnect.callDropMeApi(false).getRideListOfUser(skip, pageSize).execute().getItems();
                 }
 
                 @Override

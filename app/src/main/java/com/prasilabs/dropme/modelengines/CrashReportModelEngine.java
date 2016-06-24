@@ -9,7 +9,6 @@ import com.prasilabs.dropme.backend.dropMeApi.model.CrashReportIO;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.customs.LocalPreference;
-import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
 import com.prasilabs.enums.CrashType;
@@ -44,13 +43,8 @@ public class CrashReportModelEngine extends CoreModelEngine {
 
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse async() {
-                try {
-                    return CloudConnect.callDropMeApi(false).sendCrashReport(crashReportIO).execute();
-                } catch (Exception e) {
-                    ConsoleLog.w(TAG, "error sending crash report");
-                }
-                return null;
+            public ApiResponse asyncc() throws Exception {
+                return CloudConnect.callDropMeApi(false).sendCrashReport(crashReportIO).execute();
             }
 
             @Override

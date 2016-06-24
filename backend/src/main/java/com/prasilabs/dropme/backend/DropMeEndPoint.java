@@ -16,7 +16,6 @@ import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
-import com.prasilabs.dropme.backend.debug.Experiments;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.CrashReportIO;
 import com.prasilabs.dropme.backend.io.GcmRecordIO;
@@ -362,7 +361,7 @@ public class DropMeEndPoint
     {
         if(password.equals("prasi12345"))
         {
-            Experiments.test();
+            //JavaMailSender.test();
         }
         else
         {

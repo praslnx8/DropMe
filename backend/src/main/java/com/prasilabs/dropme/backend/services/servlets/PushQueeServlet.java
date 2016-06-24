@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.backend.services.servlets;
 
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
+import com.prasilabs.dropme.backend.logicEngines.DropMeUserLogicEngine;
 import com.prasilabs.dropme.backend.logicEngines.RideAlertLogicEngine;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
 import com.prasilabs.util.DataUtil;
@@ -35,11 +36,17 @@ public class PushQueeServlet extends HttpServlet
         }
         else if(operationType.equals(PushQueueController.SEND_RIDE_ALERT_OPER))
         {
-            String srideId = req.getParameter(PushQueueController.RIDE_ID_KEY);
+            String srideId = req.getParameter(PushQueueController.ID_KEY);
 
             long rideID = DataUtil.stringToLong(srideId);
 
             RideAlertLogicEngine.getInstance().sendRideAlertsForRide(rideID);
+        } else if (operationType.equals(PushQueueController.NEW_REG_EMAIL_OPER)) {
+            String userId = req.getParameter(PushQueueController.ID_KEY);
+
+            long userID = DataUtil.stringToLong(userId);
+
+            DropMeUserLogicEngine.getInstance().sendNewRegistrationEmail(userID);
         }
         else
         {

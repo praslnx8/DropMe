@@ -5,7 +5,6 @@ import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.backend.dropMeApi.model.VVehicle;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
-import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.services.network.CloudConnect;
 
@@ -15,6 +14,9 @@ import com.prasilabs.dropme.services.network.CloudConnect;
 public class VehicleModelEngine extends CoreModelEngine
 {
     private static VehicleModelEngine instance;
+
+    private VehicleModelEngine() {
+    }
 
     public static VehicleModelEngine getInstance()
     {
@@ -26,25 +28,14 @@ public class VehicleModelEngine extends CoreModelEngine
         return instance;
     }
 
-    private VehicleModelEngine(){}
-
     public void addVehicle(final VVehicle vVehicle, final VehicleAddCallBack vehicleAddCallBack)
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse async()
+            public ApiResponse asyncc() throws Exception
             {
-                try
-                {
-                    VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
-                    return CloudConnect.callDropMeApi(false).addVehicle(vVehicle).execute();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-
-                return null;
+                VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
+                return CloudConnect.callDropMeApi(false).addVehicle(vVehicle).execute();
             }
 
             @Override
@@ -62,18 +53,9 @@ public class VehicleModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public VVehicle async()
+            public VVehicle asyncc() throws Exception
             {
-                try
-                {
-                    return CloudConnect.callDropMeApi(false).getVehicleDetail(id).execute();
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog.e(e);
-                }
-
-                return null;
+                return CloudConnect.callDropMeApi(false).getVehicleDetail(id).execute();
             }
 
             @Override

@@ -1,7 +1,12 @@
 package com.prasilabs.dropme.core;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 
+import com.prasilabs.dropme.activities.SplashActivity;
+import com.prasilabs.dropme.customs.LocalPreference;
+import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.NetworkManager;
 import com.prasilabs.dropme.utils.ViewUtil;
 
@@ -41,6 +46,8 @@ public abstract class CoreModelEngine
     private <T> void call(final AsyncCallBack asyncCallBack) {
         new AsyncTask<Void, Void, T>()
         {
+            private boolean isOauthException = false;
+
             @Override
             protected void onPreExecute()
             {
@@ -50,9 +57,18 @@ public abstract class CoreModelEngine
             @Override
             protected T doInBackground(Void... params)
             {
-                if(asyncCallBack != null)
+                try
                 {
-                    return asyncCallBack.async();
+                    if (asyncCallBack != null) {
+                        return asyncCallBack.asyncc();
+                    }
+                } catch (Exception e) {
+                    ConsoleLog.e(e);
+
+                    String message = e.getMessage();
+                    if (message != null && message.contains("Unauthorized")) {
+                        isOauthException = true;
+                    }
                 }
 
                 return null;
@@ -67,13 +83,23 @@ public abstract class CoreModelEngine
                 {
                     asyncCallBack.result(t);
                 }
+
+                if (isOauthException) {
+                    Context context = CoreApp.getAppContext();
+                    if (context != null) {
+                        LocalPreference.clearLoginSharedPreferences(context);
+                        Intent intent = new Intent(context, SplashActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                }
             }
         }.execute();
     }
 
     public interface AsyncCallBack
     {
-        <T> T async();
+        <T> T asyncc() throws Exception;
 
         <T> void result(T t);
     }

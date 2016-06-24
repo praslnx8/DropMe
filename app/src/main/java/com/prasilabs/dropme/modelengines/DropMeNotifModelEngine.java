@@ -5,9 +5,7 @@ import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
 import com.prasilabs.dropme.db.dbmanage.DatabaseHelper;
-import com.prasilabs.dropme.debug.ConsoleLog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +52,6 @@ public class DropMeNotifModelEngine extends CoreModelEngine
             @Override
             public void onComplete(boolean success, List<DropMeNotifs> dropMeNotifsList)
             {
-                ConsoleLog.i(TAG, "notification list is  " + dropMeNotifsList);
                 if (dropMeNotifsList != null)
                 {
                     Iterator<DropMeNotifs> dropMeNotifsIterator = dropMeNotifsList.iterator();
@@ -85,15 +82,11 @@ public class DropMeNotifModelEngine extends CoreModelEngine
                             dropMeNotifsIterator.remove();
                         }
                     }
+                }
 
-                    if (getNotifCallBack != null) {
-                        getNotifCallBack.getNotifs(dropMeNotifsList);
-                    }
-                } else
+                if (getNotifCallBack != null)
                 {
-                    if (getNotifCallBack != null) {
-                        getNotifCallBack.getNotifs(new ArrayList<DropMeNotifs>());
-                    }
+                    getNotifCallBack.getNotifs(dropMeNotifsList);
                 }
             }
         });
