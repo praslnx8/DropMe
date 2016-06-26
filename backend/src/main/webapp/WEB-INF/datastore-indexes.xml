@@ -27,4 +27,10 @@
         <property name="userId" direction="asc" />
         <property name="created" direction="desc" />
     </datastore-index>
+    <!--For getting list of alerts created by user-->
+    <datastore-index ancestor="false" kind="RideAlert" source="manual">
+        <property name="isDeleted" direction="asc" />
+        <property name="userId" direction="asc" />
+        <property name="created" direction="desc" />
+    </datastore-index>
 </datastore-indexes>

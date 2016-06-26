@@ -70,7 +70,11 @@ public class MyAlertsAdapter extends CoreAdapter<RideAlertIo, MyAlertsAdapter.My
 
     @Override
     public void onResult(boolean status) {
-        ViewUtil.t(context, "Alert is deleted");
+        if (status) {
+            ViewUtil.t(context, "Alert is deleted");
+        } else {
+            ViewUtil.t(context, "unable to delete");
+        }
     }
 
     public class MyAlertsViewHolder extends RecyclerView.ViewHolder

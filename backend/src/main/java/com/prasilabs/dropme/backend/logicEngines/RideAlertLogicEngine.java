@@ -220,7 +220,7 @@ public class RideAlertLogicEngine extends CoreLogicEngine
             List<RideAlertIo> rideAlertIoList = new ArrayList<>();
 
             SortWrapper sortWrapper = new SortWrapper(RideAlert.CREATED_STR, Direction.DESCENDING);
-            List<RideAlert> rideAlertList = OfyService.ofy().load().type(RideAlert.class).filter(RideAlert.USER_ID_STR, dropMeUser.getId()).order(sortWrapper.getSorting()).list();
+            List<RideAlert> rideAlertList = OfyService.ofy().load().type(RideAlert.class).filter(RideAlert.USER_ID_STR, dropMeUser.getId()).filter(RideAlert.IS_DELETED_STR, false).order(sortWrapper.getSorting()).list();
 
             for(RideAlert rideAlert : rideAlertList)
             {
