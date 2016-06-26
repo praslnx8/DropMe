@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.backend.debug;
 
 import com.prasilabs.dropme.backend.core.CoreController;
+import com.prasilabs.dropme.backend.utils.EmailSendUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -53,6 +54,8 @@ public class ConsoleLog
             e.printStackTrace(new PrintWriter(errors));
 
             Logger.getLogger("Exception").severe(errors.toString());
+
+            EmailSendUtil.sendCrashEmail(errors.toString());
         }
     }
 }

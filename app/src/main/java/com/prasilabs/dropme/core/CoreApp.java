@@ -5,7 +5,6 @@ import android.content.Context;
 import android.provider.Settings;
 import android.support.multidex.MultiDex;
 
-import com.orm.SugarContext;
 import com.prasilabs.dropme.BuildConfig;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.services.crashReport.NoCrashHandler;
@@ -53,6 +52,5 @@ public class CoreApp extends Application
     {
         HomeGeoModelEngine.getInstance().removeAllPoints();
         super.onTerminate();
-        SugarContext.terminate();
     }
 }

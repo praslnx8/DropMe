@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
+import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modelengines.DropMeNotifModelEngine;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public class NotifPresenter extends CorePresenter
 {
+    private static final String TAG = NotifPresenter.class.getSimpleName();
     private GetNotificationCallBack getNotificationCallBack;
 
     public NotifPresenter(GetNotificationCallBack getNotificationCallBack)
@@ -43,14 +45,17 @@ public class NotifPresenter extends CorePresenter
             @Override
             public void getNotifs(List<DropMeNotifs> dropMeNotifs)
             {
+                ConsoleLog.i(TAG, "call back recieved");
                 if(getNotificationCallBack != null)
                 {
                     if(dropMeNotifs != null && dropMeNotifs.size() > 0)
                     {
+                        ConsoleLog.i(TAG, " get notification calling");
                         getNotificationCallBack.getNotifications(dropMeNotifs);
                     }
                     else
                     {
+                        ConsoleLog.i(TAG, "show empty calling");
                         getNotificationCallBack.showEmpty();
                     }
                 }

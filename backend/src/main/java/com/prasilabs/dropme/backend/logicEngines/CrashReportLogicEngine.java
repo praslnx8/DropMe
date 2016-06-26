@@ -7,6 +7,7 @@ import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.CrashReportIO;
+import com.prasilabs.dropme.backend.utils.EmailSendUtil;
 import com.prasilabs.util.ValidateUtil;
 
 import java.util.Date;
@@ -62,6 +63,8 @@ public class CrashReportLogicEngine extends CoreLogicEngine {
         if (crashReport != null) {
             crashReport.setCreated(new Date(System.currentTimeMillis()));
             crashReport.setModified(new Date(System.currentTimeMillis()));
+
+            EmailSendUtil.sendCrashEmail(crashReportIO.getCrashMessage());
 
             Key<CrashReport> crashReportKey = OfyService.ofy().save().entity(crashReport).now();
             apiResponse.setStatus(true);

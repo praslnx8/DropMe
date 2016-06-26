@@ -45,6 +45,8 @@
     <string name="fa_search_plus">&#xf00e;</string>
     <string name="fa_search_minus">&#xf010;</string>
     <string name="fa_power_off">&#xf011;</string>
+    <string name="fa_car">&#xf1b9;</string>
+    <string name="fa_bike">&#xf21c;</string>
     <string name="fa_signal">&#xf012;</string>
     <string name="fa_cog">&#xf013;</string>
     <string name="fa_trash_o">&#xf014;</string>
@@ -52,6 +54,7 @@
     <string name="fa_file_o">&#xf016;</string>
     <string name="fa_clock_o">&#xf017;</string>
     <string name="fa_road">&#xf018;</string>
+    <string name="fa_map_o">&#xf278;</string>
     <string name="fa_download">&#xf019;</string>
     <string name="fa_arrow_circle_o_down">&#xf01a;</string>
     <string name="fa_arrow_circle_o_up">&#xf01b;</string>

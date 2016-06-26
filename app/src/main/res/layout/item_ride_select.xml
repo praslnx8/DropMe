@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/paddingS"
-    android:background="@color/material_light_white"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -14,115 +14,156 @@
         android:orientation="vertical"
         android:padding="@dimen/paddingS">
 
-        <TextView
-            android:id="@+id/distance_text"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="4kms away"/>
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/paddingXS">
+
+            <TextView
+                android:id="@+id/dest_loc_text"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Koramangala" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black_overlay" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="@dimen/paddingXS">
 
             <ImageView
                 android:id="@+id/user_image"
                 android:layout_width="50dp"
-                android:layout_height="50dp" />
+                android:layout_height="50dp"
+                android:padding="@dimen/paddingXS" />
 
             <TextView
                 android:id="@+id/name_text"
+                style="@style/TextAppearance.AppCompat.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Prasann"/>
+                android:text="Prasanna" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <TextView
+            <com.prasilabs.dropme.customs.FontAweSomeTextView
                 android:id="@+id/gender_text"
+                style="@style/TextAppearance.AppCompat.Subhead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mal"/>
+                android:text="@string/fa_male" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Destination"/>
 
-                <View
+                <com.prasilabs.dropme.customs.FontAweSomeTextView
+                    android:id="@+id/vehicle_type_image_text"
+                    style="@style/TextAppearance.AppCompat.Medium"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <TextView
-                    android:id="@+id/dest_text"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="Koramangal"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vehicle Type"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/fa_car"
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/vehicle_type_text"
-                    android:layout_width="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="Car"/>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="car" />
+
             </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Start At"/>
 
-                <View
+                <com.prasilabs.dropme.customs.FontAweSomeTextView
+                    style="@style/TextAppearance.AppCompat.Medium"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/fa_map_o"
+                    android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/start_text"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/distance_text"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="4 AM"/>
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="5 km" />
+
             </LinearLayout>
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black_overlay" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <com.prasilabs.dropme.customs.FontAweSomeTextView
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/fa_clock_o"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/departure_time_text"
+                    style="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="12 AM" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

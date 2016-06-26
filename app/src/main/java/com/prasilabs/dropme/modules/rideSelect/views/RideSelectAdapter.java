@@ -19,6 +19,8 @@ import com.prasilabs.dropme.utils.DateUtil;
 import com.prasilabs.dropme.utils.DialogUtils;
 import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
+import com.prasilabs.enums.Gender;
+import com.prasilabs.enums.VehicleType;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,20 +73,22 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
     {
         @BindView(R.id.main_layout)
         LinearLayout mainLayout;
-        @BindView(R.id.distance_text)
-        TextView distanceText;
+        @BindView(R.id.dest_loc_text)
+        TextView destLocText;
         @BindView(R.id.user_image)
         ImageView userImage;
         @BindView(R.id.name_text)
         TextView nameText;
         @BindView(R.id.gender_text)
         TextView genderText;
-        @BindView(R.id.dest_text)
-        TextView destText;
+        @BindView(R.id.vehicle_type_image_text)
+        TextView vehicleTypeImageText;
         @BindView(R.id.vehicle_type_text)
         TextView vehicleTypeText;
-        @BindView(R.id.start_text)
-        TextView startText;
+        @BindView(R.id.distance_text)
+        TextView distanceText;
+        @BindView(R.id.departure_time_text)
+        TextView departureTimeText;
 
 
         public RideSelectViewHolder(View itemView)
@@ -96,34 +100,9 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
 
         public void render(final CoreActivity coreActivity, final RideDetail rideDetail)
         {
-            ViewUtil.renderImage(userImage, rideDetail.getOwnerPicture(), true);
-            LatLng currentLatLng = DropMeLocatioListener.getLatLng(coreActivity);
-            String distancestr = LocationUtils.formatDistanceBetween(currentLatLng, LocationUtils.convertToLatLng(rideDetail.getCurrentLatLng()));
-            if(distancestr != null)
-            {
-                distanceText.setText(distancestr);
-            }
-            else
-            {
-                distanceText.setText("N/A");
-            }
-            nameText.setText(rideDetail.getOwnerName());
-            genderText.setText(rideDetail.getGender());
-            destText.setText(rideDetail.getDestLoc());
-            vehicleTypeText.setText(rideDetail.getVehicleType());
-            if(rideDetail.getStartDate() != null)
-            {
-                startText.setText(DateUtil.getRelativeTime(rideDetail.getStartDate().getValue()));
-            }
-            else
-            {
-                startText.setText("Now");
-            }
-
             mainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v)
-                {
+                public void onClick(View v) {
                     DialogUtils.showSelectRideMenu(coreActivity, rideDetail, new DialogUtils.ShareLocCallBack() {
                         @Override
                         public void shareTo(long recieverId) {
@@ -139,6 +118,41 @@ public class RideSelectAdapter extends CoreAdapter<RideDetail, RideSelectAdapter
                     });
                 }
             });
+
+            destLocText.setText(rideDetail.getDestLoc());
+            ViewUtil.renderImage(userImage, rideDetail.getOwnerPicture(), true);
+            nameText.setText(rideDetail.getOwnerName());
+            if (rideDetail.getGender().equals(Gender.Male.name())) {
+                genderText.setText(coreActivity.getString(R.string.fa_male));
+            } else {
+                genderText.setText(coreActivity.getString(R.string.fa_female));
+            }
+            if (rideDetail.getVehicleType().equals(VehicleType.Bike.name())) {
+                vehicleTypeImageText.setText(coreActivity.getString(R.string.fa_bike));
+            } else {
+                vehicleTypeImageText.setText(coreActivity.getString(R.string.fa_car));
+            }
+            vehicleTypeText.setText(rideDetail.getVehicleType());
+
+            LatLng currentLatLng = DropMeLocatioListener.getLatLng(coreActivity);
+            String distancestr = LocationUtils.formatDistanceBetween(currentLatLng, LocationUtils.convertToLatLng(rideDetail.getCurrentLatLng()));
+            if(distancestr != null)
+            {
+                distanceText.setText(distancestr);
+            }
+            else
+            {
+                distanceText.setText("N/A");
+            }
+
+            if (rideDetail.getStartDate() == null || rideDetail.getStartDate().getValue() < System.currentTimeMillis())
+            {
+                departureTimeText.setText("Now");
+            }
+            else
+            {
+                departureTimeText.setText(DateUtil.getRelativeTime(rideDetail.getStartDate().getValue()));
+            }
         }
     }
 }

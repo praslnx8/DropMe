@@ -3,8 +3,11 @@ package com.prasilabs.dropme.backend.services.emails;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.services.emails.pojo.EmailWithName;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -39,8 +42,10 @@ public class JavaMailSender {
                     Address ccAddress = new InternetAddress(cc.getEmailAddress(), cc.getName());
                     message.addRecipient(Message.RecipientType.CC, ccAddress);
                 }
-                Address adminAddress = new InternetAddress("praslnx8@gmail.com", "Prasanna");
-                message.addRecipient(Message.RecipientType.BCC, adminAddress);
+                if (!toList.get(0).getEmailAddress().equals(EmailSender.prasannaEmail.getEmailAddress())) {
+                    Address adminAddress = new InternetAddress("praslnx8@gmail.com", "Prasanna");
+                    message.addRecipient(Message.RecipientType.BCC, adminAddress);
+                }
                 message.setSubject(subject);
                 message.setText(content, "utf-8", "html");
                 Transport.send(message);
@@ -49,7 +54,11 @@ public class JavaMailSender {
                 ConsoleLog.i(TAG, "to lis is empty");
             }
         } catch (Exception e) {
-            ConsoleLog.e(e);
+            //Dont use consolelog.e(). if so will result in loop....
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+
+            Logger.getLogger("Exception").severe(errors.toString());
         }
 
         return success;

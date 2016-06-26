@@ -47,4 +47,20 @@ public class EmailSendUtil {
 
         return success;
     }
+
+    public static boolean sendCrashEmail(String stackTrace) {
+        boolean success = false;
+
+        try {
+            String content = EmailContent.getDefaultEmailMessageContent(stackTrace);
+
+            String subject = "DropMe Crash";
+
+            success = EmailSender.sendPriorityEmail(EmailSender.systemEmail, EmailSender.prasannaEmail, null, subject, content);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return success;
+    }
 }

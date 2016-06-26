@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
-import com.prasilabs.dropme.activities.SplashActivity;
 import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.NetworkManager;
@@ -88,9 +87,9 @@ public abstract class CoreModelEngine
                     Context context = CoreApp.getAppContext();
                     if (context != null) {
                         LocalPreference.clearLoginSharedPreferences(context);
-                        Intent intent = new Intent(context, SplashActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                        Intent i = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(i);
                     }
                 }
             }

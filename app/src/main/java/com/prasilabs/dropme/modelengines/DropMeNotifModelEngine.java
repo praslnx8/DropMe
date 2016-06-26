@@ -5,6 +5,7 @@ import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
 import com.prasilabs.dropme.db.dbPojos.DropMeNotifs;
 import com.prasilabs.dropme.db.dbmanage.DatabaseHelper;
+import com.prasilabs.dropme.debug.ConsoleLog;
 
 import java.util.Calendar;
 import java.util.Iterator;
@@ -47,11 +48,12 @@ public class DropMeNotifModelEngine extends CoreModelEngine
 
     public void getNotification(final GetNotifCallBack getNotifCallBack)
     {
-
+        ConsoleLog.i(TAG, "get notification called on model engine");
         new DatabaseHelper(CoreApp.getAppContext()).getNotifListAsync(new DatabaseHelper.DatabaseHandler<List<DropMeNotifs>>() {
             @Override
             public void onComplete(boolean success, List<DropMeNotifs> dropMeNotifsList)
             {
+                ConsoleLog.i(TAG, "oncomplete query came");
                 if (dropMeNotifsList != null)
                 {
                     Iterator<DropMeNotifs> dropMeNotifsIterator = dropMeNotifsList.iterator();
@@ -86,6 +88,7 @@ public class DropMeNotifModelEngine extends CoreModelEngine
 
                 if (getNotifCallBack != null)
                 {
+                    ConsoleLog.i(TAG, "throwing to callback");
                     getNotifCallBack.getNotifs(dropMeNotifsList);
                 }
             }

@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfo;
+import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfoCollection;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetailCollection;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
@@ -290,7 +291,12 @@ public class RideModelEngine extends CoreModelEngine
                 @Override
                 public List<MyRideInfo> asyncc() throws Exception
                 {
-                    return CloudConnect.callDropMeApi(false).getRideListOfUser(skip, pageSize).execute().getItems();
+                    MyRideInfoCollection myRideInfoCollection = CloudConnect.callDropMeApi(false).getRideListOfUser(skip, pageSize).execute();
+                    if (myRideInfoCollection != null) {
+                        return myRideInfoCollection.getItems();
+                    } else {
+                        return null;
+                    }
                 }
 
                 @Override
