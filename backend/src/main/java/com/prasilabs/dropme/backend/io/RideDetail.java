@@ -11,6 +11,7 @@ import java.util.Date;
 public class RideDetail
 {
     private long rideId;
+    private GeoPt sourceLatLng;
     private GeoPt currentLatLng;
     private GeoPt destLatLng;
     private String destLoc;
@@ -117,5 +118,13 @@ public class RideDetail
 
     public void setOwnerId(long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public GeoPt getSourceLatLng() {
+        return sourceLatLng;
+    }
+
+    public void setSourceLatLng(GeoPt sourceLatLng) {
+        this.sourceLatLng = sourceLatLng;
     }
 }

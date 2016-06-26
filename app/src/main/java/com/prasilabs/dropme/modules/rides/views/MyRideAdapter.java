@@ -9,10 +9,13 @@ import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.MyRideInfo;
 import com.prasilabs.dropme.backend.dropMeApi.model.VVehicle;
 import com.prasilabs.dropme.core.CoreAdapter;
 import com.prasilabs.dropme.utils.DateUtil;
+import com.prasilabs.dropme.utils.LocationUtils;
+import com.prasilabs.enums.VehicleType;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,9 +25,12 @@ import butterknife.ButterKnife;
  */
 public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideViewHolder>
 {
+    private static MyRideAdapter instance;
     private Context context;
 
-    private static MyRideAdapter instance;
+    private MyRideAdapter() {
+
+    }
 
     public static MyRideAdapter getInstance(Context context)
     {
@@ -38,11 +44,6 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
         return instance;
     }
 
-    private MyRideAdapter()
-    {
-
-    }
-
     private void setContext(Context context) {
         this.context = context;
     }
@@ -50,7 +51,7 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
     @Override
     public MyRideViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = View.inflate(context, R.layout.item_my_ride, null);
+        View view = getInlfatedView(context, parent, R.layout.item_my_ride);
 
         return new MyRideViewHolder(view);
     }
@@ -72,11 +73,18 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
     public class MyRideViewHolder extends RecyclerView.ViewHolder
     {
 
-        @BindView(R.id.time_text) TextView timeText;
-        @BindView(R.id.souce_text) TextView sourceText;
-        @BindView(R.id.dest_text) TextView destText;
-        @BindView(R.id.status_text) TextView statusText;
-        @BindView(R.id.vehicle_type_text) TextView vehicleTypeText;
+        @BindView(R.id.time_text)
+        TextView timeText;
+        @BindView(R.id.souce_text)
+        TextView sourceText;
+        @BindView(R.id.dest_text)
+        TextView destText;
+        @BindView(R.id.vehicle_type_text)
+        TextView vehicleTypeText;
+        @BindView(R.id.vehicle_type_image_text)
+        TextView vehicleTypeImageText;
+        @BindView(R.id.distance_text)
+        TextView distanceText;
 
         public MyRideViewHolder(View itemView)
         {
@@ -91,6 +99,9 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
             if(date != null)
             {
                 timeText.setText(DateUtil.getRelativeTime(date.getValue()));
+                if (date.getValue() > System.currentTimeMillis()) {
+                    timeText.setTextColor(context.getResources().getColor(R.color.blue));
+                }
             }
             else
             {
@@ -103,26 +114,25 @@ public class MyRideAdapter extends CoreAdapter<MyRideInfo, MyRideAdapter.MyRideV
             }
             sourceText.setText(sourceName);
             destText.setText(myRideInfo.getDestLocName());
-            if(myRideInfo.getCurrent())
-            {
-                statusText.setText("Progress");
-                statusText.setTextColor(context.getResources().getColor(R.color.red));
-            }
-            else
-            {
-
-                statusText.setText("Past");
-                statusText.setTextColor(context.getResources().getColor(R.color.blue));
-            }
             VVehicle vVehicle = myRideInfo.getVehicle();
             if(vVehicle != null)
             {
+                if (vVehicle.getType().equals(VehicleType.Bike.name())) {
+                    vehicleTypeImageText.setText(context.getString(R.string.fa_bike));
+                } else {
+                    vehicleTypeImageText.setText(context.getString(R.string.fa_car));
+                }
                 vehicleTypeText.setText(vVehicle.getType());
             }
             else
             {
                 vehicleTypeText.setText("");
             }
+
+            GeoPt source = myRideInfo.getSourceLoc();
+            GeoPt dest = myRideInfo.getDestLoc();
+
+            distanceText.setText(LocationUtils.formatDistanceBetween(LocationUtils.convertToLatLng(source), LocationUtils.convertToLatLng(dest)));
         }
     }
 }

@@ -113,6 +113,28 @@ public class RideAlertModelEngine extends CoreModelEngine
         }
     }
 
+    public void deleteAlert(final long id, final DeleteAlertCallBack deleteAlertCallBack) {
+        callAsync(new AsyncCallBack() {
+            @Override
+            public ApiResponse asyncc() throws Exception {
+                return CloudConnect.callDropMeApi(false).deleteAlert(id).execute();
+            }
+
+            @Override
+            public <T> void result(T t) {
+                ApiResponse apiResponse = (ApiResponse) t;
+
+                if (deleteAlertCallBack != null) {
+                    if (apiResponse != null) {
+                        deleteAlertCallBack.onResult(apiResponse.getStatus());
+                    } else {
+                        deleteAlertCallBack.onResult(false);
+                    }
+                }
+            }
+        });
+    }
+
     public interface CreateAlertCallBack
     {
         void alertCreated(ApiResponse apiResponse);
@@ -123,5 +145,7 @@ public class RideAlertModelEngine extends CoreModelEngine
         void getAlertList(int skip, List<RideAlertIo> rideAlertIoList);
     }
 
-
+    public interface DeleteAlertCallBack {
+        void onResult(boolean status);
+    }
 }

@@ -327,6 +327,19 @@ public class DropMeEndPoint
         return null;
     }
 
+    @ApiMethod(name = "deleteAlert")
+    public ApiResponse deleteAlert(User user, @Named("alertId") long alertId) throws OAuthRequestException {
+        AdminUtil.checkAndThrow(user);
+
+        try {
+            return RideAlertLogicEngine.getInstance().deleteRideAlert(user, alertId);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+    }
+
     @ApiMethod(name = "shareLocation")
     public ApiResponse shareLocation(User user, @Named("userId") long recieverId, @Named("deviceID") String deviceID) throws OAuthRequestException {
         AdminUtil.checkAndThrow(user);

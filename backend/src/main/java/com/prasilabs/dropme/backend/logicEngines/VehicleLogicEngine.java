@@ -19,6 +19,9 @@ public class VehicleLogicEngine
     private static final String TAG = VehicleLogicEngine.class.getSimpleName();
     private static VehicleLogicEngine vehicleLogicEngine;
 
+    private VehicleLogicEngine() {
+    }
+
     public static VehicleLogicEngine getInstance()
     {
         if(vehicleLogicEngine == null)
@@ -28,8 +31,6 @@ public class VehicleLogicEngine
 
         return vehicleLogicEngine;
     }
-
-    private VehicleLogicEngine(){}
 
     public ApiResponse addVehicle(User user, VVehicle vVehicle)
     {
@@ -76,9 +77,11 @@ public class VehicleLogicEngine
 
     private VVehicle convertToVVehicle(Vehicle vehicle)
     {
+        VVehicle vVehicle = null;
+
         if(vehicle != null && vehicle.getId() != null)
         {
-            VVehicle vVehicle = new VVehicle();
+            vVehicle = new VVehicle();
 
             vVehicle.setId(vehicle.getId());
             vVehicle.setPicture(vehicle.getPicture());
@@ -89,7 +92,7 @@ public class VehicleLogicEngine
             vVehicle.setType(vehicle.getType());
         }
 
-        return null;
+        return vVehicle;
     }
 
     private Vehicle convertToVehicle(VVehicle vVehicle)

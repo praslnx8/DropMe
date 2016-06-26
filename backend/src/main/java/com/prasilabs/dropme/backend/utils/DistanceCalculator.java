@@ -31,6 +31,17 @@ public class DistanceCalculator
 		return false;
 	}
 
+	public static double distance(GeoPt geoPt1, GeoPt geoPt2, String unit) {
+		double distance = 0;
+		if (geoPt1 != null && geoPt2 != null) {
+			Float lat1 = geoPt1.getLatitude();
+			Float lon1 = geoPt1.getLongitude();
+			Float lat2 = geoPt2.getLatitude();
+			Float lon2 = geoPt2.getLongitude();
+			distance = DistanceCalculator.distance(lat1.doubleValue(), lon1.doubleValue(), lat2.doubleValue(), lon2.doubleValue(), unit);
+		}
+		return distance;
+	}
 
 	public static double distance(double lat1, double lon1, double lat2, double lon2, String unit) {
 		double theta = lon1 - lon2;

@@ -134,6 +134,45 @@ public class RideLogicEngine extends CoreLogicEngine
         return isValid;
     }
 
+    private static RideDetail convertRideToRideDetail(Ride ride) {
+        RideDetail rideDetail = null;
+        boolean isValid = true;
+
+        Vehicle vehicle = null;
+        if (isValid) {
+            vehicle = OfyService.ofy().load().type(Vehicle.class).id(ride.getVehicleId()).now();
+            if (vehicle == null) {
+                isValid = false;
+            }
+        }
+        DropMeUser dropMeUser = null;
+        if (isValid) {
+            dropMeUser = OfyService.ofy().load().type(DropMeUser.class).id(ride.getUserId()).now();
+            if (dropMeUser == null) {
+                isValid = false;
+            }
+        }
+
+        if (isValid) {
+            rideDetail = new RideDetail();
+            rideDetail.setRideId(ride.getId());
+            rideDetail.setStartDate(ride.getStartDate());
+            rideDetail.setSourceLatLng(ride.getSourceLoc());
+            rideDetail.setDestLatLng(ride.getDestLoc());
+            rideDetail.setDestLoc(ride.getDestLocName());
+            rideDetail.setCurrentLatLng(ride.getCurrentLoc());
+            rideDetail.setOwnerId(ride.getUserId());
+            rideDetail.setVehicleNumber(vehicle.getvNumber());
+            rideDetail.setVehicleType(vehicle.getType());
+            rideDetail.setGender(dropMeUser.getGender());
+            rideDetail.setOwnerName(dropMeUser.getName());
+            rideDetail.setOwnerPhone(ride.getPhoneNo());
+            rideDetail.setOwnerPicture(dropMeUser.getPicture());
+        }
+
+        return rideDetail;
+    }
+
     public ApiResponse updateRide(User user, RideInput rideInput)
     {
         ApiResponse apiResponse = new ApiResponse();
@@ -329,7 +368,6 @@ public class RideLogicEngine extends CoreLogicEngine
                 dest = null;
             }
             ConsoleLog.i(TAG, "dest is not null and invalid. Setting to null");
-            dest = null;
         }
 
         List<RideDetail> rideDetails = new ArrayList<>();
@@ -344,29 +382,7 @@ public class RideLogicEngine extends CoreLogicEngine
 
             if(ride.getExpiryDate().after(new Date(System.currentTimeMillis())) && !ride.isClosed())
             {
-                RideDetail rideDetail = new RideDetail();
-                rideDetail.setRideId(ride.getId());
-                rideDetail.setStartDate(ride.getStartDate());
-                rideDetail.setDestLatLng(ride.getDestLoc());
-                rideDetail.setDestLoc(ride.getDestLocName());
-                rideDetail.setCurrentLatLng(ride.getCurrentLoc());
-                rideDetail.setOwnerId(ride.getUserId());
-                Vehicle vehicle = OfyService.ofy().load().type(Vehicle.class).id(ride.getVehicleId()).now();
-                if (vehicle != null) {
-                    rideDetail.setVehicleNumber(vehicle.getvNumber());
-                    rideDetail.setVehicleType(vehicle.getType());
-                } else {
-                    isValid = false;
-                }
-                DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).id(ride.getUserId()).now();
-                if (dropMeUser != null) {
-                    rideDetail.setGender(dropMeUser.getGender());
-                    rideDetail.setOwnerName(dropMeUser.getName());
-                    rideDetail.setOwnerPhone(ride.getPhoneNo());
-                    rideDetail.setOwnerPicture(dropMeUser.getPicture());
-                } else {
-                    isValid = false;
-                }
+                RideDetail rideDetail = convertRideToRideDetail(ride);
 
                 if(dest != null)
                 {

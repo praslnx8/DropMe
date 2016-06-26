@@ -1,107 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:padding="@dimen/paddingS">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/paddingXS"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="@dimen/paddingXS">
 
         <TextView
             android:id="@+id/time_text"
             style="@style/TextAppearance.AppCompat.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:text="2 days ago"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-
-        <TextView
-            android:id="@+id/status_text"
-            style="@style/TextAppearance.AppCompat.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Progress"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/souce_text"
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/green"
-            android:text="Koramangala"/>
-
-
-        <com.prasilabs.dropme.customs.FontAweSomeTextView
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/fa_arrow_circle_o_right"/>
-
-
-        <TextView
-            android:id="@+id/dest_text"
-            style="@style/TextAppearance.AppCompat.Headline"
-            android:textColor="@color/blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Indira Nagar"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/paddingS"
-        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                style="@style/TextAppearance.AppCompat.Body1"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vehicle Type"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text=":"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/vehicle_type_text"
-                style="@style/TextAppearance.AppCompat.Body2"
-                android:layout_width="wrap_content"
+
+                <com.prasilabs.dropme.customs.FontAweSomeTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fa_circle_thin"
+                    android:textColor="@color/primary"
+                    android:textSize="20dp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/paddingXS"
+                    android:layout_weight="1"
+                    android:background="@color/black_overlay" />
+
+
+                <com.prasilabs.dropme.customs.FontAweSomeTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fa_circle"
+                    android:textColor="@color/secondary"
+                    android:textSize="20dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="CAR"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/souce_text"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/paddingM"
+                    android:text="HSR Layout"
+                    android:textColor="@color/primary" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/paddingM"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.prasilabs.dropme.customs.FontAweSomeTextView
+                                style="@style/TextAppearance.AppCompat.Small"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="@dimen/paddingXS"
+                                android:text="@string/fa_map_o" />
+
+                            <TextView
+                                android:id="@+id/distance_text"
+                                style="@style/TextAppearance.AppCompat.Small"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="4 kms" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/paddingS"
+                            android:orientation="horizontal">
+
+                            <com.prasilabs.dropme.customs.FontAweSomeTextView
+                                android:id="@+id/vehicle_type_image_text"
+                                style="@style/TextAppearance.AppCompat.Small"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="@dimen/paddingXS"
+                                android:text="@string/fa_car" />
+
+                            <TextView
+                                android:id="@+id/vehicle_type_text"
+                                style="@style/TextAppearance.AppCompat.Small"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Car" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/dest_text"
+                    style="@style/TextAppearance.AppCompat.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/paddingM"
+                    android:text="Koramangala"
+                    android:textColor="@color/secondary" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
 
-
-
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

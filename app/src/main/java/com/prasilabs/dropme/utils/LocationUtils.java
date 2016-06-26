@@ -60,7 +60,7 @@ public class LocationUtils
 
     public static String formatDistanceBetween(LatLng point1, LatLng point2) {
         if (point1 == null || point2 == null) {
-            return null;
+            return "";
         }
 
         NumberFormat numberFormat = NumberFormat.getNumberInstance();

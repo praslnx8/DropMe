@@ -62,10 +62,25 @@ public class MyAlertsPresenter extends CorePresenter
         });
     }
 
+    public void deleteAlert(long id, final DeleteAlertCallBack deleteAlertCallBack) {
+        RideAlertModelEngine.getInstance().deleteAlert(id, new RideAlertModelEngine.DeleteAlertCallBack() {
+            @Override
+            public void onResult(boolean status) {
+                if (deleteAlertCallBack != null) {
+                    deleteAlertCallBack.onResult(status);
+                }
+            }
+        });
+    }
+
     public interface AlertCallBack
     {
         void getAlertList(int skip, List<RideAlertIo> rideAlertIoList);
 
         void showEmpty(int skip);
+    }
+
+    public interface DeleteAlertCallBack {
+        void onResult(boolean status);
     }
 }

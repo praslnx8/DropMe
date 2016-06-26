@@ -99,4 +99,11 @@ public abstract class CoreAdapter<E, T extends RecyclerView.ViewHolder> extends 
             notifyItemChanged(0);
         }
     }
+
+    public void removeListItem(E item) {
+        if (item != null) {
+            this.list.remove(item);
+            notifyDataSetChanged();
+        }
+    }
 }

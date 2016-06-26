@@ -25,17 +25,15 @@ import butterknife.OnClick;
  */
 public class MyAlertsFragment extends CoreFragment<MyAlertsPresenter> implements MyAlertsPresenter.AlertCallBack
 {
+    private static MyAlertsFragment instance;
     @BindView(R.id.recycler_view)
     MyRecyclerView alertListView;
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
     @BindView(R.id.empty_layout)
     LinearLayout emptyLayout;
-
     private boolean isLoading;
     private MyAlertsAdapter myAlertsAdapter;
-
-    private static MyAlertsFragment instance;
 
     public static MyAlertsFragment getInstance()
     {
@@ -52,7 +50,7 @@ public class MyAlertsFragment extends CoreFragment<MyAlertsPresenter> implements
     {
         super.onCreate(savedInstanceState);
 
-        myAlertsAdapter = MyAlertsAdapter.getInstance(getContext());
+        myAlertsAdapter = MyAlertsAdapter.getInstance(getContext(), getPresenter());
     }
 
     @Nullable
