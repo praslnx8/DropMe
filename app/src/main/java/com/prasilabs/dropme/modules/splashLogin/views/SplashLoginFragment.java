@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.modules.splashLogin.views;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -47,6 +48,7 @@ import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
 import com.prasilabs.dropme.modules.splashLogin.presenter.SplashLoginPresenter;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
+import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 import com.prasilabs.enums.Gender;
 import com.prasilabs.enums.LoginType;
@@ -199,20 +201,36 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     {
         try
         {
-            ConsoleLog.i(TAG, "on activity result");
-            ConsoleLog.i(TAG, "Result code is" + resultCode + ": Request Code is" + requestCode);
-            if (requestCode == 0 && resultCode == 0)
-            {
-                progressDialog.dismiss();
-            }
             if (requestCode == RC_SIGN_IN)
             {
+                if (resultCode == 0) {
+                    progressDialog.dismiss();
+                }
+
                 if (resultCode == RC_SIGN_IN_SUCCESS)
                 {
                     if (!mGoogleApiClient.isConnecting())
                     {
                         mGoogleApiClient.connect();
                     }
+                }
+            } else if (requestCode == LocationUtils.REQUEST_CHECK_SETTINGS) {
+                ConsoleLog.i(TAG, " location result came");
+                if (resultCode == Activity.RESULT_OK) {
+                    callHomeActivity();
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    Snackbar.make(getFragmentView(), "Please Enable GPS.",
+                            Snackbar.LENGTH_INDEFINITE)
+                            .setAction("OK", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    LocationUtils.askLocationRequest(getCoreActivity());
+
+                                    /*Intent intnt = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    intnt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intnt);*/
+                                }
+                            }).show();
                 }
             }
             else
@@ -339,16 +357,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                         HomeActivity.callHomeActivity(getContext());
                         getCoreActivity().finish();
                     } else {
-                        Snackbar.make(getFragmentView(), "Please Enable GPS.",
-                                Snackbar.LENGTH_LONG)
-                                .setAction("OK", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Intent intnt = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                        intnt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intnt);
-                                    }
-                                }).show();
+                        LocationUtils.askLocationRequest(getCoreActivity());
                     }
                 } else {
                     getLocationPermissions();
@@ -435,13 +444,6 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     }
 
     @Override
-    public void onResume()
-    {
-        super.onResume();
-        callHomeActivity();
-    }
-
-    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
     {
         ConsoleLog.i(TAG, "connection resut is : " + connectionResult.getErrorCode() + " error msg is : " + connectionResult.getErrorMessage());
@@ -525,7 +527,6 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
         }
     }
 
-
     private void connectToGooglePlus() {
         progressDialog.show();
         if (!mGoogleApiClient.isConnecting() && !mGoogleApiClient.isConnected()) {
@@ -533,13 +534,6 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
         } else if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.clearDefaultAccountAndReconnect();
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        //mGoogleApiClient.connect();
     }
 
     @Override

@@ -156,7 +156,7 @@ public class DropMeLocatioListener implements LocationListener
     @Override
     public void onProviderEnabled(String provider)
     {
-        if (lm.isProviderEnabled(LocationManager.PASSIVE_PROVIDER))
+        if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
         {
             Intent intent = new Intent();
             intent.setAction(BroadCastConstant.LOCATION_ENABLED_CONSTANT);
