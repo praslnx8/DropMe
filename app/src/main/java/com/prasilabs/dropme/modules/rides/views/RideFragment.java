@@ -65,9 +65,13 @@ public class RideFragment extends CoreFragment<RidePresenter> implements RidePre
         mapLoader.loadMap(new MapLoader.MapLoaderCallBack() {
             @Override
             public void mapLoaded() {
-                mapLoader.showDirection(LocationUtils.convertToLatLng(rideInput.getSourceLoc()), LocationUtils.convertToLatLng(rideInput.getDestLoc()), true);
-                getPresenter().getGeoList(RideFragment.this);
                 LatLng latLng = DropMeLocatioListener.getLatLng(getContext());
+                if (latLng == null) {
+                    latLng = LocationUtils.convertToLatLng(rideInput.getSourceLoc());
+                }
+                mapLoader.showDirection(latLng, LocationUtils.convertToLatLng(rideInput.getDestLoc()), true);
+                getPresenter().getGeoList(RideFragment.this);
+                getPresenter().listenToPosChange(RideFragment.this);
                 mapLoader.moveToLoc(latLng);
             }
         });
@@ -143,10 +147,12 @@ public class RideFragment extends CoreFragment<RidePresenter> implements RidePre
 
     @Override
     public void positionChanged() {
+        ConsoleLog.i(TAG, " position change callback came");
         LatLng latLng = DropMeLocatioListener.getLatLng(getContext());
 
         if (mapLoader.isMapLoaded()) {
             mapLoader.moveToLoc(latLng);
+            mapLoader.showDirection(latLng, LocationUtils.convertToLatLng(rideInput.getDestLoc()), true);
         }
     }
 

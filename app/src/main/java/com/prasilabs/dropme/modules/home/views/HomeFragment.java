@@ -145,13 +145,13 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @Override
     public void addMarker(MarkerInfo markerInfo)
     {
-        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), MarkerUtil.getMarkerResId(markerInfo));
+        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), false, MarkerUtil.getMarkerResId(markerInfo), markerInfo.getMarkerDirection());
     }
 
     @Override
     public void moveMarker(MarkerInfo markerInfo)
     {
-        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), MarkerUtil.getMarkerResId(markerInfo));
+        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), false, MarkerUtil.getMarkerResId(markerInfo), markerInfo.getMarkerDirection());
     }
 
     @Override
@@ -164,5 +164,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     public void moveMap(LatLng latLng)
     {
         mapLoader.moveToLoc(latLng);
+        mapLoader.removeMarker("me");
+        mapLoader.addMarker("me", latLng, R.drawable.ic_location_pointer);
     }
 }

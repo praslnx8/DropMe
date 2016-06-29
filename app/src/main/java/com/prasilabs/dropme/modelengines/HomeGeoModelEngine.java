@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.modelengines;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.firebase.client.FirebaseError;
@@ -273,7 +274,18 @@ public class HomeGeoModelEngine
                                                     } else {
                                                         markerInfo.setMarkerType(MarkerType.Car.name());
                                                     }
+                                                    LatLng sourceLatLng = LocationUtils.convertToLatLng(rideDetail.getSourceLatLng());
+                                                    LatLng destLatLng = LocationUtils.convertToLatLng(rideDetail.getDestLatLng());
+                                                    Location sourceLoc = new Location("source");
+                                                    sourceLoc.setLatitude(sourceLatLng.latitude);
+                                                    sourceLoc.setLongitude(sourceLatLng.longitude);
+
+                                                    Location destLoc = new Location("destination");
+                                                    destLoc.setLatitude(destLatLng.latitude);
+                                                    destLoc.setLongitude(destLatLng.longitude);
+
                                                     markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
+                                                    markerInfo.setMarkerDirection(sourceLoc.bearingTo(destLoc));
 
                                                     geoMarkerMap.put(key, markerInfo);
 

@@ -3,16 +3,20 @@ package com.prasilabs.dropme.customs;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.view.animation.LinearInterpolator;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -109,6 +113,10 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
 
     public void addMarker(String id, LatLng latLng, boolean isClear, int resourceId)
     {
+        addMarker(id, latLng, isClear, resourceId, 0);
+    }
+
+    public void addMarker(String id, LatLng latLng, boolean isClear, int resourceId, float dir) {
         if(latLng != null)
         {
             if (isClear)
@@ -136,7 +144,7 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
                     if(bitmapdraw != null)
                     {
                         Bitmap bitmap = bitmapdraw.getBitmap();
-                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 70, 70, false);
 
                         BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(resizedBitmap);
                         markerOptions.icon(icon);
@@ -146,14 +154,51 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
                         ConsoleLog.w(TAG, "bitmapDrawable is null");
                     }
                 }
+                if (dir != 0) {
+                    markerOptions.rotation(dir);
+                }
                 markerOptions.position(latLng);
                 Marker marker = gMap.addMarker(markerOptions);
+                animateMarker(marker, latLng, false);
                 if(id != null)
                 {
                     markerMap.put(id, marker);
                 }
             }
         }
+    }
+
+    public void animateMarker(final Marker marker, final LatLng toPosition, final boolean hideMarker) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = gMap.getProjection();
+        Point startPoint = proj.toScreenLocation(marker.getPosition());
+        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
+        final long duration = 500;
+        final LinearInterpolator interpolator = new LinearInterpolator();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / duration);
+                double lng = t * toPosition.longitude + (1 - t)
+                        * startLatLng.longitude;
+                double lat = t * toPosition.latitude + (1 - t)
+                        * startLatLng.latitude;
+                marker.setPosition(new LatLng(lat, lng));
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                } else {
+                    if (hideMarker) {
+                        marker.setVisible(false);
+                    } else {
+                        marker.setVisible(true);
+                    }
+                }
+            }
+        });
     }
 
     public void removeMarker(String markerId)
@@ -178,7 +223,7 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
     {
         if(isClear)
         {
-           clearPolyLine();
+            clearPolyLine();
         }
         removeMarker(MarkerUtil.SOURCE_MARKER_KEY);
         removeMarker(MarkerUtil.DEST_MARKER_KEY);

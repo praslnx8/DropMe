@@ -11,6 +11,7 @@ public class MarkerInfo
     private LatLng loc;
     private String markerType;
     private String userOrVehicle;
+    private float markerDirection = 0;
 
     public String getKey() {
         return key;
@@ -42,5 +43,13 @@ public class MarkerInfo
 
     public void setUserOrVehicle(String userOrVehicle) {
         this.userOrVehicle = userOrVehicle;
+    }
+
+    public float getMarkerDirection() {
+        return markerDirection;
+    }
+
+    public void setMarkerDirection(float markerDirection) {
+        this.markerDirection = markerDirection;
     }
 }

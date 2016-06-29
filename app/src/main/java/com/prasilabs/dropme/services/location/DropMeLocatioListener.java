@@ -20,7 +20,6 @@ import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.utils.LocationUtils;
-import com.prasilabs.dropme.utils.ViewUtil;
 
 /**
  * Created by prasi on 8/6/15.
@@ -86,16 +85,17 @@ public class DropMeLocatioListener implements LocationListener
         }
         else
         {
-            ViewUtil.t(context, "Please enable GPS");
+            /*ViewUtil.t(context, "Please enable GPS");
             Intent intnt = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             intnt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intnt);
+            context.startActivity(intnt);*/
         }
 
         final Criteria criteria = new Criteria();
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
         criteria.setAltitudeRequired(false);
-        criteria.setSpeedAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setBearingRequired(false);
+        criteria.setAccuracy(Criteria.ACCURACY_MEDIUM);
         if(checkLocationPermission(context))
         {
             String best = lm.getBestProvider(criteria, true);

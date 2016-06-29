@@ -70,11 +70,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     private static final int RC_SIGN_IN = 0;
     private static final int RC_SIGN_IN_SUCCESS = -1;
     private static ProgressDialog progressDialog;
-    private CallbackManager callbackManager;
-
-    private GoogleApiClient mGoogleApiClient;
     private static SplashLoginFragment splashLoginFragment;
-
     @BindView(R.id.splash_layout)
     LinearLayout splashLayout;
     @BindView(R.id.login_layout)
@@ -87,7 +83,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
     ViewPager introPager;
     @BindView(R.id.pager_indicator)
     CirclePageIndicator pageIndicator;
-
+    private CallbackManager callbackManager;
+    private GoogleApiClient mGoogleApiClient;
     private boolean isHomeActivityCalled;
 
     public static SplashLoginFragment getInstance()
@@ -328,6 +325,7 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
         UserManager.saveDropMeUser(getContext(), vDropMeUser);
         ViewUtil.hideProgressView(getContext(), logiBtnLayout);
 
+        logiBtnLayout.setVisibility(View.INVISIBLE);
 
         callHomeActivity();
     }

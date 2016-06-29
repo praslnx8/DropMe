@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CorePresenter;
+import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.RideManager;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.modelengines.RideModelEngine;
@@ -20,6 +21,7 @@ import java.util.Map;
  * Created by prasi on 14/6/16.
  */
 public class RidePresenter extends CorePresenter {
+    private static final String TAG = RidePresenter.class.getSimpleName();
     private GetGeoCallBack getGeoCallBack;
     private GetRideCallBack getRideCallBack;
     private PosChangeCallBack posChangeCallBack;
@@ -78,8 +80,11 @@ public class RidePresenter extends CorePresenter {
                 getRideCallBack.getRide(rideInput);
             }
         } else if (intent.getAction().equals(BroadCastConstant.LOCATION_REFRESH_CONSTANT)) {
+            ConsoleLog.i(TAG, " position change broadcast recieved");
             if (posChangeCallBack != null) {
                 posChangeCallBack.positionChanged();
+            } else {
+                ConsoleLog.w(TAG, " positonChangeCallback is null");
             }
         }
     }
