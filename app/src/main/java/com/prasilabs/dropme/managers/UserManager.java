@@ -77,10 +77,35 @@ public class UserManager
     {
         boolean isSuccess = false;
 
-        LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.MOBILE_STR, phone);
-        isSuccess = true;
+        try {
+            LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.MOBILE_STR, phone);
+            isSuccess = true;
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+        return isSuccess;
+    }
+
+    public static boolean saveAndConfirmPhoneNo(Context context, String phone) {
+        boolean isSuccess = false;
+
+        try {
+            LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.MOBILE_STR, phone);
+            LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.MOBILE_VERIFIED_STR, true);
+            isSuccess = true;
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
 
         return isSuccess;
+    }
+
+    public static boolean isMobileVerified(Context context) {
+        String mobile = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.MOBILE_STR, null);
+        boolean mobileVerified = LocalPreference.getLoginDataFromShared(context, PojoConstants.UserConstant.MOBILE_VERIFIED_STR, false);
+
+        return mobile != null && mobileVerified;
+
     }
 
     public static VDropMeUser getDropMeUser(Context context)

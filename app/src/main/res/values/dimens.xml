@@ -11,6 +11,7 @@
     <dimen name="paddingCard">12dp</dimen>
     <dimen name="npaddingS">-10dp</dimen>
     <dimen name="paddingS">10dp</dimen>
+    <dimen name="paddingSM">15dp</dimen>
     <dimen name="paddingM">20dp</dimen>
     <dimen name="paddingL">40dp</dimen>
     <dimen name="paddingXL">60dp</dimen>

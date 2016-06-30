@@ -19,4 +19,18 @@ public class MobileVerificationPresenter extends CorePresenter {
     protected void broadCastRecieved(Context context, Intent intent) {
 
     }
+
+    public void sendOtp(String phone) {
+
+    }
+
+    public void verifyOtp(String phone, String otp) {
+
+    }
+
+    public interface OtpVerifyCallBack {
+        void verified(boolean status);
+
+        void otpSent(boolean status);
+    }
 }

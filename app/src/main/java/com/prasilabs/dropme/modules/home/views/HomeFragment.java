@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.GenericActivity;
 import com.prasilabs.dropme.activities.SplashActivity;
-import com.prasilabs.dropme.core.CoreDialogFragment;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
@@ -173,7 +172,7 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
 
     @Override
     public void askMobileNumber() {
-        CoreDialogFragment.showFragmentAsDialog(this, MobileVerificationFragment.getInstance());
+        MobileVerificationFragment.getInstance(this, true);
     }
 
     @Override

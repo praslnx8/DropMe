@@ -27,11 +27,13 @@
                 android:textSize="25dp" />
 
             <EditText
+                android:id="@+id/mobile_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/paddingL"
                 android:background="@drawable/edit_text_white_rounded"
                 android:hint="Enter Mobile Number"
+                android:inputType="phone"
                 android:padding="@dimen/paddingM" />
 
         </LinearLayout>
@@ -51,11 +53,13 @@
                 android:text="Enter OTP" />
 
             <EditText
+                android:id="@+id/otp_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/paddingXS"
                 android:background="@drawable/edit_text_white_rounded"
                 android:hint="Enter OTP"
+                android:inputType="number"
                 android:padding="@dimen/paddingXS" />
 
         </LinearLayout>
@@ -75,7 +79,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="@dimen/paddingM"
+            android:padding="@dimen/paddingSM"
             android:text="SKIP" />
 
         <Button
@@ -84,7 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="@dimen/paddingM"
+            android:padding="@dimen/paddingSM"
             android:text="NEXT" />
 
     </LinearLayout>

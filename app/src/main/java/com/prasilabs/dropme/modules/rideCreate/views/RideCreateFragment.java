@@ -31,6 +31,7 @@ import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.NoDefaultSpinner;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.UserManager;
+import com.prasilabs.dropme.modules.mobileVerification.views.MobileVerificationFragment;
 import com.prasilabs.dropme.modules.rideCreate.presenter.RideCreatePresenter;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.LocationUtils;
@@ -227,7 +228,12 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
     {
         if(validateRide())
         {
-            createAndMakeApiCall(null);
+            boolean isPhoneConfirmed = UserManager.isMobileVerified(getContext());
+            if (isPhoneConfirmed) {
+                createAndMakeApiCall(null);
+            } else {
+                MobileVerificationFragment.getInstance(this, false);
+            }
         }
     }
 
@@ -236,20 +242,24 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
     {
         if(validateRide())
         {
-            final Calendar calendar = Calendar.getInstance();
-            new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-                {
+            boolean isPhoneConfirmed = UserManager.isMobileVerified(getContext());
+            if (isPhoneConfirmed) {
+                final Calendar calendar = Calendar.getInstance();
+                new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    calendar.set(Calendar.MINUTE, minute);
-                    DateTime startDate = new DateTime(calendar.getTime());
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        DateTime startDate = new DateTime(calendar.getTime());
 
-                    createAndMakeApiCall(startDate);
+                        createAndMakeApiCall(startDate);
 
-                }
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+                    }
+                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();
+            } else {
+                MobileVerificationFragment.getInstance(this, false);
+            }
         }
     }
 

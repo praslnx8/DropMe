@@ -19,6 +19,7 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
     private Context context;
     private CoreActivity coreActivity;
     private T corePresenter;
+    private CoreDialogFragment coreDialogFragment;
 
     public View getFragmentView()
     {
@@ -60,6 +61,14 @@ public abstract class CoreFragment<T extends CorePresenter> extends Fragment
     protected boolean onDialogBackPressed()
     {
         return true;
+    }
+
+    protected void setDialogFragment(CoreDialogFragment coreDialogFragment) {
+        this.coreDialogFragment = coreDialogFragment;
+    }
+
+    public CoreDialogFragment getCoreDialogFragment() {
+        return coreDialogFragment;
     }
 
     public CoreActivity getCoreActivity()

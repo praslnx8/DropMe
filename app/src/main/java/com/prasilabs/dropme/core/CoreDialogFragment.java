@@ -24,18 +24,28 @@ import com.prasilabs.dropme.customs.FragmentNavigator;
 public class CoreDialogFragment extends DialogFragment
 {
     private static final String TAG = CoreDialogFragment.class.getSimpleName();
+    private static final int TYPE_FULL_SCREEN = 1;
+    private static final int TYPE_DIALOG = 2;
+    private static final String LAYOUT_TYPE_STR = "type";
+
 
     private LinearLayout linearLayout;
     private CoreFragment coreFragment;
 
     private View view;
     private boolean isRenderNeeded = false;
+    private int layoutType;
 
 
     public static CoreDialogFragment showFragmentAsFullScreen(CoreActivity coreActivity, CoreFragment coreFragment)
     {
         FragmentManager fm = coreActivity.getSupportFragmentManager();
         CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(LAYOUT_TYPE_STR, TYPE_FULL_SCREEN);
+        coreDialogFragment.setArguments(bundle);
+
         coreDialogFragment.setCoreFragment(coreFragment);
         coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.fullScreen_Dialog);
         coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
@@ -46,6 +56,11 @@ public class CoreDialogFragment extends DialogFragment
     public static CoreDialogFragment showFragmentAsFullScreen(CoreFragment parentFragment, CoreFragment coreFragment) {
         FragmentManager fm = parentFragment.getChildFragmentManager();
         CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(LAYOUT_TYPE_STR, TYPE_FULL_SCREEN);
+        coreDialogFragment.setArguments(bundle);
+
         coreDialogFragment.setCoreFragment(coreFragment);
         coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.fullScreen_Dialog);
         coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
@@ -56,6 +71,11 @@ public class CoreDialogFragment extends DialogFragment
     public static CoreDialogFragment showFragmentAsDialog(CoreActivity coreActivity, CoreFragment coreFragment) {
         FragmentManager fm = coreActivity.getSupportFragmentManager();
         CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(LAYOUT_TYPE_STR, TYPE_DIALOG);
+        coreDialogFragment.setArguments(bundle);
+
         coreDialogFragment.setCoreFragment(coreFragment);
         coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.centre_Dialog);
         coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
@@ -66,6 +86,11 @@ public class CoreDialogFragment extends DialogFragment
     public static CoreDialogFragment showFragmentAsDialog(CoreFragment parentFragment, CoreFragment coreFragment) {
         FragmentManager fm = parentFragment.getChildFragmentManager();
         CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(LAYOUT_TYPE_STR, TYPE_DIALOG);
+        coreDialogFragment.setArguments(bundle);
+
         coreDialogFragment.setCoreFragment(coreFragment);
         coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.centre_Dialog);
         coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
@@ -80,8 +105,10 @@ public class CoreDialogFragment extends DialogFragment
 
         if (getArguments() != null)
         {
-
+            layoutType = getArguments().getInt(LAYOUT_TYPE_STR, 0);
         }
+
+        coreFragment.setDialogFragment(this);
     }
 
     @Override
@@ -92,8 +119,13 @@ public class CoreDialogFragment extends DialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        WindowManager.LayoutParams wmlp = getDialog().getWindow().getAttributes();
-        wmlp.gravity = Gravity.FILL_HORIZONTAL | Gravity.FILL_VERTICAL;
+        if (layoutType == TYPE_FULL_SCREEN) {
+            WindowManager.LayoutParams wmlp = getDialog().getWindow().getAttributes();
+            wmlp.gravity = Gravity.FILL_HORIZONTAL | Gravity.FILL_VERTICAL;
+        } else if (layoutType == TYPE_DIALOG) {
+            WindowManager.LayoutParams wmlp = getDialog().getWindow().getAttributes();
+            wmlp.gravity = Gravity.CENTER;
+        }
 
         if(view == null)
         {
