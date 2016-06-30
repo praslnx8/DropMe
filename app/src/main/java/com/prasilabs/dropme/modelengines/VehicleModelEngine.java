@@ -32,7 +32,7 @@ public class VehicleModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse asyncc() throws Exception
+            public ApiResponse async() throws Exception
             {
                 VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
                 return CloudConnect.callDropMeApi(false).addVehicle(vVehicle).execute();
@@ -53,7 +53,7 @@ public class VehicleModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public VVehicle asyncc() throws Exception
+            public VVehicle async() throws Exception
             {
                 return CloudConnect.callDropMeApi(false).getVehicleDetail(id).execute();
             }

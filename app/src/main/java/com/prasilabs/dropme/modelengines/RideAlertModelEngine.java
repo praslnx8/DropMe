@@ -40,7 +40,7 @@ public class RideAlertModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse asyncc() throws Exception
+            public ApiResponse async() throws Exception
             {
                 return CloudConnect.callDropMeApi(false).createAlert(rideAlertIo).execute();
             }
@@ -74,7 +74,7 @@ public class RideAlertModelEngine extends CoreModelEngine
         {
             callAsync(new AsyncCallBack() {
                 @Override
-                public List<RideAlertIo> asyncc() throws Exception
+                public List<RideAlertIo> async() throws Exception
                 {
 
                     RideAlertIoCollection rideAlertIoCollection = CloudConnect.callDropMeApi(false).getAlertListOfUser().execute();
@@ -116,7 +116,7 @@ public class RideAlertModelEngine extends CoreModelEngine
     public void deleteAlert(final long id, final DeleteAlertCallBack deleteAlertCallBack) {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse asyncc() throws Exception {
+            public ApiResponse async() throws Exception {
                 return CloudConnect.callDropMeApi(false).deleteAlert(id).execute();
             }
 

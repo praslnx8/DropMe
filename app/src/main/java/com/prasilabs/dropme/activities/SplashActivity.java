@@ -1,5 +1,6 @@
 package com.prasilabs.dropme.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +25,10 @@ public class SplashActivity extends CoreActivity
 
     private SplashLoginFragment splashLoginFragment;
 
+    public static void openSplashActivity(Context context) {
+        Intent intent = new Intent(context, SplashActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)

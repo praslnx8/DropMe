@@ -168,6 +168,12 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         }
     }
 
+    public VDropMeUser getLoginInfo(User user) {
+        DropMeUser dropMeUser = getDropMeUser(user.getEmail());
+
+        return convertToVDropMeUser(dropMeUser, true);
+    }
+
     public DropMeUser getDropMeUserById(long id)
     {
         DropMeUser dropMeUser = getDropMeUser(id);

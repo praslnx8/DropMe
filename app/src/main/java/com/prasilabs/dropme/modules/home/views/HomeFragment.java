@@ -12,10 +12,13 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.activities.GenericActivity;
+import com.prasilabs.dropme.activities.SplashActivity;
+import com.prasilabs.dropme.core.CoreDialogFragment;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.MapLoader;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.modules.home.presenters.HomePresenter;
+import com.prasilabs.dropme.modules.mobileVerification.views.MobileVerificationFragment;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.location.DropMeGLocationService;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
@@ -27,7 +30,7 @@ import butterknife.OnClick;
 /**
  * Created by prasi on 27/5/16.
  */
-public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.MapChange
+public class HomeFragment extends CoreFragment<HomePresenter> implements HomePresenter.HomePresenterCallBack
 {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private static HomeFragment instance;
@@ -166,5 +169,16 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
         mapLoader.moveToLoc(latLng);
         mapLoader.removeMarker("me");
         mapLoader.addMarker("me", latLng, R.drawable.ic_location_pointer);
+    }
+
+    @Override
+    public void askMobileNumber() {
+        CoreDialogFragment.showFragmentAsDialog(this, MobileVerificationFragment.getInstance());
+    }
+
+    @Override
+    public void logout() {
+        SplashActivity.openSplashActivity(getContext());
+        getCoreActivity().finish();
     }
 }

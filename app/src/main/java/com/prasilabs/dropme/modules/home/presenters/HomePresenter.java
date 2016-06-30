@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.modelengines.DropMeUserModelEngine;
 import com.prasilabs.dropme.modelengines.HomeGeoModelEngine;
 import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
+import com.prasilabs.util.DataUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +24,14 @@ import java.util.List;
 public class HomePresenter extends CorePresenter
 {
     private static final String TAG = HomePresenter.class.getSimpleName();
-    private MapChange mapChange;
+    private HomePresenterCallBack homePresenterCallBack;
     private List<MarkerInfo> markerInfoList = new ArrayList<>();
 
-    public HomePresenter(MapChange mapChange)
+    public HomePresenter(HomePresenterCallBack homePresenterCallBack)
     {
-        this.mapChange = mapChange;
+        this.homePresenterCallBack = homePresenterCallBack;
+
+        checkLoginInfo();
     }
 
     private void listenToMap(LatLng latLng)
@@ -39,17 +44,17 @@ public class HomePresenter extends CorePresenter
             {
                 if(checkAlreadyExist(markerInfo))
                 {
-                    if(mapChange != null)
+                    if (homePresenterCallBack != null)
                     {
-                        mapChange.moveMarker(markerInfo);
+                        homePresenterCallBack.moveMarker(markerInfo);
                     }
                 }
                 else
                 {
                     markerInfoList.add(markerInfo);
-                    if(mapChange != null)
+                    if (homePresenterCallBack != null)
                     {
-                        mapChange.addMarker(markerInfo);
+                        homePresenterCallBack.addMarker(markerInfo);
                     }
                 }
             }
@@ -57,9 +62,9 @@ public class HomePresenter extends CorePresenter
             @Override
             public void removeMarker(MarkerInfo markerInfo)
             {
-                if(mapChange != null)
+                if (homePresenterCallBack != null)
                 {
-                    mapChange.removeMarker(markerInfo);
+                    homePresenterCallBack.removeMarker(markerInfo);
                 }
             }
         });
@@ -76,6 +81,25 @@ public class HomePresenter extends CorePresenter
         }
 
         return false;
+    }
+
+    private void checkLoginInfo() {
+        DropMeUserModelEngine.getInstance().getLoginInfo(new DropMeUserModelEngine.GetLoginInfoCallBack() {
+            @Override
+            public void getLoginInfo(VDropMeUser vDropMeUser) {
+                if (vDropMeUser == null || DataUtil.isEmpty(vDropMeUser.getId())) {
+                    if (homePresenterCallBack != null) {
+                        ConsoleLog.i(TAG, " logout");
+                        homePresenterCallBack.logout();
+                    }
+                } else if (DataUtil.isEmpty(vDropMeUser.getMobile()) || !vDropMeUser.getMobileVerified()) {
+                    if (homePresenterCallBack != null) {
+                        ConsoleLog.i(TAG, " ask mobile number");
+                        homePresenterCallBack.askMobileNumber();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -96,14 +120,14 @@ public class HomePresenter extends CorePresenter
             if(latLng != null)
             {
                 listenToMap(latLng);
-                if (mapChange != null) {
-                    mapChange.moveMap(latLng);
+                if (homePresenterCallBack != null) {
+                    homePresenterCallBack.moveMap(latLng);
                 }
             }
         }
     }
 
-    public interface MapChange
+    public interface HomePresenterCallBack
     {
         void addMarker(MarkerInfo markerInfo);
 
@@ -112,5 +136,9 @@ public class HomePresenter extends CorePresenter
         void removeMarker(MarkerInfo markerInfo);
 
         void moveMap(LatLng latLng);
+
+        void askMobileNumber();
+
+        void logout();
     }
 }

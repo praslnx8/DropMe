@@ -108,8 +108,7 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
         }
         else
         {
-            Intent intent = new Intent(this, SplashActivity.class);
-            startActivity(intent);
+            SplashActivity.openSplashActivity(this);
             finish();
         }
     }
@@ -205,8 +204,7 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
             LocalPreference.clearLoginSharedPreferences(this);
             HomeGeoModelEngine.getInstance().clearUserData();
             RideModelEngine.getInstance().clearData();
-            Intent intent = new Intent(this,SplashActivity.class);
-            startActivity(intent);
+            SplashActivity.openSplashActivity(this);
             finish();
         }
 

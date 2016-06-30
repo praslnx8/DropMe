@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -31,12 +32,42 @@ public class CoreDialogFragment extends DialogFragment
     private boolean isRenderNeeded = false;
 
 
-    public static CoreDialogFragment showFragment(CoreActivity coreActivity, CoreFragment coreFragment)
+    public static CoreDialogFragment showFragmentAsFullScreen(CoreActivity coreActivity, CoreFragment coreFragment)
     {
         FragmentManager fm = coreActivity.getSupportFragmentManager();
         CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
         coreDialogFragment.setCoreFragment(coreFragment);
         coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.fullScreen_Dialog);
+        coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
+
+        return coreDialogFragment;
+    }
+
+    public static CoreDialogFragment showFragmentAsFullScreen(CoreFragment parentFragment, CoreFragment coreFragment) {
+        FragmentManager fm = parentFragment.getChildFragmentManager();
+        CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
+        coreDialogFragment.setCoreFragment(coreFragment);
+        coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.fullScreen_Dialog);
+        coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
+
+        return coreDialogFragment;
+    }
+
+    public static CoreDialogFragment showFragmentAsDialog(CoreActivity coreActivity, CoreFragment coreFragment) {
+        FragmentManager fm = coreActivity.getSupportFragmentManager();
+        CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
+        coreDialogFragment.setCoreFragment(coreFragment);
+        coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.centre_Dialog);
+        coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
+
+        return coreDialogFragment;
+    }
+
+    public static CoreDialogFragment showFragmentAsDialog(CoreFragment parentFragment, CoreFragment coreFragment) {
+        FragmentManager fm = parentFragment.getChildFragmentManager();
+        CoreDialogFragment coreDialogFragment = new CoreDialogFragment();
+        coreDialogFragment.setCoreFragment(coreFragment);
+        coreDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.centre_Dialog);
         coreDialogFragment.show(fm, coreDialogFragment.getClass().getSimpleName());
 
         return coreDialogFragment;
@@ -67,10 +98,12 @@ public class CoreDialogFragment extends DialogFragment
         if(view == null)
         {
             isRenderNeeded = true;
-            view = ((ViewGroup) inflater.inflate(R.layout.dialog_linear_layout, container, false));
+            view = inflater.inflate(R.layout.dialog_linear_layout, container, false);
 
             linearLayout = (LinearLayout) view.findViewById(R.id.linear_layout);
         }
+
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         return view;
     }
@@ -91,11 +124,7 @@ public class CoreDialogFragment extends DialogFragment
                                  KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK)
                 {
-                    if(coreFragment.onDialogBackPressed())
-                    {
-                        return false;
-                    }
-                    return true;
+                    return !coreFragment.onDialogBackPressed();
                 }
                 return false;
             }

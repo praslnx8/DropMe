@@ -1,6 +1,5 @@
 package com.prasilabs.dropme.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -31,8 +30,7 @@ public class SorryCrashActivity extends CoreActivity {
 
     @OnClick(R.id.try_again_btn)
     protected void tryAgain() {
-        Intent intent = new Intent(this, SplashActivity.class);
-        startActivity(intent);
+        SplashActivity.openSplashActivity(this);
         finish();
     }
 

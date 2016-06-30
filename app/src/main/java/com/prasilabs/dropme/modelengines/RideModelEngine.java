@@ -53,7 +53,7 @@ public class RideModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse asyncc() throws Exception
+            public ApiResponse async() throws Exception
             {
                 return CloudConnect.callDropMeApi(false).updateRide(rideInput).execute();
             }
@@ -81,7 +81,7 @@ public class RideModelEngine extends CoreModelEngine
         callAsync(new AsyncCallBack()
         {
             @Override
-            public RideInput asyncc() throws Exception
+            public RideInput async() throws Exception
             {
                 return CloudConnect.callDropMeApi(false).createRide(input).execute();
             }
@@ -128,7 +128,7 @@ public class RideModelEngine extends CoreModelEngine
         callAsync(new AsyncCallBack()
         {
             @Override
-            public MyRideInfo asyncc() throws Exception
+            public MyRideInfo async() throws Exception
             {
                 final MyRideInfo myRideInfo = new MyRideInfo();
 
@@ -179,7 +179,7 @@ public class RideModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public RideInput asyncc() throws Exception
+            public RideInput async() throws Exception
             {
 
                 return CloudConnect.callDropMeApi(false).getCurrentRide(CoreApp.getDeviceId()).execute();
@@ -203,7 +203,7 @@ public class RideModelEngine extends CoreModelEngine
         ConsoleLog.i(TAG, "id is : " + rideId);
         callAsync(new AsyncCallBack() {
             @Override
-            public RideDetail asyncc() throws Exception
+            public RideDetail async() throws Exception
             {
                 return CloudConnect.callDropMeApi(false).getRideDetail(rideId).execute();
             }
@@ -226,7 +226,7 @@ public class RideModelEngine extends CoreModelEngine
     {
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse asyncc() throws Exception
+            public ApiResponse async() throws Exception
             {
                 return CloudConnect.callDropMeApi(false).cancelRide(CoreApp.getDeviceId()).execute();
             }
@@ -253,7 +253,7 @@ public class RideModelEngine extends CoreModelEngine
         {
             callAsync(new AsyncCallBack() {
                 @Override
-                public List<RideDetail> asyncc() throws Exception {
+                public List<RideDetail> async() throws Exception {
                     RideDetailCollection rideDetailCollection = CloudConnect.callDropMeApi(false).getRideDetailList(idsList, geoPt).execute();
                     if (rideDetailCollection != null) {
                         return rideDetailCollection.getItems();
@@ -289,7 +289,7 @@ public class RideModelEngine extends CoreModelEngine
         {
             callAsync(new AsyncCallBack() {
                 @Override
-                public List<MyRideInfo> asyncc() throws Exception
+                public List<MyRideInfo> async() throws Exception
                 {
                     MyRideInfoCollection myRideInfoCollection = CloudConnect.callDropMeApi(false).getRideListOfUser(skip, pageSize).execute();
                     if (myRideInfoCollection != null) {

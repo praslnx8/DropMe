@@ -38,11 +38,10 @@ import java.util.Locale;
  */
 public class LocationUtils
 {
+    public static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static final String DISTANCE_KM_POSTFIX = "KM";
     private static final String DISTANCE_M_POSTFIX = "M";
     private static final String TAG = LocationUtils.class.getSimpleName();
-    public static final int REQUEST_CHECK_SETTINGS = 0x1;
-    private static boolean isLocationDialogIsOpen = false;
 
     public static GeoPt convertToGeoPt(LatLng latLng)
     {
@@ -165,76 +164,71 @@ public class LocationUtils
     }
 
     public static void askLocationRequest(final Activity activity) {
-        if (!isLocationDialogIsOpen) {
-            ConsoleLog.i(TAG, "ask location called");
-            GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
-                @Override
-                public void onConnected(@Nullable Bundle bundle) {
-                    ConsoleLog.i(TAG, "onconnected");
+        ConsoleLog.i(TAG, "ask location called");
+        GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+                ConsoleLog.i(TAG, "onconnected");
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+                ConsoleLog.i(TAG, " suspended");
+            }
+        };
+
+        GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
+            @Override
+            public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                ConsoleLog.w(TAG, "failed");
+                ConsoleLog.i(TAG, " connection result is " + connectionResult.getErrorMessage() + " code " + connectionResult.getErrorCode());
+            }
+        };
+
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(activity)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(connectionCallbacks)
+                .addOnConnectionFailedListener(onConnectionFailedListener).build();
+
+        googleApiClient.connect();
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true); //this is the key ingredient
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
                 }
-
-                @Override
-                public void onConnectionSuspended(int i) {
-                    ConsoleLog.i(TAG, " suspended");
-                }
-            };
-
-            GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener = new GoogleApiClient.OnConnectionFailedListener() {
-                @Override
-                public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                    ConsoleLog.w(TAG, "failed");
-                    ConsoleLog.i(TAG, " connection result is " + connectionResult.getErrorMessage() + " code " + connectionResult.getErrorCode());
-                }
-            };
-
-            GoogleApiClient googleApiClient = new GoogleApiClient.Builder(activity)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(connectionCallbacks)
-                    .addOnConnectionFailedListener(onConnectionFailedListener).build();
-
-            googleApiClient.connect();
-
-            LocationRequest locationRequest = LocationRequest.create();
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setInterval(30 * 1000);
-            locationRequest.setFastestInterval(5 * 1000);
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                    .addLocationRequest(locationRequest);
-            builder.setAlwaysShow(true); //this is the key ingredient
-
-            PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-            result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-                @Override
-                public void onResult(@NonNull LocationSettingsResult result) {
-                    isLocationDialogIsOpen = false;
-                    final Status status = result.getStatus();
-                    final LocationSettingsStates state = result.getLocationSettingsStates();
-                    switch (status.getStatusCode()) {
-                        case LocationSettingsStatusCodes.SUCCESS:
-                            // All location settings are satisfied. The client can initialize location
-                            // requests here.
-                            break;
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied. But could be fixed by showing the user
-                            // a dialog.
-                            try {
-                                // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                status.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way to fix the
-                            // settings so we won't show the dialog.
-                            break;
-                    }
-                }
-            });
-
-            isLocationDialogIsOpen = true;
-        }
+            }
+        });
     }
 
     public interface GetLocationNameCallBack

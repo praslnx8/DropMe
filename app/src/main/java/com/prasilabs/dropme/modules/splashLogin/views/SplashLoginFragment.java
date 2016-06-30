@@ -146,6 +146,8 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     }
                     else
                     {
+                        splashLayout.setVisibility(View.VISIBLE);
+                        loginLayout.setVisibility(View.GONE);
                         callHomeActivity();
                     }
                 }
@@ -351,9 +353,9 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
             if (vDropMeUser != null && !TextUtils.isEmpty(vDropMeUser.getHash()) && vDropMeUser.getId() != null && vDropMeUser.getId() != 0) {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (DropMeLocatioListener.getInstance().isLocationEnabled(getContext())) {
-                        isHomeActivityCalled = true;
                         HomeActivity.callHomeActivity(getContext());
                         getCoreActivity().finish();
+                        isHomeActivityCalled = true;
                     } else {
                         LocationUtils.askLocationRequest(getCoreActivity());
                     }
@@ -361,6 +363,9 @@ public class SplashLoginFragment extends CoreFragment<SplashLoginPresenter> impl
                     getLocationPermissions();
                 }
             } else {
+                splashLayout.setVisibility(View.GONE);
+                loginLayout.setVisibility(View.VISIBLE);
+                logiBtnLayout.setVisibility(View.VISIBLE);
                 //No need. called only after login
                 //ConsoleLog.i(TAG, "Login to continue");
             }

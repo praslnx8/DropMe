@@ -43,7 +43,7 @@ public class CrashReportModelEngine extends CoreModelEngine {
 
         callAsync(new AsyncCallBack() {
             @Override
-            public ApiResponse asyncc() throws Exception {
+            public ApiResponse async() throws Exception {
                 return CloudConnect.callDropMeApi(false).sendCrashReport(crashReportIO).execute();
             }
 
@@ -62,7 +62,7 @@ public class CrashReportModelEngine extends CoreModelEngine {
     }
 
     public void reportCrashIfExist() {
-        String stackTrace = LocalPreference.getAppDataFromShared(CoreApp.getAppContext(), CommonConstant.CRASH_STACKTRACE_STR, null);
+        String stackTrace = LocalPreference.getAppDataFromShared(CoreApp.getAppContext(), CommonConstant.CRASH_STACKTRACE_STR, "");
 
         if (!TextUtils.isEmpty(stackTrace)) {
             reportCrash(stackTrace, CrashType.EXCEPTION);

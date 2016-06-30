@@ -91,6 +91,19 @@ public class DropMeEndPoint
         return null;
     }
 
+    @ApiMethod(name = "getLoginInfo")
+    public VDropMeUser getLoginInfo(User user) throws OAuthRequestException {
+        AdminUtil.checkAndThrow(user);
+
+        try {
+            return DropMeUserLogicEngine.getInstance().getLoginInfo(user);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+    }
+
     @ApiMethod(name = "getVehicleDetail")
     public VVehicle getVehicleDetail(@Named("id") long id)
     {
@@ -276,8 +289,10 @@ public class DropMeEndPoint
     }
 
     @ApiMethod(name = "updateUserLocation")
-    public ApiResponse updateUserLocation(User user, @Named("deviceId") String deviceId, GeoPt currentLoc)
+    public ApiResponse updateUserLocation(User user, @Named("deviceId") String deviceId, GeoPt currentLoc) throws OAuthRequestException
     {
+        AdminUtil.checkAndThrow(user);
+
         ApiResponse apiResponse = new ApiResponse();
 
         try
