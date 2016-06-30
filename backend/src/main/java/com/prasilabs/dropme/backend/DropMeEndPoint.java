@@ -384,6 +384,40 @@ public class DropMeEndPoint
         return null;
     }
 
+    @ApiMethod(name = "sendOtp")
+    public ApiResponse sendOtpSms(User user, @Named("phone") String phone) throws OAuthRequestException {
+        AdminUtil.checkAndThrow(user);
+
+        ApiResponse apiResponse = new ApiResponse();
+
+        try {
+
+            boolean status = DropMeUserLogicEngine.getInstance().sendOtp(user, phone);
+
+            apiResponse.setStatus(status);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return apiResponse;
+    }
+
+    @ApiMethod(name = "verifyOtp")
+    public ApiResponse verifyOtp(User user, @Named("otp") String otp) throws OAuthRequestException {
+        AdminUtil.checkAndThrow(user);
+
+        ApiResponse apiResponse = new ApiResponse();
+
+        try {
+            boolean status = DropMeUserLogicEngine.getInstance().verifyOtp(user, otp);
+            apiResponse.setStatus(status);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return apiResponse;
+    }
+
     @ApiMethod(name = "test")
     public void test(@Named("password") String password) throws OAuthRequestException
     {

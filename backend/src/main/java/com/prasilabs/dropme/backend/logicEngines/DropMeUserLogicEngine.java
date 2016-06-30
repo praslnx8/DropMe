@@ -5,12 +5,16 @@ import com.googlecode.objectify.Key;
 import com.prasilabs.dropme.backend.annotions.PushQ;
 import com.prasilabs.dropme.backend.core.CoreLogicEngine;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
+import com.prasilabs.dropme.backend.datastore.OTPData;
 import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.security.HashGenerator;
+import com.prasilabs.dropme.backend.services.encryption.EncryptionManager;
+import com.prasilabs.dropme.backend.services.encryption.OTPManager;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
 import com.prasilabs.dropme.backend.utils.EmailSendUtil;
+import com.prasilabs.dropme.backend.utils.SmsSenderUtil;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.ValidateUtil;
 
@@ -209,6 +213,41 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.HASH_STR, hash).first().now();
 
         return dropMeUser;
+    }
+
+    public boolean sendOtp(User user, String phone) {
+        DropMeUser dropMeUser = getDropMeUser(user.getEmail());
+        dropMeUser.setMobile(phone);
+
+        OTPData otpData = OfyService.ofy().load().type(OTPData.class).filter(OTPData.USER_ID_STR, dropMeUser.getId()).first().now();
+        if (otpData == null) {
+            otpData = new OTPData();
+            otpData.setCreated(new Date(System.currentTimeMillis()));
+        } else {
+            otpData.setId(dropMeUser.getId());
+        }
+        otpData.setModified(new Date(System.currentTimeMillis()));
+        String otpNo = OTPManager.getOtp();
+        String encryptedNo = EncryptionManager.encryptData(otpNo);
+        otpData.setOtp(encryptedNo);
+
+        OfyService.ofy().save().entity(otpData).now();
+        OfyService.ofy().save().entity(dropMeUser).now();
+
+        return SmsSenderUtil.sendOtpSms(otpNo, dropMeUser.getName(), phone);
+    }
+
+    public boolean verifyOtp(User user, String otp) {
+        DropMeUser dropMeUser = getDropMeUser(user.getEmail());
+
+        OTPData otpData = OfyService.ofy().load().type(OTPData.class).filter(OTPData.USER_ID_STR, dropMeUser.getId()).first().now();
+
+        String otpNoFromServer = otpData.getOtp();
+
+        String decryptedOtp = EncryptionManager.decryptData(otpNoFromServer);
+
+        return decryptedOtp.equalsIgnoreCase(otp);
+
     }
 
     @PushQ

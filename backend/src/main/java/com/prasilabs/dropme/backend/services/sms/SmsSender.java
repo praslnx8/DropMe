@@ -5,6 +5,7 @@ import com.prasilabs.apiRequest.ApiRequestType;
 import com.prasilabs.apiRequest.ApiResult;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,13 @@ public class SmsSender {
     private static final String SENDER_ID = "DROPME";
     private static final String trans_url = "https://control.msg91.com/api/sendhttp.php?authkey=" + MSG_91_API_KEY + "&route=4&sender=" + SENDER_ID;
     private static final String TAG = SmsSender.class.getSimpleName();
+
+    public static boolean sendMsg91Sms(String message, String number) {
+        List<String> stringList = new ArrayList<>();
+        stringList.add(number);
+
+        return sendMsg91Sms(message, stringList);
+    }
 
     public static boolean sendMsg91Sms(String message, List<String> numbers) {
         boolean success = false;

@@ -7,6 +7,7 @@ public class CommonConstant
 
     public static final String CRASH_STACKTRACE_STR = "crash_stacktrace";
     public static final String CRASH_TIME_STR = "crash_time";
+    public static final String OTP_STR = "otp";
 
     public static final int PAGE_SIZE = 10;
 }

@@ -1,5 +1,6 @@
 package com.prasilabs.dropme.modelengines;
 
+import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
@@ -105,6 +106,50 @@ public class DropMeUserModelEngine extends CoreModelEngine
         }
     }
 
+    public void sendOtp(final String phone, final OtpSendCallBack otpCallBack) {
+        callAsync(new AsyncCallBack() {
+            @Override
+            public ApiResponse async() throws Exception {
+                return CloudConnect.callDropMeApi(false).sendOtp(phone).execute();
+            }
+
+            @Override
+            public <T> void result(T t) {
+                ApiResponse apiResponse = (ApiResponse) t;
+
+                if (otpCallBack != null) {
+                    if (apiResponse != null && apiResponse.getStatus()) {
+                        otpCallBack.otpSent(true);
+                    } else {
+                        otpCallBack.otpSent(false);
+                    }
+                }
+            }
+        });
+    }
+
+    public void verifyOtp(final String otp, final OtpVerifyCallBack otpVerifyCallBack) {
+        callAsync(new AsyncCallBack() {
+            @Override
+            public ApiResponse async() throws Exception {
+                return CloudConnect.callDropMeApi(false).verifyOtp(otp).execute();
+            }
+
+            @Override
+            public <T> void result(T t) {
+                ApiResponse apiResponse = (ApiResponse) t;
+
+                if (otpVerifyCallBack != null) {
+                    if (apiResponse != null && apiResponse.getStatus()) {
+                        otpVerifyCallBack.otpVerified(true);
+                    } else {
+                        otpVerifyCallBack.otpVerified(false);
+                    }
+                }
+            }
+        });
+    }
+
     public interface GetUserCallBack
     {
         void getUser(VDropMeUser vDropMeUser);
@@ -112,5 +157,13 @@ public class DropMeUserModelEngine extends CoreModelEngine
 
     public interface GetLoginInfoCallBack {
         void getLoginInfo(VDropMeUser vDropMeUser);
+    }
+
+    public interface OtpSendCallBack {
+        void otpSent(boolean status);
+    }
+
+    public interface OtpVerifyCallBack {
+        void otpVerified(boolean status);
     }
 }

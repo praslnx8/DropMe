@@ -13,4 +13,5 @@ public class BroadCastConstant
     public static final String RIDE_REFRESH_INTENT = "ride_refresh";
     public static final String NOTIFICATION_REFRESH_INTENT = "notification_refresh";
     public static final String GEO_REFRESH_INTENT = "geo_refresh";
+    public static final String SMS_RECIEVED_INTENT = "sms_recieved";
 }

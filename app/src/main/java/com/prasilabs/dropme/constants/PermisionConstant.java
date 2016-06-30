@@ -8,4 +8,5 @@ public class PermisionConstant
     public static final int REQUEST_READ_CONTACT=3;
     public static final int REQUEST_FINE_LOCATION=4;
     public static final int REQUEST_CALL_NO = 5;
+    public static final int READ_SMS = 6;
 }

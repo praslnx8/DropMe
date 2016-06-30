@@ -2,6 +2,7 @@ package com.prasilabs.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by prasi on 10/6/16.
@@ -30,5 +31,10 @@ public class CommonUtil
 
         return tempList;
 
+    }
+
+    public static int getRandomNumber(int start, int end) {
+        Random rand = new Random();
+        return rand.nextInt((end + 1) - start) + start;
     }
 }
