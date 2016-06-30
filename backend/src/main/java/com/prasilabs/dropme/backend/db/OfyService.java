@@ -8,6 +8,7 @@ import com.prasilabs.dropme.backend.datastore.CrashReport;
 import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.GcmRecord;
 import com.prasilabs.dropme.backend.datastore.LocationShare;
+import com.prasilabs.dropme.backend.datastore.OTPData;
 import com.prasilabs.dropme.backend.datastore.Ride;
 import com.prasilabs.dropme.backend.datastore.RideAlert;
 import com.prasilabs.dropme.backend.datastore.UserLocation;
@@ -37,6 +38,7 @@ public class OfyService
             ObjectifyService.register(UserLocation.class);
             ObjectifyService.register(Vehicle.class);
             ObjectifyService.register(CrashReport.class);
+            ObjectifyService.register(OTPData.class);
         }
         catch (Exception e)
         {

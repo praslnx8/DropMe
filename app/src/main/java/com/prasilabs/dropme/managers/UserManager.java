@@ -23,7 +23,9 @@ public class UserManager
         boolean isSucces = false;
         try
         {
-            LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.HASH_STR, vDropMeUser.getHash());
+            if (!TextUtils.isEmpty(vDropMeUser.getHash())) {
+                LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.HASH_STR, vDropMeUser.getHash());
+            }
             LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.NAME_STR, vDropMeUser.getName());
             LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.EMAIL_STR, vDropMeUser.getEmail());
             LocalPreference.saveLoginDataInShared(context, PojoConstants.UserConstant.LOGIN_TYPE_STR, vDropMeUser.getLoginType());
