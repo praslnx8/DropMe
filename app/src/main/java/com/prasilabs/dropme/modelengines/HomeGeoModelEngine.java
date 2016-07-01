@@ -308,6 +308,12 @@ public class HomeGeoModelEngine
                                                     markerInfo.setUserOrVehicle(UserOrVehicle.Vehicle.name());
                                                     markerInfo.setMarkerDirection(sourceLoc.bearingTo(destLoc));
 
+                                                    String message = rideDetail.getMessage();
+                                                    if (TextUtils.isEmpty(message)) {
+                                                        message = "Hi!,I am going to " + rideDetail.getDestLoc();
+                                                    }
+                                                    markerInfo.setTitle(message);
+
                                                     geoMarkerMap.put(key, markerInfo);
 
                                                     ConsoleLog.i(TAG, "rider is included");

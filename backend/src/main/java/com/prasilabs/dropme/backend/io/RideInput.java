@@ -19,6 +19,7 @@ public class RideInput
     private GeoPt currentLoc;
     private boolean isClosed;
     private int farePerKm;
+    private String message;
     private Date expiryDate;
     private Date startDate;
     private Date closedDate;
@@ -125,5 +126,13 @@ public class RideInput
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

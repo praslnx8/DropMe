@@ -18,6 +18,7 @@ public class MyRideInfo
     private int farePerKm;
     private boolean isCurrent;
     private Date date;
+    private String message;
 
     public long getId() {
         return id;
@@ -89,5 +90,13 @@ public class MyRideInfo
 
     public void setSourceLocName(String sourceLocName) {
         this.sourceLocName = sourceLocName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

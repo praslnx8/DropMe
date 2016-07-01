@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
@@ -136,6 +137,15 @@
 
 
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/message_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lgray2"
+        android:hint="Message (optional)"
+        android:lines="3"
+        android:maxLines="4" />
 
     <View
         android:layout_width="0dp"

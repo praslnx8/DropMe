@@ -51,6 +51,8 @@ public class Ride
     private Date created;
     private Date modified;
 
+    private String message;
+
     public Long getId() {
         return id;
     }
@@ -185,5 +187,13 @@ public class Ride
 
     public void setSourceLocName(String sourceLocName) {
         this.sourceLocName = sourceLocName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

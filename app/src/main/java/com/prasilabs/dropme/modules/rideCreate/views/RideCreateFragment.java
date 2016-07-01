@@ -37,7 +37,6 @@ import com.prasilabs.dropme.utils.ViewUtil;
 import com.prasilabs.util.DataUtil;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -58,10 +57,11 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
     TextView carBtn;
     @BindView(R.id.price_text)
     EditText priceText;
+    @BindView(R.id.message_text)
+    EditText messageText;
 
     private long vehicleID = 0;
     private GeoPt destLoc;
-    private Date startTime;
     private String destLocationName;
     private PlaceAutocompleteFragment autocompleteFragment;
 
@@ -158,6 +158,7 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
         String fare = priceText.getText().toString();
 
         int farePerKm = DataUtil.stringToInt(fare);
+        String message = messageText.getText().toString();
 
         RideInput rideInput = new RideInput();
         rideInput.setDestLoc(destLoc);
@@ -169,6 +170,7 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
         rideInput.setDeviceId(CoreApp.getDeviceId());
         rideInput.setUserId(UserManager.getDropMeUser(getContext()).getId());
         rideInput.setStartDate(startDate);
+        rideInput.setMessage(message);
 
         ViewUtil.showProgressView(getContext(), topLayout, true);
         getPresenter().createRide(rideInput);

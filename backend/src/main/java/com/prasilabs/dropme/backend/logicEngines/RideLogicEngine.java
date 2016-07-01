@@ -70,6 +70,7 @@ public class RideLogicEngine extends CoreLogicEngine
             rideInput.setClosed(ride.isClosed());
             rideInput.setClosedDate(ride.getClosedDate());
             rideInput.setStartDate(ride.getStartDate());
+            rideInput.setMessage(ride.getMessage());
         }
 
         return rideInput;
@@ -92,6 +93,7 @@ public class RideLogicEngine extends CoreLogicEngine
         ride.setDestLoc(rideInput.getDestLoc());
         ride.setDestLocName(rideInput.getDestLocName());
         ride.setSourceLocName(PlaceUtil.getLocalityName(rideInput.getSourceLoc()));
+        ride.setMessage(rideInput.getMessage());
 
         return ride;
     }
@@ -163,6 +165,7 @@ public class RideLogicEngine extends CoreLogicEngine
             rideDetail.setOwnerName(dropMeUser.getName());
             rideDetail.setOwnerPhone(dropMeUser.getMobile());
             rideDetail.setOwnerPicture(dropMeUser.getPicture());
+            rideDetail.setMessage(ride.getMessage());
         }
 
         return rideDetail;
@@ -450,6 +453,8 @@ public class RideLogicEngine extends CoreLogicEngine
             {
                 myRideInfo.setCurrent(false);
             }
+
+            myRideInfo.setMessage(ride.getMessage());
 
             myRideInfoList.add(myRideInfo);
         }

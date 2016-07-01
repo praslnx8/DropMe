@@ -23,6 +23,7 @@ public class RideDetail
     private Date startDate;
     private String vehicleType;
     private VNumber vehicleNumber;
+    private String message;
 
     public long getRideId() {
         return rideId;
@@ -126,5 +127,13 @@ public class RideDetail
 
     public void setSourceLatLng(GeoPt sourceLatLng) {
         this.sourceLatLng = sourceLatLng;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
