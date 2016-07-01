@@ -20,6 +20,16 @@
             android:layout_height="match_parent"
             mapbox:access_token="pk.eyJ1IjoicHJhc2xueDgiLCJhIjoiY2lvcjltMXV3MDAzZnUwbTgxcWVvMjAyayJ9.bYEuK4yO9sxedj3Ler19Kg"/>
 -->
+        <com.prasilabs.dropme.customs.FontAweSomeTextView
+            android:id="@+id/my_loc_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_margin="@dimen/paddingM"
+            android:padding="@dimen/paddingXS"
+            android:text="@string/fa_map_marker"
+            android:textSize="36dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

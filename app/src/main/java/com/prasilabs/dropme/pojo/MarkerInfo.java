@@ -12,6 +12,7 @@ public class MarkerInfo
     private String markerType;
     private String userOrVehicle;
     private float markerDirection = 0;
+    private String title;
 
     public String getKey() {
         return key;
@@ -51,5 +52,13 @@ public class MarkerInfo
 
     public void setMarkerDirection(float markerDirection) {
         this.markerDirection = markerDirection;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

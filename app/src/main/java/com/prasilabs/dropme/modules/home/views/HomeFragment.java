@@ -106,6 +106,12 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
         GenericActivity.openRideSelect(getContext());
     }
 
+    @OnClick(R.id.my_loc_btn)
+    protected void onMyLocClicked() {
+        LatLng latLng = DropMeLocatioListener.getLatLng(getContext());
+        mapLoader.moveToLoc(latLng);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -147,13 +153,13 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @Override
     public void addMarker(MarkerInfo markerInfo)
     {
-        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), false, MarkerUtil.getMarkerResId(markerInfo), markerInfo.getMarkerDirection());
+        mapLoader.addMarker(false, markerInfo, MarkerUtil.getMarkerResId(markerInfo));
     }
 
     @Override
     public void moveMarker(MarkerInfo markerInfo)
     {
-        mapLoader.addMarker(markerInfo.getKey(), markerInfo.getLoc(), false, MarkerUtil.getMarkerResId(markerInfo), markerInfo.getMarkerDirection());
+        mapLoader.addMarker(false, markerInfo, MarkerUtil.getMarkerResId(markerInfo));
     }
 
     @Override

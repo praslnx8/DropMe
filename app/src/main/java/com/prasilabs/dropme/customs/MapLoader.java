@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
+import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,7 +27,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.api.client.util.ArrayMap;
+import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.utils.MarkerUtil;
 
 import java.util.Map;
@@ -60,6 +65,8 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
                 gMap = googleMap;
                 //gMap.setMyLocationEnabled(true);
                 mapLoaderCallBack.mapLoaded();
+
+                gMap.setOnInfoWindowClickListener(MapLoader.this);
 
                 if (ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mapView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     //gMap.setMyLocationEnabled(true);
@@ -101,11 +108,6 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
         }
     }
 
-    public void addMarker(LatLng latLng, boolean isClear, int resourceId)
-    {
-        addMarker(null, latLng, isClear, resourceId);
-    }
-
     public void addMarker(String id, LatLng latLng, int resourceId)
     {
         addMarker(id, latLng, false, resourceId);
@@ -113,11 +115,15 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
 
     public void addMarker(String id, LatLng latLng, boolean isClear, int resourceId)
     {
-        addMarker(id, latLng, isClear, resourceId, 0);
+        MarkerInfo markerInfo = new MarkerInfo();
+        markerInfo.setKey(id);
+        markerInfo.setLoc(latLng);
+
+        addMarker(isClear, markerInfo, resourceId);
     }
 
-    public void addMarker(String id, LatLng latLng, boolean isClear, int resourceId, float dir) {
-        if(latLng != null)
+    public void addMarker(boolean isClear, MarkerInfo markerInfo, int resourceId) {
+        if (markerInfo.getLoc() != null)
         {
             if (isClear)
             {
@@ -126,14 +132,14 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
             }
 
             Marker existingMarker = null;
-            if(id != null)
+            if (markerInfo.getKey() != null)
             {
-                existingMarker = markerMap.get(id);
+                existingMarker = markerMap.get(markerInfo.getKey());
             }
 
             if(existingMarker != null)
             {
-                existingMarker.setPosition(latLng);
+                existingMarker.setPosition(markerInfo.getLoc());
             }
             else
             {
@@ -154,18 +160,22 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
                         ConsoleLog.w(TAG, "bitmapDrawable is null");
                     }
                 }
-                if (dir != 0) {
-                    markerOptions.rotation(dir);
+                if (markerInfo.getMarkerDirection() != 0) {
+                    markerOptions.rotation(markerInfo.getMarkerDirection());
                 }
-                markerOptions.position(latLng);
+                markerOptions.position(markerInfo.getLoc());
+                if (markerInfo.getTitle() != null) {
+                    markerOptions.title(markerInfo.getTitle());
+                }
                 Marker marker = gMap.addMarker(markerOptions);
-                animateMarker(marker, latLng, false);
-                if(id != null)
+                animateMarker(marker, markerInfo.getLoc(), false);
+                if (markerInfo.getKey() != null)
                 {
-                    markerMap.put(id, marker);
+                    markerMap.put(markerInfo.getKey(), marker);
                 }
             }
         }
+
     }
 
     public void animateMarker(final Marker marker, final LatLng toPosition, final boolean hideMarker) {
@@ -283,5 +293,35 @@ public class MapLoader implements GoogleMap.OnInfoWindowClickListener
     public interface MapMarkerClick
     {
         void markerClicked(String id);
+    }
+
+    private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        private View view;
+
+        public CustomInfoWindowAdapter(CoreActivity coreActivity) {
+            view = coreActivity.getLayoutInflater().inflate(R.layout.widget_marker_window, null);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+            if (marker != null && marker.isInfoWindowShown() && marker.getTitle() != null) {
+                marker.hideInfoWindow();
+                marker.showInfoWindow();
+            }
+            return null;
+        }
+
+        @Override
+        public View getInfoWindow(final Marker marker) {
+
+            TextView textView = (TextView) view.findViewById(R.id.text_view);
+
+            if (marker.getTitle() != null) {
+                textView.setText(marker.getTitle());
+            }
+
+            return view;
+        }
     }
 }

@@ -158,7 +158,7 @@ public class GenericActivity extends CoreActivity
             FragmentNavigator.navigateToFragment(this, RideCreateFragment.getInstance(), false, container.getId());
             if(getSupportActionBar() != null)
             {
-                getSupportActionBar().hide();
+                getSupportActionBar().setTitle("Start Ride");
             }
         }
         else if(requestFor == RIDE_SELECT)

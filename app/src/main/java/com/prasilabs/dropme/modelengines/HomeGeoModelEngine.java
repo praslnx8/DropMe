@@ -3,6 +3,7 @@ package com.prasilabs.dropme.modelengines;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 
 import com.firebase.client.FirebaseError;
 import com.firebase.geofire.GeoLocation;
@@ -24,6 +25,7 @@ import com.prasilabs.dropme.pojo.MarkerInfo;
 import com.prasilabs.dropme.services.firebase.FireBaseConfig;
 import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.LocationUtils;
+import com.prasilabs.enums.Gender;
 import com.prasilabs.enums.VehicleType;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.GeoFireKeyGenerator;
@@ -235,19 +237,38 @@ public class HomeGeoModelEngine
                                 if (key.contains(GeoUserStr))
                                 {
                                     VDropMeUser vDropMeUser = UserManager.getDropMeUser(CoreApp.getAppContext());
-                                    if (vDropMeUser ==null || id != vDropMeUser.getId())
+
+                                    if (vDropMeUser != null && vDropMeUser.getId() == id)
                                     {
-                                        MarkerInfo markerInfo = new MarkerInfo();
-                                        markerInfo.setKey(key);
-                                        markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
-                                        markerInfo.setMarkerType(MarkerType.UserMale.name());
-                                        markerInfo.setUserOrVehicle(UserOrVehicle.User.name());
+                                        //Do nothing
+                                    } else {
+                                        DropMeUserModelEngine.getInstance().getDropMeUser(id, new DropMeUserModelEngine.GetUserCallBack() {
+                                            @Override
+                                            public void getUser(VDropMeUser vDropMeUser) {
+                                                if (vDropMeUser != null) {
+                                                    MarkerInfo markerInfo = new MarkerInfo();
+                                                    markerInfo.setKey(key);
+                                                    markerInfo.setLoc(new LatLng(location.latitude, location.longitude));
+                                                    if (vDropMeUser.getGender().equals(Gender.Male.name())) {
+                                                        markerInfo.setMarkerType(MarkerType.UserMale.name());
+                                                    } else if (vDropMeUser.getGender().equals(Gender.Female.name())) {
+                                                        markerInfo.setMarkerType(MarkerType.UserFeMale.name());
+                                                    }
+                                                    markerInfo.setUserOrVehicle(UserOrVehicle.User.name());
+                                                    if (TextUtils.isEmpty(vDropMeUser.getMessage())) {
+                                                        markerInfo.setTitle("Hi!. Lets Share Ride in DropMe");
+                                                    } else {
+                                                        markerInfo.setTitle(vDropMeUser.getMessage());
+                                                    }
 
-                                        geoMarkerMap.put(key, markerInfo);
+                                                    geoMarkerMap.put(key, markerInfo);
 
-                                        if (geoCallBack != null) {
-                                            geoCallBack.getMarker(markerInfo);
-                                        }
+                                                    if (geoCallBack != null) {
+                                                        geoCallBack.getMarker(markerInfo);
+                                                    }
+                                                }
+                                            }
+                                        });
                                     }
                                 }
                                 else if (key.contains(GeoRideStr))
