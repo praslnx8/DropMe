@@ -1,5 +1,6 @@
 package com.prasilabs.dropme.backend.datastore;
 
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
@@ -8,7 +9,7 @@ import java.util.Date;
 /**
  * Created by prasi on 30/6/16.
  */
-@Index
+@Entity
 public class OTPData {
     public static final String USER_ID_STR = "userId";
 

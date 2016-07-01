@@ -39,7 +39,7 @@ public class EncryptionManager {
             ConsoleLog.e(e);
         }
 
-        return null;
+        return data;
     }
 
     public static String decryptData(String data) {
@@ -63,6 +63,6 @@ public class EncryptionManager {
             ConsoleLog.e(e);
         }
 
-        return null;
+        return data;
     }
 }

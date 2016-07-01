@@ -15,6 +15,7 @@ import com.prasilabs.constants.CommonConstant;
 import com.prasilabs.dropme.constants.BroadCastConstant;
 import com.prasilabs.dropme.core.CoreActivity;
 import com.prasilabs.dropme.debug.ConsoleLog;
+import com.prasilabs.util.DataUtil;
 
 /**
  * Created by prasi on 9/10/15.
@@ -61,11 +62,16 @@ public class SmsVerificationReciever extends BroadcastReceiver {
                         String[] messageStr = msgBody.split(" ");
                         if (messageStr.length > 4) {
                             String otp = messageStr[3];
-                            Intent smsRecievedIntent = new Intent();
-                            smsRecievedIntent.putExtra(CommonConstant.OTP_STR, otp);
-                            smsRecievedIntent.setAction(BroadCastConstant.SMS_RECIEVED_INTENT);
 
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(smsRecievedIntent);
+                            ConsoleLog.i(TAG, "otp recieved as string is " + otp);
+                            int otpAsInt = DataUtil.stringToInt(otp);
+                            if (otpAsInt > 0) {
+                                Intent smsRecievedIntent = new Intent();
+                                smsRecievedIntent.putExtra(CommonConstant.OTP_STR, otp);
+                                smsRecievedIntent.setAction(BroadCastConstant.SMS_RECIEVED_INTENT);
+
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(smsRecievedIntent);
+                            }
                         }
                     }
                 } catch (Exception e) {

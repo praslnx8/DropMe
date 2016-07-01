@@ -213,4 +213,10 @@ public class MobileVerificationFragment extends CoreFragment<MobileVerificationP
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        SmsVerificationReciever.unRegisterSmsVerificationReciever(getCoreActivity());
+    }
 }
