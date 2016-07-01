@@ -50,6 +50,11 @@ public class DropMeUserModelEngine extends CoreModelEngine
                     }
                 }
             }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
         });
     }
 
@@ -69,6 +74,11 @@ public class DropMeUserModelEngine extends CoreModelEngine
                 {
                     getUserCallBack.getUser((VDropMeUser) t);
                 }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
             }
         });
     }
@@ -98,7 +108,12 @@ public class DropMeUserModelEngine extends CoreModelEngine
                         getLoginInfoCallBack.getLoginInfo(loginInfo);
                     }
                 }
-            });
+
+                @Override
+                public void error(int errorCode) {
+                    //do nothing
+                }
+            }, true);
         } else {
             if (getLoginInfoCallBack != null) {
                 getLoginInfoCallBack.getLoginInfo(vDropMeUser);
@@ -125,6 +140,11 @@ public class DropMeUserModelEngine extends CoreModelEngine
                     }
                 }
             }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
         });
     }
 
@@ -146,6 +166,11 @@ public class DropMeUserModelEngine extends CoreModelEngine
                         otpVerifyCallBack.otpVerified(false);
                     }
                 }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
             }
         });
     }

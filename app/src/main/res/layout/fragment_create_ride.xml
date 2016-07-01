@@ -79,18 +79,6 @@
 
         </FrameLayout>
 
-        <EditText
-            android:id="@+id/phone_text"
-            style="@style/button.primary.transparent"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="@dimen/paddingS"
-            android:background="@android:color/white"
-            android:gravity="left|center"
-            android:hint="Enter Your Phone Number"
-            android:inputType="phone"
-            android:paddingLeft="@dimen/paddingS" />
-
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"

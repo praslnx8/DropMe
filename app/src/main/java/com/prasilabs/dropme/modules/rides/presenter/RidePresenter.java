@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
 import com.prasilabs.dropme.constants.BroadCastConstant;
+import com.prasilabs.dropme.constants.ErrorCodes;
 import com.prasilabs.dropme.core.CorePresenter;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.managers.RideManager;
@@ -42,6 +43,18 @@ public class RidePresenter extends CorePresenter {
             public void getCurrentRide(RideInput rideInput) {
                 if (getRideCallBack != null) {
                     getRideCallBack.getRide(rideInput);
+                }
+            }
+
+            @Override
+            public void error(int errorCode) {
+                if (getRideCallBack != null) {
+                    if (errorCode == ErrorCodes.NOT_CONNECTED) {
+                        getRideCallBack.noInternet();
+                    } else {
+                        //failsafe for user to access app
+                        getRideCallBack.getRide(null);
+                    }
                 }
             }
         });
@@ -106,6 +119,8 @@ public class RidePresenter extends CorePresenter {
 
     public interface GetRideCallBack {
         void getRide(RideInput rideInput);
+
+        void noInternet();
     }
 
     public interface GetGeoCallBack {

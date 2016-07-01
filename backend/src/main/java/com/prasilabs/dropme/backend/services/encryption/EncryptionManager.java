@@ -14,7 +14,7 @@ public class EncryptionManager {
 
     public static String encryptData(String data) {
         try {
-            if (data != null && data.length() > 0) {
+            if (data != null && data.length() > 0 && false) {
                 // Create key and cipher
                 Key aesKey = new SecretKeySpec(key.getBytes(), "AES");
                 Cipher cipher = Cipher.getInstance("AES");

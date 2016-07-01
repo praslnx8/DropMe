@@ -14,7 +14,6 @@ import com.prasilabs.dropme.backend.services.encryption.EncryptionManager;
 import com.prasilabs.dropme.backend.services.encryption.OTPManager;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
 import com.prasilabs.dropme.backend.utils.EmailSendUtil;
-import com.prasilabs.dropme.backend.utils.SmsSenderUtil;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.ValidateUtil;
 
@@ -222,10 +221,10 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         OTPData otpData = OfyService.ofy().load().type(OTPData.class).filter(OTPData.USER_ID_STR, dropMeUser.getId()).first().now();
         if (otpData == null) {
             otpData = new OTPData();
+            otpData.setUserId(dropMeUser.getId());
             otpData.setCreated(new Date(System.currentTimeMillis()));
-        } else {
-            otpData.setId(dropMeUser.getId());
         }
+
         otpData.setModified(new Date(System.currentTimeMillis()));
         String otpNo = OTPManager.getOtp();
         String encryptedNo = EncryptionManager.encryptData(otpNo);
@@ -234,20 +233,31 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         OfyService.ofy().save().entity(otpData).now();
         OfyService.ofy().save().entity(dropMeUser).now();
 
-        return SmsSenderUtil.sendOtpSms(otpNo, dropMeUser.getName(), phone);
+        //return SmsSenderUtil.sendOtpSms(otpNo, dropMeUser.getName(), phone);
+
+        return true;
     }
 
     public boolean verifyOtp(User user, String otp) {
+        boolean verified = false;
         DropMeUser dropMeUser = getDropMeUser(user.getEmail());
 
         OTPData otpData = OfyService.ofy().load().type(OTPData.class).filter(OTPData.USER_ID_STR, dropMeUser.getId()).first().now();
 
-        String otpNoFromServer = otpData.getOtp();
+        if (otpData != null) {
+            String otpNoFromServer = otpData.getOtp();
 
-        String decryptedOtp = EncryptionManager.decryptData(otpNoFromServer);
+            String decryptedOtp = "7777"; //TODO for temp. EncryptionManager.decryptData(otpNoFromServer);
 
-        return decryptedOtp.equalsIgnoreCase(otp);
+            verified = decryptedOtp.equalsIgnoreCase(otp);
 
+            if (verified) {
+                dropMeUser.setMobileVerified(true);
+                OfyService.ofy().save().entity(dropMeUser).now();
+            }
+        }
+
+        return verified;
     }
 
     @PushQ

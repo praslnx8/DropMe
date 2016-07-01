@@ -49,6 +49,11 @@ public class UserLocationModelEngine extends CoreModelEngine
                         }
                     }
                 }
+
+                @Override
+                public void error(int errorCode) {
+
+                }
             }, true);
         }
     }
@@ -68,6 +73,11 @@ public class UserLocationModelEngine extends CoreModelEngine
                 if (shareLocationCallBack != null) {
                     shareLocationCallBack.locationShared();
                 }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
             }
         });
     }

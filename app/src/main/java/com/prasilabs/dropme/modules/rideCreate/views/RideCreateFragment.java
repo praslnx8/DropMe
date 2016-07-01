@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,7 +24,6 @@ import com.prasilabs.constants.TempConstant;
 import com.prasilabs.dropme.R;
 import com.prasilabs.dropme.backend.dropMeApi.model.GeoPt;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideInput;
-import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreFragment;
 import com.prasilabs.dropme.customs.NoDefaultSpinner;
@@ -37,7 +35,6 @@ import com.prasilabs.dropme.services.location.DropMeLocatioListener;
 import com.prasilabs.dropme.utils.LocationUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 import com.prasilabs.util.DataUtil;
-import com.prasilabs.util.ValidateUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,8 +58,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
     NoDefaultSpinner fareRateSpinner;
     @BindView(R.id.top_layout)
     LinearLayout topLayout;
-    @BindView(R.id.phone_text)
-    EditText phoneText;
     @BindView(R.id.vehicle_text)
     TextView vehicleTypeText;
     @BindView(R.id.fare_rate_text)
@@ -211,13 +206,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
                     selectVehicleSpinner.performClick();
                 }
             });
-
-            VDropMeUser vDropMeUser = UserManager.getDropMeUser(getContext());
-            if(vDropMeUser != null && !DataUtil.isEmpty(vDropMeUser.getMobile()))
-            {
-                phoneText.setText(vDropMeUser.getMobile());
-            }
-
         }
 
         return getFragmentView();
@@ -267,9 +255,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
     {
         GeoPt source = LocationUtils.convertToGeoPt(DropMeLocatioListener.getLatLng(getContext()));
 
-        String phoneNo = phoneText.getText().toString();
-        UserManager.savePhoneNo(getContext(), phoneNo);
-
         RideInput rideInput = new RideInput();
         rideInput.setDestLoc(destLoc);
         rideInput.setDestLocName(destLocationName);
@@ -280,7 +265,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
         rideInput.setDeviceId(CoreApp.getDeviceId());
         rideInput.setUserId(UserManager.getDropMeUser(getContext()).getId());
         rideInput.setStartDate(startDate);
-        rideInput.setPhoneNo(phoneNo);
 
         ViewUtil.showProgressView(getContext(), topLayout, true);
         getPresenter().createRide(rideInput);
@@ -304,20 +288,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
         else if(DataUtil.isEmpty(destLocationName))
         {
             ViewUtil.t(getContext(), "Please select destination from dropdown");
-            isValid = false;
-        }
-        else if(!ValidateUtil.validateMobile(phoneText.getText().toString()))
-        {
-            if(DataUtil.isEmpty(phoneText.getText().toString()))
-            {
-                phoneText.setError("Required");
-                ViewUtil.t(getContext(), "Please add phone number");
-            }
-            else
-            {
-                phoneText.setError("Add proper number");
-                ViewUtil.t(getContext(), "Please add proper phone number");
-            }
             isValid = false;
         }
 

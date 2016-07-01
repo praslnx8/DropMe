@@ -73,6 +73,11 @@ public class RideModelEngine extends CoreModelEngine
                 }
 
             }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
         });
     }
 
@@ -118,6 +123,11 @@ public class RideModelEngine extends CoreModelEngine
                         rideCreateCallBack.rideCreateFailed();
                     }
                 }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
             }
         });
     }
@@ -170,6 +180,11 @@ public class RideModelEngine extends CoreModelEngine
                 }
 
             }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
         });
 
 
@@ -195,6 +210,13 @@ public class RideModelEngine extends CoreModelEngine
                     getCurrentRideCallBack.getCurrentRide(rideInput);
                 }
             }
+
+            @Override
+            public void error(int errorCode) {
+                if (getCurrentRideCallBack != null) {
+                    getCurrentRideCallBack.error(errorCode);
+                }
+            }
         });
     }
 
@@ -218,6 +240,11 @@ public class RideModelEngine extends CoreModelEngine
                     rideDetailCallBack.getRideDetail(rideDetail);
                 }
             }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
         });
     }
 
@@ -240,6 +267,11 @@ public class RideModelEngine extends CoreModelEngine
                 {
                     cancleRideCallBack.cancel(apiResponse.getStatus());
                 }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
             }
         });
     }
@@ -270,6 +302,11 @@ public class RideModelEngine extends CoreModelEngine
                     {
                         getRideDetailListCallBack.getRideDetailList(rideDetailList);
                     }
+                }
+
+                @Override
+                public void error(int errorCode) {
+
                 }
             });
         }
@@ -312,6 +349,11 @@ public class RideModelEngine extends CoreModelEngine
                     {
                         getRideInfoListCallBack.myRideInfoList(myRideInfos, skip);
                     }
+                }
+
+                @Override
+                public void error(int errorCode) {
+
                 }
             });
         }
@@ -359,5 +401,7 @@ public class RideModelEngine extends CoreModelEngine
 
     public interface GetCurrentRideCallBack {
         void getCurrentRide(RideInput rideInput);
+
+        void error(int errorCode);
     }
 }

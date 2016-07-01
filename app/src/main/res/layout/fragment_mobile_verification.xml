@@ -47,21 +47,23 @@
 
 
             <TextView
-                style="@style/Base.TextAppearance.AppCompat.Title"
+                style="@style/primaryBoxButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Enter OTP" />
+                android:padding="@dimen/paddingM"
+                android:text="Enter OTP"
+                android:textSize="25dp" />
 
             <EditText
                 android:id="@+id/otp_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/paddingXS"
+                android:layout_margin="@dimen/paddingL"
                 android:background="@drawable/edit_text_white_rounded"
                 android:hint="Enter OTP"
                 android:inputType="number"
-                android:padding="@dimen/paddingXS" />
+                android:padding="@dimen/paddingM" />
 
         </LinearLayout>
 

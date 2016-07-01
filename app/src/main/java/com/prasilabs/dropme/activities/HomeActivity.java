@@ -34,12 +34,15 @@ import com.prasilabs.dropme.utils.OtherUtils;
 import com.prasilabs.dropme.utils.ViewUtil;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class HomeActivity extends CoreActivity<RidePresenter> implements NavigationView.OnNavigationItemSelectedListener, RidePresenter.GetRideCallBack, RideFragment.RideCancelCallBack
 {
     private static final String TAG = HomeActivity.class.getSimpleName();
     @BindView(R.id.container)
     LinearLayout containerLayout;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
     private long prevBackPresTime;
 
     private boolean isLoading = false;
@@ -71,10 +74,11 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
 
         GcmRegistrationIntentService.startIntentService(this);
 
-        makeApiCall();
+        noInternetLayout.setVisibility(View.GONE);
+        checkRide();
     }
 
-    private void makeApiCall() {
+    private void checkRide() {
         isLoading = true;
         ViewUtil.showProgressView(this, containerLayout, true);
         getPresenter().getCurrentRide(this);
@@ -220,6 +224,8 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
             ViewUtil.hideProgressView(this, containerLayout);
         }
 
+        noInternetLayout.setVisibility(View.GONE);
+
         if (rideInput != null) {
             FragmentNavigator.navigateToFragment(this, RideFragment.newInstance(rideInput, this), false, containerLayout.getId());
         } else {
@@ -228,8 +234,19 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
     }
 
     @Override
+    public void noInternet() {
+        ViewUtil.hideProgressView(this, containerLayout);
+        noInternetLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void rideCanceled() {
         ConsoleLog.i(TAG, " ride canceled. Going to render other");
         FragmentNavigator.navigateToFragment(this, HomeFragment.getInstance(), false, containerLayout.getId());
+    }
+
+    @OnClick(R.id.retry_btn)
+    protected void onRetry() {
+        checkRide();
     }
 }

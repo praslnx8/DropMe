@@ -70,7 +70,6 @@ public class RideLogicEngine extends CoreLogicEngine
             rideInput.setClosed(ride.isClosed());
             rideInput.setClosedDate(ride.getClosedDate());
             rideInput.setStartDate(ride.getStartDate());
-            rideInput.setPhoneNo(ride.getPhoneNo());
         }
 
         return rideInput;
@@ -92,7 +91,6 @@ public class RideLogicEngine extends CoreLogicEngine
         ride.setVehicleId(rideInput.getVehicleId());
         ride.setDestLoc(rideInput.getDestLoc());
         ride.setDestLocName(rideInput.getDestLocName());
-        ride.setPhoneNo(rideInput.getPhoneNo());
         ride.setSourceLocName(PlaceUtil.getLocalityName(rideInput.getSourceLoc()));
 
         return ride;
@@ -125,9 +123,6 @@ public class RideLogicEngine extends CoreLogicEngine
             } else if (ride.getExpiryDate() == null || ride.getExpiryDate().before(new Date(System.currentTimeMillis()))) {
                 isValid = false;
                 ConsoleLog.w(TAG, "expiry date is not valid");
-            } else if (DataUtil.isEmpty(ride.getPhoneNo())) {
-                isValid = false;
-                ConsoleLog.w(TAG, "phone number is empty");
             }
         }
 
@@ -166,7 +161,7 @@ public class RideLogicEngine extends CoreLogicEngine
             rideDetail.setVehicleType(vehicle.getType());
             rideDetail.setGender(dropMeUser.getGender());
             rideDetail.setOwnerName(dropMeUser.getName());
-            rideDetail.setOwnerPhone(ride.getPhoneNo());
+            rideDetail.setOwnerPhone(dropMeUser.getMobile());
             rideDetail.setOwnerPicture(dropMeUser.getPicture());
         }
 
@@ -211,7 +206,7 @@ public class RideLogicEngine extends CoreLogicEngine
     public RideInput createRide(User user, RideInput rideInput)
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());
-        if(dropMeUser != null)
+        if (dropMeUser != null && dropMeUser.getMobile() != null && dropMeUser.isMobileVerified())
         {
             rideInput.setUserId(dropMeUser.getId());
 
@@ -246,7 +241,7 @@ public class RideLogicEngine extends CoreLogicEngine
         }
         else
         {
-            ConsoleLog.w(TAG, "user is null");
+            ConsoleLog.w(TAG, "user is null or mobile not confirmed");
         }
 
 

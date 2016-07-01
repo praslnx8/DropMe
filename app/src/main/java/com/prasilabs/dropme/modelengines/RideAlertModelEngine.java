@@ -65,6 +65,11 @@ public class RideAlertModelEngine extends CoreModelEngine
                     createAlertCallBack.alertCreated(apiResponse);
                 }
             }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
         });
     }
 
@@ -100,6 +105,11 @@ public class RideAlertModelEngine extends CoreModelEngine
                         getAlertCallBack.getAlertList(skip, rideAlertIoList);
                     }
                 }
+
+                @Override
+                public void error(int errorCode) {
+
+                }
             });
         }
         else
@@ -131,6 +141,11 @@ public class RideAlertModelEngine extends CoreModelEngine
                         deleteAlertCallBack.onResult(false);
                     }
                 }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
             }
         });
     }

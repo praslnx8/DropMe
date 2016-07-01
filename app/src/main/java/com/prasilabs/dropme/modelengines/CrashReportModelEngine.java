@@ -57,7 +57,12 @@ public class CrashReportModelEngine extends CoreModelEngine {
                     }
                 }
             }
-        });
+
+            @Override
+            public void error(int errorCode) {
+
+            }
+        }, true);
 
     }
 

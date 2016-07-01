@@ -46,6 +46,11 @@ public class VehicleModelEngine extends CoreModelEngine
                     vehicleAddCallBack.addVehicle((ApiResponse) t);
                 }
             }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
         });
     }
 
@@ -65,6 +70,11 @@ public class VehicleModelEngine extends CoreModelEngine
                 {
                     vehicleGetCallBack.getVehicle((VVehicle) t);
                 }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
             }
         });
     }

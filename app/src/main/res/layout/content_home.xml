@@ -12,7 +12,35 @@
     tools:showIn="@layout/app_bar_home">
 
 
-    
+    <LinearLayout
+        android:id="@+id/no_internet_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <com.prasilabs.dropme.customs.FontAweSomeTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fa_exclamation_triangle"
+            android:textSize="100dp" />
+
+        <TextView
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Intenet" />
+
+        <Button
+            android:id="@+id/retry_btn"
+            style="@style/primaryBoxButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/paddingS"
+            android:text="Try Again" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -17,7 +17,6 @@ public class RideInput
     private String destLocName;
     private GeoPt destLoc;
     private GeoPt currentLoc;
-    private String phoneNo;
     private boolean isClosed;
     private int farePerKm;
     private Date expiryDate;
@@ -120,19 +119,11 @@ public class RideInput
         this.closedDate = closedDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
     public Date getExpiryDate() {
         return expiryDate;
     }
 
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public void setPhoneNo(String phoneNo) {
-        this.phoneNo = phoneNo;
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }

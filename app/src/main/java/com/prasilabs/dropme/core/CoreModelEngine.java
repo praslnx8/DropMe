@@ -2,9 +2,12 @@ package com.prasilabs.dropme.core;
 
 import android.os.AsyncTask;
 
+import com.prasilabs.dropme.constants.ErrorCodes;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.services.network.NetworkManager;
 import com.prasilabs.dropme.utils.ViewUtil;
+
+import java.io.IOException;
 
 /**
  * Created by prasi on 27/5/16.
@@ -34,7 +37,7 @@ public abstract class CoreModelEngine
             ViewUtil.t(CoreApp.getAppContext(), "Please check the network and try again");
 
             if (asyncCallBack != null) {
-                asyncCallBack.result(null);
+                asyncCallBack.error(ErrorCodes.NOT_CONNECTED);
             }
         }
     }
@@ -42,6 +45,8 @@ public abstract class CoreModelEngine
     private <T> void call(final AsyncCallBack asyncCallBack) {
         new AsyncTask<Void, Void, T>()
         {
+            private int errorCode = 0;
+
             @Override
             protected void onPreExecute()
             {
@@ -58,6 +63,12 @@ public abstract class CoreModelEngine
                     }
                 } catch (Exception e) {
                     ConsoleLog.e(e);
+
+                    if (e instanceof IOException) {
+                        errorCode = ErrorCodes.TIME_OUT;
+                    } else {
+                        errorCode = ErrorCodes.GENERAL;
+                    }
                 }
 
                 return null;
@@ -70,7 +81,11 @@ public abstract class CoreModelEngine
 
                 if(asyncCallBack != null)
                 {
-                    asyncCallBack.result(t);
+                    if (errorCode > 0) {
+                        asyncCallBack.error(errorCode);
+                    } else {
+                        asyncCallBack.result(t);
+                    }
                 }
             }
         }.execute();
@@ -81,5 +96,7 @@ public abstract class CoreModelEngine
         <T> T async() throws Exception;
 
         <T> void result(T t);
+
+        void error(int errorCode);
     }
 }

@@ -3,6 +3,7 @@ package com.prasilabs.dropme.modules.mobileVerification.views;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -190,6 +191,15 @@ public class MobileVerificationFragment extends CoreFragment<MobileVerificationP
             viewFlipper.showNext();
             UserManager.savePhoneNo(getContext(), phone);
             nextBtn.setText("VERIFY");
+
+            //TODO until sms
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    otpText.setText("7777");
+                    nextBtn.performClick();
+                }
+            }, 2000);
         } else {
             ViewUtil.t(getContext(), "unable to sent OTP");
         }
