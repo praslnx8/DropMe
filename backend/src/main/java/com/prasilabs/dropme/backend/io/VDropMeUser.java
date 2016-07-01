@@ -13,7 +13,7 @@ public class VDropMeUser
     private String name;
     private String email;
     private String picture;
-    private int age;
+    private Date dob;
     private String gender;
     private String loginType;
     private String mobile;
@@ -21,6 +21,7 @@ public class VDropMeUser
     private boolean isVerified;
     private boolean isMobileVerified;
     private List<String> roles;
+    private String message;
     private Date created;
 
     public long getId() {
@@ -59,16 +60,16 @@ public class VDropMeUser
         return loginType;
     }
 
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
+
     public String getPicture() {
         return picture;
     }
 
     public void setPicture(String picture) {
         this.picture = picture;
-    }
-
-    public void setLoginType(String loginType) {
-        this.loginType = loginType;
     }
 
     public String getGender() {
@@ -111,8 +112,20 @@ public class VDropMeUser
         this.created = created;
     }
 
-    public int getAge() {
-        return age;
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getLocation() {
@@ -121,10 +134,6 @@ public class VDropMeUser
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public boolean isVerified() {

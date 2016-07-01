@@ -8,6 +8,8 @@ import com.prasilabs.dropme.backend.datastore.DropMeUser;
 import com.prasilabs.dropme.backend.datastore.OTPData;
 import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
+import com.prasilabs.dropme.backend.io.ApiResponse;
+import com.prasilabs.dropme.backend.io.DropMeUserEditIO;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.security.HashGenerator;
 import com.prasilabs.dropme.backend.services.encryption.EncryptionManager;
@@ -70,6 +72,8 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
             dropMeUser.setMobile(vDropMeUser.getMobile());
             dropMeUser.setPicture(vDropMeUser.getPicture());
             dropMeUser.setMobileVerified(vDropMeUser.isMobileVerified());
+            dropMeUser.setDob(vDropMeUser.getDob());
+            dropMeUser.setMessage(vDropMeUser.getMessage());
 
             return dropMeUser;
         }
@@ -93,7 +97,8 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         vDropMeUser.setRoles(dropMeUser.getRoles());
         vDropMeUser.setCreated(dropMeUser.getCreated());
         vDropMeUser.setPicture(dropMeUser.getPicture());
-        vDropMeUser.setAge(dropMeUser.getAge());
+        vDropMeUser.setDob(dropMeUser.getDob());
+        vDropMeUser.setMessage(dropMeUser.getMessage());
         vDropMeUser.setMobileVerified(dropMeUser.isMobileVerified());
 
         return vDropMeUser;
@@ -129,11 +134,14 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         if (!DataUtil.isEmpty(source.getMobile())) {
             dest.setMobile(source.getMobile());
         }
-        if (source.getAge() != 0) {
-            dest.setAge(source.getAge());
+        if (source.getDob() != null) {
+            dest.setDob(source.getDob());
         }
         if (!DataUtil.isEmpty(source.getLocation())) {
             dest.setLoginType(source.getLocation());
+        }
+        if (!DataUtil.isEmpty(source.getMessage())) {
+            dest.setMessage(source.getMessage());
         }
     }
 
@@ -169,6 +177,13 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
 
             return convertToVDropMeUser(existingDropMeUser, true);
         }
+    }
+
+    public ApiResponse updateDropMeUser(DropMeUserEditIO dropMeUserEditIO) {
+        ApiResponse apiResponse = new ApiResponse();
+
+
+        return apiResponse;
     }
 
     public VDropMeUser getLoginInfo(User user) {

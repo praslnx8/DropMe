@@ -63,8 +63,6 @@ public class RideCreateFragment extends CoreFragment<RideCreatePresenter> implem
     @BindView(R.id.fare_rate_text)
     TextView fareRateText;
 
-    /*@BindView(R.id.place_picker_btn)
-    Button placePickerBtn;*/
 
     private long vehicleID = 0;
     private GeoPt destLoc;

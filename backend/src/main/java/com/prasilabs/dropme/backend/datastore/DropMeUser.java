@@ -22,7 +22,6 @@ public class DropMeUser
     private String hash;
     @Index
     private String email;
-    private String picture;
     private String name;
     @Index
     private String gender;
@@ -31,7 +30,7 @@ public class DropMeUser
     @Index
     private String mobile;
     @Index
-    private int age;
+    private Date dob;
     @Index
     private boolean isVerified;
     private String location;
@@ -45,6 +44,11 @@ public class DropMeUser
     private Date lastLogedIn;
     @Index
     private Date modified;
+
+    //other data
+    private String message;
+    private String picture;
+
 
     public Long getId() {
         return id;
@@ -82,16 +86,16 @@ public class DropMeUser
         return gender;
     }
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getPicture() {
         return picture;
     }
 
     public void setPicture(String picture) {
         this.picture = picture;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 
     public String getLoginType() {
@@ -150,12 +154,20 @@ public class DropMeUser
         this.lastLogedIn = lastLogedIn;
     }
 
-    public int getAge() {
-        return age;
+    public Date getDob() {
+        return dob;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getLocation() {
