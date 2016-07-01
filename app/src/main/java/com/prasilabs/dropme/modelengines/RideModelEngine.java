@@ -353,7 +353,9 @@ public class RideModelEngine extends CoreModelEngine
 
                 @Override
                 public void error(int errorCode) {
-
+                    if (getRideInfoListCallBack != null) {
+                        getRideInfoListCallBack.error(errorCode);
+                    }
                 }
             });
         }
@@ -397,6 +399,8 @@ public class RideModelEngine extends CoreModelEngine
     public interface GetRideInfoListCallBack
     {
         void myRideInfoList(List<MyRideInfo> myRideInfoList, int skip);
+
+        void error(int errorCode);
     }
 
     public interface GetCurrentRideCallBack {

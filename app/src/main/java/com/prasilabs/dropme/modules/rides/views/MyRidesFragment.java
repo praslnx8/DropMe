@@ -35,6 +35,8 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
     MyRecyclerView myRideListView;
     @BindView(R.id.empty_layout)
     LinearLayout emptyLayout;
+    @BindView(R.id.no_internet_layout)
+    LinearLayout noInternetLayout;
     private boolean isShowLoading;
     private boolean isAlreadyLoaded = false;
     private MyRideAdapter myRideAdapter;
@@ -98,6 +100,11 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
         getCoreActivity().finish();
     }
 
+    @OnClick(R.id.retry_btn)
+    protected void onRetryClicked() {
+        makeApiCall(0);
+    }
+
     @Override
     protected MyRidesPresenter setCorePresenter()
     {
@@ -125,6 +132,7 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
 
         myRideListView.setVisibility(View.VISIBLE);
         emptyLayout.setVisibility(View.GONE);
+        noInternetLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -138,8 +146,21 @@ public class MyRidesFragment extends CoreFragment<MyRidesPresenter> implements M
                 isShowLoading = false;
             }
 
+            noInternetLayout.setVisibility(View.GONE);
             myRideListView.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void showNoInternet() {
+        if (isShowLoading) {
+            ViewUtil.hideProgressView(getContext(), topLayout);
+            isShowLoading = false;
+        }
+
+        myRideListView.setVisibility(View.GONE);
+        emptyLayout.setVisibility(View.GONE);
+        noInternetLayout.setVisibility(View.VISIBLE);
     }
 }

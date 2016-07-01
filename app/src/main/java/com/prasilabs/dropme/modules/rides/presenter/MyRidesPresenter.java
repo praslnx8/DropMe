@@ -61,6 +61,13 @@ public class MyRidesPresenter extends CorePresenter
                     }
                 }
             }
+
+            @Override
+            public void error(int errorCode) {
+                if (myRideListCallBack != null) {
+                    myRideListCallBack.showNoInternet();
+                }
+            }
         });
     }
 
@@ -69,6 +76,8 @@ public class MyRidesPresenter extends CorePresenter
         void getMyRideList(int skip, List<MyRideInfo> myRideInfoList);
 
         void getMyRideIsEmpty(int skip);
+
+        void showNoInternet();
     }
 
 }
