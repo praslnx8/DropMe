@@ -71,7 +71,8 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
                 {
                     ConsoleLog.i(TAG, "map loaded");
                     LatLng latLng = DropMeLocatioListener.getLatLng(getContext());
-                    mapLoader.moveToLoc(latLng);
+                    moveMap(latLng);
+                    getPresenter().listenToMap(latLng);
                     DropMeGLocationService.start(getContext());
                 }
             });
@@ -171,9 +172,11 @@ public class HomeFragment extends CoreFragment<HomePresenter> implements HomePre
     @Override
     public void moveMap(LatLng latLng)
     {
-        mapLoader.moveToLoc(latLng);
-        mapLoader.removeMarker("me");
-        mapLoader.addMarker("me", latLng, R.drawable.ic_location_pointer);
+        if (latLng != null) {
+            mapLoader.moveToLoc(latLng);
+            mapLoader.removeMarker("me");
+            mapLoader.addMarker("me", latLng, R.drawable.ic_location_pointer);
+        }
     }
 
     @Override

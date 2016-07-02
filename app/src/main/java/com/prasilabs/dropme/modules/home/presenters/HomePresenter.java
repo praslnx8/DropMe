@@ -34,40 +34,37 @@ public class HomePresenter extends CorePresenter
         checkLoginInfo();
     }
 
-    private void listenToMap(LatLng latLng)
+    public void listenToMap(LatLng latLng)
     {
-        ConsoleLog.i(TAG, "listen to map triggered");
-        HomeGeoModelEngine.getInstance().listenToHomeGeoLoc(latLng, new HomeGeoModelEngine.GeoCallBack()
-        {
-            @Override
-            public void getMarker(MarkerInfo markerInfo)
+        if (latLng != null) {
+            ConsoleLog.i(TAG, "listen to map triggered");
+            HomeGeoModelEngine.getInstance().listenToHomeGeoLoc(latLng, new HomeGeoModelEngine.GeoCallBack()
             {
-                if(checkAlreadyExist(markerInfo))
+                @Override
+                public void getMarker(MarkerInfo markerInfo)
                 {
-                    if (homePresenterCallBack != null)
-                    {
-                        homePresenterCallBack.moveMarker(markerInfo);
+                    if (checkAlreadyExist(markerInfo)) {
+                        if (homePresenterCallBack != null) {
+                            homePresenterCallBack.moveMarker(markerInfo);
+                        }
+                    } else {
+                        markerInfoList.add(markerInfo);
+                        if (homePresenterCallBack != null) {
+                            homePresenterCallBack.addMarker(markerInfo);
+                        }
                     }
                 }
-                else
-                {
-                    markerInfoList.add(markerInfo);
-                    if (homePresenterCallBack != null)
-                    {
-                        homePresenterCallBack.addMarker(markerInfo);
-                    }
-                }
-            }
 
-            @Override
-            public void removeMarker(MarkerInfo markerInfo)
-            {
-                if (homePresenterCallBack != null)
-                {
-                    homePresenterCallBack.removeMarker(markerInfo);
+                @Override
+                public void removeMarker(MarkerInfo markerInfo) {
+                    if (homePresenterCallBack != null) {
+                        homePresenterCallBack.removeMarker(markerInfo);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            ConsoleLog.w(TAG, "latlng is null");
+        }
     }
 
     private boolean checkAlreadyExist(MarkerInfo markerInfo)

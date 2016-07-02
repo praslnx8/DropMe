@@ -156,7 +156,9 @@ public class LocationUtils
             LocalPreference.storeLocation(context, latLngLocation, LocationConstant.AGGREGATE_CURRENT_LOC_STR);
             LocalPreference.storeLocation(context, latLngLocation, LocationConstant.CURRENT_LOC_STR);
             DropMeLocatioListener.informLocation(context, true);
-        } else if (oldLatLng == null || distance > 100) {
+        }
+        //else if (oldLatLng == null || distance > 100)
+        {
             ConsoleLog.i(TAG, "sending loc only for geo fire");
             LocalPreference.storeLocation(context, latLngLocation, LocationConstant.CURRENT_LOC_STR);
             DropMeLocatioListener.informLocation(context, false);

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -15,6 +16,9 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.prasilabs.dropme.constants.BroadCastConstant;
+import com.prasilabs.dropme.constants.LocationConstant;
+import com.prasilabs.dropme.customs.LocalPreference;
 import com.prasilabs.dropme.debug.ConsoleLog;
 import com.prasilabs.dropme.utils.LocationUtils;
 
@@ -129,6 +133,11 @@ public class DropMeGLocationService extends IntentService
         if (location != null)
         {
             final LatLng latLngLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+            LocalPreference.storeLocation(this, latLngLocation, LocationConstant.CURRENT_LOC_STR);
+            Intent locIntent = new Intent();
+            locIntent.setAction(BroadCastConstant.LOCATION_REFRESH_CONSTANT);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(locIntent);
 
             LocationUtils.getLocationFromLatLng(this, latLngLocation, new LocationUtils.GetLocationNameCallBack() {
                 @Override
