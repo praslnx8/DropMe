@@ -9,6 +9,7 @@ import com.prasilabs.dropme.backend.datastore.OTPData;
 import com.prasilabs.dropme.backend.db.OfyService;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
+import com.prasilabs.dropme.backend.io.DropMeUserDetail;
 import com.prasilabs.dropme.backend.io.DropMeUserEditIO;
 import com.prasilabs.dropme.backend.io.VDropMeUser;
 import com.prasilabs.dropme.backend.security.HashGenerator;
@@ -16,6 +17,7 @@ import com.prasilabs.dropme.backend.services.encryption.EncryptionManager;
 import com.prasilabs.dropme.backend.services.encryption.OTPManager;
 import com.prasilabs.dropme.backend.services.pushquees.PushQueueController;
 import com.prasilabs.dropme.backend.utils.EmailSendUtil;
+import com.prasilabs.enums.LoginType;
 import com.prasilabs.util.DataUtil;
 import com.prasilabs.util.ValidateUtil;
 
@@ -145,6 +147,26 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         }
     }
 
+    private static void copyDropMeUserToDetail(DropMeUser dropMeUser, DropMeUserDetail dropMeUserDetail) {
+        dropMeUserDetail.setId(dropMeUser.getId());
+        dropMeUserDetail.setCreated(dropMeUser.getCreated());
+        dropMeUserDetail.setDob(dropMeUser.getDob());
+        dropMeUserDetail.setEmail(dropMeUser.getEmail());
+        dropMeUserDetail.setGender(dropMeUser.getGender());
+        dropMeUserDetail.setLastLogedIn(dropMeUser.getLastLogedIn());
+        dropMeUserDetail.setLocation(dropMeUser.getLocation());
+        dropMeUserDetail.setMessage(dropMeUser.getMessage());
+        dropMeUserDetail.setMobile(dropMeUser.getMobile());
+        dropMeUserDetail.setMobileVerified(dropMeUser.isMobileVerified());
+        dropMeUserDetail.setRoles(dropMeUser.getRoles());
+        dropMeUserDetail.setName(dropMeUser.getName());
+        String picture = dropMeUser.getPicture();
+        if (picture != null && dropMeUser.getLoginType().equals(LoginType.GPlus.name())) {
+            picture = picture.replace("sz=50", "sz=200");
+        }
+        dropMeUserDetail.setPicture(picture);
+    }
+
     public VDropMeUser loginSignup(User user, VDropMeUser input)
     {
         DropMeUser existingDropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.EMAIL_STR, user.getEmail()).first().now();
@@ -227,6 +249,20 @@ public class DropMeUserLogicEngine extends CoreLogicEngine
         DropMeUser dropMeUser = OfyService.ofy().load().type(DropMeUser.class).filter(DropMeUser.HASH_STR, hash).first().now();
 
         return dropMeUser;
+    }
+
+    public DropMeUserDetail getUserDetail(long id) {
+        DropMeUserDetail dropMeUserDetail = new DropMeUserDetail();
+
+        DropMeUser dropMeUser = getDropMeUser(id);
+
+        copyDropMeUserToDetail(dropMeUser, dropMeUserDetail);
+
+        int rideCount = RideLogicEngine.getInstance().getRideCountOfUser(id);
+
+        dropMeUserDetail.setRideCount(rideCount);
+
+        return dropMeUserDetail;
     }
 
     public boolean sendOtp(User user, String phone) {

@@ -19,6 +19,8 @@ import com.squareup.picasso.RequestCreator;
  */
 public class ViewUtil
 {
+    private static final String TAG = ViewUtil.class.getSimpleName();
+
     public static void ts(Context context, String message)
     {
         if(context != null && !TextUtils.isEmpty(message))
@@ -93,6 +95,7 @@ public class ViewUtil
     {
         if(!TextUtils.isEmpty(url))
         {
+            ConsoleLog.i(TAG, "picture url is : " + url);
             try
             {
                 RequestCreator requestCreator = Picasso.with(view.getContext()).load(url).placeholder(android.R.drawable.ic_menu_camera);

@@ -1,6 +1,7 @@
 package com.prasilabs.dropme.modelengines;
 
 import com.prasilabs.dropme.backend.dropMeApi.model.ApiResponse;
+import com.prasilabs.dropme.backend.dropMeApi.model.DropMeUserDetail;
 import com.prasilabs.dropme.backend.dropMeApi.model.VDropMeUser;
 import com.prasilabs.dropme.core.CoreApp;
 import com.prasilabs.dropme.core.CoreModelEngine;
@@ -73,6 +74,29 @@ public class DropMeUserModelEngine extends CoreModelEngine
                 if(getUserCallBack != null)
                 {
                     getUserCallBack.getUser((VDropMeUser) t);
+                }
+            }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
+        });
+    }
+
+    public void getDropMeUserDetail(final long userId, final GetUserDetailCallBack getUserDetailCallBack) {
+        callAsync(new AsyncCallBack() {
+            @Override
+            public DropMeUserDetail async() throws Exception {
+                return CloudConnect.callDropMeApi(false).getDropMeUserDetail(userId).execute();
+            }
+
+            @Override
+            public <T> void result(T t) {
+                DropMeUserDetail dropMeUserDetail = (DropMeUserDetail) t;
+
+                if (getUserDetailCallBack != null) {
+                    getUserDetailCallBack.getUser(dropMeUserDetail);
                 }
             }
 
@@ -190,5 +214,9 @@ public class DropMeUserModelEngine extends CoreModelEngine
 
     public interface OtpVerifyCallBack {
         void otpVerified(boolean status);
+    }
+
+    public interface GetUserDetailCallBack {
+        void getUser(DropMeUserDetail dropMeUserDetail);
     }
 }

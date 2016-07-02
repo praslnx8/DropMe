@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.prasilabs.dropme.R;
+import com.prasilabs.dropme.activities.GenericCollapsingActivity;
 import com.prasilabs.dropme.backend.dropMeApi.model.RideDetail;
 import com.prasilabs.dropme.constants.PermisionConstant;
 import com.prasilabs.dropme.core.CoreActivity;
@@ -35,7 +36,7 @@ public class DialogUtils
         if (coreActivity != null) {
             ConsoleLog.i(TAG, "showing menu called");
             AlertDialog.Builder builder = new AlertDialog.Builder(coreActivity);
-            CharSequence[] menuOption = new CharSequence[]{"Call", "Share Location"};
+            CharSequence[] menuOption = new CharSequence[]{"Call", "Share Location", "View Profile"};
             builder.setItems(menuOption, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -57,6 +58,8 @@ public class DialogUtils
                             shareLocCallBack.shareTo(rideDetail.getOwnerId());
                             ViewUtil.t(coreActivity, "Your location is shared to the user and will be auto expired in 30 mins");
                         }
+                    } else if (which == 2) {
+                        GenericCollapsingActivity.openMyProfile(coreActivity, rideDetail.getOwnerId());
                     }
                 }
             });

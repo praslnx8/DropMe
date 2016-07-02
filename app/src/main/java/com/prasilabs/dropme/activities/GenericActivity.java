@@ -28,7 +28,7 @@ import butterknife.BindView;
 public class GenericActivity extends CoreActivity
 {
     private static final String REQUEST_FOR = "requestFor";
-    private static final String NOT_ID_STR = "not_id";
+    private static final String ID_STR = "id";
     private static final int MY_RIDE = 1;
     private static final int MY_ALERT = 2;
     private static final int MY_NOTIFS = 3;
@@ -44,7 +44,7 @@ public class GenericActivity extends CoreActivity
     public static Intent getNotificationIntent(Context context, int notId) {
         Intent intent = new Intent(context, GenericActivity.class);
         intent.putExtra(REQUEST_FOR, MY_NOTIFS);
-        intent.putExtra(NOT_ID_STR, notId);
+        intent.putExtra(ID_STR, notId);
 
         return intent;
     }
@@ -97,6 +97,7 @@ public class GenericActivity extends CoreActivity
         intent.putExtra(REQUEST_FOR, ALERT_CREATE);
         context.startActivity(intent);
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)

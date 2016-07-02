@@ -416,6 +416,12 @@ public class RideLogicEngine extends CoreLogicEngine
         return rideDetails;
     }
 
+    public int getRideCountOfUser(long userID) {
+        int count = OfyService.ofy().load().type(Ride.class).filter(Ride.USER_ID_STR, userID).list().size();
+
+        return count;
+    }
+
     public List<MyRideInfo> getRideDetailsOfUser(User user, int skip, int resultSize)
     {
         DropMeUser dropMeUser = DropMeUserLogicEngine.getInstance().getDropMeUser(user.getEmail());

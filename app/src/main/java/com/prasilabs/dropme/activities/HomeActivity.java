@@ -95,6 +95,7 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
         ImageView userImage = (ImageView) header.findViewById(R.id.user_image);
         TextView nameText = (TextView) header.findViewById(R.id.name_text);
         TextView emailText = (TextView) header.findViewById(R.id.email_text);
+        LinearLayout mainLayout = (LinearLayout) header.findViewById(R.id.nav_head_layout);
 
         VDropMeUser vDropMeUser = UserManager.getDropMeUser(this);
 
@@ -115,6 +116,14 @@ public class HomeActivity extends CoreActivity<RidePresenter> implements Navigat
             SplashActivity.openSplashActivity(this);
             finish();
         }
+
+        mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long userId = UserManager.getUserId(HomeActivity.this);
+                GenericCollapsingActivity.openMyProfile(HomeActivity.this, userId);
+            }
+        });
     }
 
     @Override

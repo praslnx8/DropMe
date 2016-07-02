@@ -18,6 +18,7 @@ import com.prasilabs.constants.AuthConstants;
 import com.prasilabs.dropme.backend.debug.ConsoleLog;
 import com.prasilabs.dropme.backend.io.ApiResponse;
 import com.prasilabs.dropme.backend.io.CrashReportIO;
+import com.prasilabs.dropme.backend.io.DropMeUserDetail;
 import com.prasilabs.dropme.backend.io.GcmRecordIO;
 import com.prasilabs.dropme.backend.io.MyRideInfo;
 import com.prasilabs.dropme.backend.io.RideAlertIo;
@@ -249,6 +250,20 @@ public class DropMeEndPoint
 
         return null;
     }
+
+    @ApiMethod(name = "getDropMeUserDetail")
+    public DropMeUserDetail getDropMeUserDetail(User user, @Named("userId") long userId) throws OAuthRequestException {
+        AdminUtil.checkAndThrow(user);
+
+        try {
+            return DropMeUserLogicEngine.getInstance().getUserDetail(userId);
+        } catch (Exception e) {
+            ConsoleLog.e(e);
+        }
+
+        return null;
+    }
+
 
     @ApiMethod(name = "addGcmId")
     public ApiResponse addGcmId(User user, GcmRecordIO gcmRecordIO) throws OAuthRequestException
