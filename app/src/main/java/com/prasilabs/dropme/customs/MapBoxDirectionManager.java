@@ -1,32 +1,9 @@
 package com.prasilabs.dropme.customs;
 
-import android.content.Context;
-import android.graphics.Color;
-
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.services.Constants;
-import com.mapbox.services.commons.ServicesException;
-import com.mapbox.services.commons.geojson.LineString;
-import com.mapbox.services.commons.models.Position;
-import com.mapbox.services.directions.v5.DirectionsCriteria;
-import com.mapbox.services.directions.v5.MapboxDirections;
-import com.mapbox.services.directions.v5.models.DirectionsResponse;
-import com.mapbox.services.directions.v5.models.DirectionsRoute;
-import com.prasilabs.dropme.debug.ConsoleLog;
-import com.prasilabs.dropme.utils.ViewUtil;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 /**
  * Created by prasi on 7/6/16.
  */
-public class MapBoxDirectionManager
+/*public class MapBoxDirectionManager
 {
     private static final String TAG = MapBoxDirectionManager.class.getSimpleName();
 
@@ -93,4 +70,4 @@ public class MapBoxDirectionManager
                 .color(Color.parseColor("#009688"))
                 .width(5));
     }
-}
+}*/

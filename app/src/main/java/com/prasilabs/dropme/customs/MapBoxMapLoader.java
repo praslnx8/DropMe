@@ -1,31 +1,9 @@
 package com.prasilabs.dropme.customs;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-
-import com.google.api.client.util.ArrayMap;
-import com.mapbox.mapboxsdk.annotations.Icon;
-import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.prasilabs.dropme.debug.ConsoleLog;
-
-import java.util.Map;
-
 /**
  * Created by prasi on 12/12/15.
  */
-public class MapBoxMapLoader
+/*public class MapBoxMapLoader
 {
     public static final String MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoicHJhc2xueDgiLCJhIjoiY2lvcjltMXV3MDAzZnUwbTgxcWVvMjAyayJ9.bYEuK4yO9sxedj3Ler19Kg";
 
@@ -212,4 +190,4 @@ public class MapBoxMapLoader
     {
         void getLatLng(LatLng latLng);
     }
-}
+}*/

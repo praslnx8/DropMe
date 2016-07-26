@@ -44,7 +44,7 @@ public class DropMeNotifCreator
         try {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
-            builder.setSmallIcon(R.drawable.ic_directions_walk_black_24dp);
+            builder.setSmallIcon(R.drawable.ic_notification);
             builder.setContentTitle(title);
             builder.setContentText(message);
 

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.mapbox.mapboxsdk.maps.MapView
+    <!--<com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        mapbox:access_token="pk.eyJ1IjoicHJhc2xueDgiLCJhIjoiY2lvcjltMXV3MDAzZnUwbTgxcWVvMjAyayJ9.bYEuK4yO9sxedj3Ler19Kg"/>/>
+        mapbox:access_token="pk.eyJ1IjoicHJhc2xueDgiLCJhIjoiY2lvcjltMXV3MDAzZnUwbTgxcWVvMjAyayJ9.bYEuK4yO9sxedj3Ler19Kg"/>-->
 
 </LinearLayout>
