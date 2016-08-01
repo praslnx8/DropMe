@@ -1,4 +1,4 @@
-# DropMe
+# DropMe (Support Ended) This project is now private and no more support/update has been provided
 DropME android app with Google App Engine Server
 
 DropMe is basically an android app with backend server hosted in GAE. 
